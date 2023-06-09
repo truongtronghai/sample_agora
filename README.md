@@ -18,11 +18,13 @@ To run the sample projects in this folder, take the following steps:
     git clone https://github.com/AgoraIO/signaling-sdk-samples-web.git
     ```
 
-1. To install the dependencies, open a command prompt in the root directory of the project and run the following command:
+1. Install the dependencies. Open Terminal in the root directory of this project and run the following command:
 
     ```bash
     npm install
     ```
+1. Generate a temporary authentication token. 
+   Each Signaling token is specific for a userID and channel. 
 
 1. In `src/sdk_quickstart/get_started.js`, replace `appId`, `channelName`, and `token` with your app ID, channel name, and authentication token.
 
@@ -34,6 +36,6 @@ To run the sample projects in this folder, take the following steps:
     npm run start:dev
     ```
 
-    The project can be opened at `http://localhost:9000/` in your default browser.
+    Open the project at `http://localhost:9000/`.
 
-1. Select an item from the dropdown to test the sample codes.
+1. Select an item from the dropdown and test the sample codes.
