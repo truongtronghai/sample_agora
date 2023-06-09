@@ -23,8 +23,8 @@ To run the sample projects in this folder, take the following steps:
     ```bash
     npm install
     ```
-1. Generate a temporary authentication token. 
-   Each Signaling token is specific for a userID and channel. 
+1. Generate [temporary authentication tokens](https://webdemo.agora.io/token-builder/). 
+   In Signaling, each token you create for your app is specific to a user ID. To test your app, you need a token for each user in the channel. 
 
 1. In `src/sdk_quickstart/get_started.js`, replace `appId`, `channelName`, and `token` with your app ID, channel name, and authentication token.
 
