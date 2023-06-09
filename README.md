@@ -6,7 +6,7 @@ This repository holds the code examples used for the [Agora Signaling SDK for We
 
 The runnable code examples are:
 
-- [SDK quickstart](/src/sdk_quickstart/) - The minimum code you need to integrate low-latency, high-concurrency signaling features into your app using Video SDK.
+- [SDK quickstart](/src/sdk_quickstart/) - The minimum code you need to integrate low-latency, high-concurrency signaling features into your app using Signaling SDK.
 
 ## Run this project
 
