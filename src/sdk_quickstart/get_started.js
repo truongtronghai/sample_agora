@@ -1,16 +1,20 @@
 import SignallingManager from "../SignalingManager/SignalingManger.js";
 
 // Your app ID
-const appId = "17cb7ec4e5d845498de0f75eeac4273a";
+const appId = "<your app id>";
 // Your token
-const token =
-  "00617cb7ec4e5d845498de0f75eeac4273aIACpRknChoBQ4Q7PXbEhcInwgp93AMwRyFFbv5sNt/iOzrfv3IMAAAAAEACoRXECYTqEZAEA6APx9oJk";
+const token = "<your token>";
 // Your channel name
-const channelName = "demochannel";
+const channelName = "<your channel name>";
 
-const {signalingEngine, signalingChannel} = await SignallingManager({appId, channelName, token});
+// Signaling Manager will create the engine and channel for you
+const { signalingEngine, signalingChannel } = await SignallingManager({
+  appId,
+  channelName,
+  token,
+});
 
-// Button behavior
+// The following code is solely related to UI implementation and not Agora-specific code
 window.onload = function () {
   // Buttons
   // login
@@ -20,7 +24,7 @@ window.onload = function () {
       token: "",
     };
     options.uid = document.getElementById("userID").value.toString();
-    options.token = token
+    options.token = token;
     await signalingEngine.login(options);
   };
 
@@ -37,7 +41,9 @@ window.onload = function () {
       document
         .getElementById("log")
         .appendChild(document.createElement("div"))
-        .append("You have successfully joined channel " + signalingChannel.channelId);
+        .append(
+          "You have successfully joined channel " + signalingChannel.channelId
+        );
     });
   };
 
@@ -46,9 +52,11 @@ window.onload = function () {
     if (signalingChannel != null) {
       await signalingChannel.leave().then(() => {
         document
-        .getElementById("log")
-        .appendChild(document.createElement("div"))
-        .append("You have successfully left channel " + signalingChannel.channelId);
+          .getElementById("log")
+          .appendChild(document.createElement("div"))
+          .append(
+            "You have successfully left channel " + signalingChannel.channelId
+          );
       });
     } else {
       console.log("Channel is empty");
@@ -94,7 +102,10 @@ window.onload = function () {
           .getElementById("log")
           .appendChild(document.createElement("div"))
           .append(
-            "Channel message: " + channelMessage + " from " + signalingChannel.channelId
+            "Channel message: " +
+              channelMessage +
+              " from " +
+              signalingChannel.channelId
           );
       });
     }
