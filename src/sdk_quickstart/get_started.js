@@ -6,6 +6,7 @@ window.onload = async () => {
   const {
     signalingEngine,
     signalingChannel,
+    uid,
     login,
     logout,
     join,
@@ -16,11 +17,13 @@ window.onload = async () => {
 
   // Display channel name
   document.getElementById("channelName").innerHTML = signalingChannel.channelId;
+  // Display User name
+  document.getElementById("userId").innerHTML = uid;
 
   // Buttons
   // login
   document.getElementById("login").onclick = async function () {
-    await login(document.getElementById("userID").value.toString());
+    await login();
   };
 
   // logout

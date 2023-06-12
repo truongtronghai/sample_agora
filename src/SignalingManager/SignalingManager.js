@@ -1,11 +1,15 @@
 const SignalingManager = async () => {
   let signalingEngine = null;
   let signalingChannel = null;
+  let uid = "";
 
-  // Get the config from config .json
+  // Get the config from config.json
   const config = await fetch("/SignalingManager/config.json").then((res) =>
     res.json()
   );
+
+  // Set the uid to export it
+  uid = config.uid;
 
   // Setup the signaling engine and channel
   const setupSignallingEngine = async () => {
@@ -47,7 +51,7 @@ const SignalingManager = async () => {
 
   await setupSignallingEngine();
 
-  const login = async (uid) => {
+  const login = async () => {
     signalingEngine.login({ uid: uid, token: config.token });
   };
 
@@ -130,6 +134,7 @@ const SignalingManager = async () => {
   return {
     signalingEngine,
     signalingChannel,
+    uid,
     login,
     logout,
     join,
