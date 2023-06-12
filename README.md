@@ -26,7 +26,7 @@ To run the sample projects in this folder, take the following steps:
 1. Generate [temporary authentication tokens](https://webdemo.agora.io/token-builder/). 
    In Signaling, each token you create for your app is specific to a user ID. To test your app, you need a token for each user in the channel. 
 
-1. In `src/SignalingManager/config.js`, replace `appId`, `channelName`, and `token` values with your app ID, channel name, and authentication token.
+1. In `src/SignalingManager/config.js`, replace `appId`, `channelName`, `uid` and `token` values with your app ID, channel name, and authentication token.
 
 
 1. Open a command prompt in the project folder, and run the following command:
