@@ -1,4 +1,4 @@
-const SignallingManager = async () => {
+const SignalingManager = async () => {
   let signalingEngine = null;
   let signalingChannel = null;
 
@@ -139,4 +139,4 @@ const SignallingManager = async () => {
   };
 };
 
-export default SignallingManager;
+export default SignalingManager;

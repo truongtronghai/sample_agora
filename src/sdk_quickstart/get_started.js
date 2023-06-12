@@ -1,4 +1,4 @@
-import SignallingManager from "../SignalingManager/SignalingManger.js";
+import SignalingManager from "../SignalingManager/SignalingManager.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -12,7 +12,7 @@ window.onload = async () => {
     leave,
     sendPeerMessage,
     sendChannelMessage,
-  } = await SignallingManager();
+  } = await SignalingManager();
 
   // Display channel name
   document.getElementById("channelName").innerHTML = signalingChannel.channelId;
