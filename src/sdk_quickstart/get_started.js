@@ -1,18 +1,7 @@
 import SignallingManager from "../SignalingManager/SignalingManger.js";
 
-// Your app ID
-const appId = "<your app id>";
-// Your token
-const token = "<your token>";
-// Your channel name
-const channelName = "<your channel name>";
-
 // Signaling Manager will create the engine and channel for you
-const { signalingEngine, signalingChannel } = await SignallingManager({
-  appId,
-  channelName,
-  token,
-});
+const { signalingEngine, signalingChannel } = await SignallingManager();
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = function () {

@@ -1,0 +1,5 @@
+{
+    "appId": "<---- Your App ID ---->",
+    "channelName": "<---- Your Channel Name ---->",
+    "token": "<---- Your RTM token ---->"
+}

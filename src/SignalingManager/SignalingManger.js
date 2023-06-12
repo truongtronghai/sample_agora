@@ -1,14 +1,18 @@
-const SignallingManager = async ({ appId, channelName, token }) => {
+const SignallingManager = async () => {
   let signalingEngine = null;
   let signalingChannel = null;
+
+  // Get the config from config .json
+  const config = await fetch("/SignalingManager/config.json")
+    .then((res) => res.json())
 
   // Setup the signaling engine and channel
   const setupSignallingEngine = async () => {
     // Create an Agora RTM instance
-    signalingEngine = AgoraRTM.createInstance(appId);
+    signalingEngine = AgoraRTM.createInstance(config.appId);
 
     // Create a signalingChannel
-    signalingChannel = signalingEngine.createChannel(channelName);
+    signalingChannel = signalingEngine.createChannel(config.channelName);
 
     // signalingEngine Event listeners
     // Display messages from peer
