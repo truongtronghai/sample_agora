@@ -1,4 +1,4 @@
-import SignalingManager from "../SignalingManager/SignalingManager.js";
+import SignalingManager from "../signaling_manager/signaling_manager.js";
 
 const showMessage = (message) => {
   document
