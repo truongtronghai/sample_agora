@@ -2,11 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Signaling Examples</title>
-    <script src="index.js" type="text/javascript"></script>
+    <title>Signaling Authentication Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/agora-rtm-sdk@1.6.0-205/index.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="authentication_guide.js" type="module"></script>
   </head>
   <body>
-    <h1 class="left-align">Signaling Examples</h1>
+    <h1 class="left-align">Signaling Authentication Guide</h1>
     <form id="loginForm">
       <div class="col" style="min-width: 433px; max-width: 443px">
         <div class="card" style="margin-top: 0px; margin-bottom: 0px">
@@ -14,14 +16,13 @@
             class="row card-content"
             style="margin-bottom: 0px; margin-top: 10px"
           >
+            <div class="input-field">
+              <label>User ID: </label>
+              <input type="text" placeholder="User id" id="uid" />
+            </div>
             <div class="row">
               <div>
-                <h3>Select a sample code:</h3>
-                <select id="selectedExample">
-                  <option value="">Select</option>
-                  <option value="getStarted">Get Started</option>
-                  <option value="authenticationGuide">Authentication Guide</option>
-                </select>
+                <button type="button" id="login">LOGIN</button>
               </div>
             </div>
           </div>

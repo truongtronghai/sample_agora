@@ -7,6 +7,8 @@ window.onload = function () {
       case "getStarted":
         window.location.assign("/sdk_quickstart/");
         return;
+      case "authenticationGuide":
+        window.location.assign("/authentication_guide")
       default:
         return null;
     }
