@@ -17,7 +17,7 @@ let options = {
   // Set token expire time: the number of seconds after which this token will expire
   expireTime: 60,
   // The base URL to your token server. For example, https://agora-token-service-production-92ff.up.railway.app".
-  serverUrl: "https://agora-token-service-production-32bb.up.railway.app",
+  serverUrl: "<your token server URL>",
 };
 
 window.onload = async () => {
