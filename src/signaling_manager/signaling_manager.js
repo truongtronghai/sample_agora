@@ -76,10 +76,7 @@ const SignalingManager = async (messageCallback) => {
     }
   };
 
-  const sendPeerMessage = async () => {
-    let peerId = document.getElementById("peerId").value.toString();
-    let peerMessage = document.getElementById("peerMessage").value.toString();
-
+  const sendPeerMessage = async (peerId, peerMessage) => {
     await signalingEngine
       .sendMessageToPeer({ text: peerMessage }, peerId)
       .then((sendResult) => {
@@ -91,11 +88,7 @@ const SignalingManager = async (messageCallback) => {
       });
   };
 
-  const sendChannelMessage = async () => {
-    let channelMessage = document
-      .getElementById("channelMessage")
-      .value.toString();
-
+  const sendChannelMessage = async (channelMessage) => {
     if (signalingChannel != null) {
       await signalingChannel.sendMessage({ text: channelMessage }).then(() => {
         messageCallback("Channel message from " + signalingChannel.channelId + ": " + channelMessage);

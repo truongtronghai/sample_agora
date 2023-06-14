@@ -2,9 +2,9 @@ import SignalingManager from "../signaling_manager/signaling_manager.js";
 
 const showMessage = (message) => {
   document
-        .getElementById("log")
-        .appendChild(document.createElement("div"))
-        .append(message);
+    .getElementById("log")
+    .appendChild(document.createElement("div"))
+    .append(message);
 };
 
 // The following code is solely related to UI implementation and not Agora-specific code
@@ -50,11 +50,16 @@ window.onload = async () => {
 
   // send peer-to-peer message
   document.getElementById("send_peer_message").onclick = async function () {
-    await sendPeerMessage();
+    let peerId = document.getElementById("peerId").value.toString();
+    let peerMessage = document.getElementById("peerMessage").value.toString();
+    await sendPeerMessage(peerId, peerMessage);
   };
 
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
-    await sendChannelMessage();
+    let channelMessage = document
+      .getElementById("channelMessage")
+      .value.toString();
+    await sendChannelMessage(channelMessage);
   };
 };

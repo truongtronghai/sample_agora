@@ -35,7 +35,6 @@ window.onload = async () => {
         return;
       }
       token = await FetchToken(options);
-      console.log("this is token", token)
       await login(options.uid, token);
 
       isLoggedIn = true;
@@ -66,7 +65,6 @@ async function FetchToken() {
         }
       )
       .then((response) => {
-        console.log(response.data.rtmToken);
         resolve(response.data.rtmToken);
       })
       .catch((error) => {
