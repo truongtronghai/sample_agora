@@ -29,12 +29,11 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
     item1.setValue("available");
 
     try {
-      await client.setLocalUserMetadata([item1]);
+      await signalingManager.signalingEngine.setLocalUserMetadata([item1]);
     } catch (status) {
       if (status) {
-        console.log("set local catch");
         const { code, message } = status;
-        console.log(code, message);
+        messageCallback(code + ": " +  message);
       }
     }
   };
@@ -49,7 +48,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
     } catch (status) {
       if (status) {
         const { code, message } = status;
-        showMessage("Error:" + code + ": " + message);
+        messageCallback("Error:" + code + ": " + message);
       }
     }
   };

@@ -15,18 +15,17 @@ window.onload = async () => {
     if (eventName == "MessageFromPeer") {
       
     } else if (eventName == "ConnectionStateChanged") {
-      
+      if (eventArgs.state == "CONNECTED") {
+        setLocalUserMetadata();
+      }
     } else if (eventName == "ChannelMessage") {
       
     } else if (eventName == "MemberJoined") {
       updateChannelMemberList();
-      showMessage("User joined");
     } else if (eventName == "MemberLeft") {
-      //removeUserFromList(eventArgs.memberId);
-      showMessage("user left")
+      removeUserFromList(eventArgs.memberId);
     } else if (eventName == "UserMetaDataUpdated" ) {
-      showMessage("value:" + rtmMetadata.items[2].getValue());
-      value = rtmMetadata.items[2].getValue();
+      const value = eventArgs.rtmMetadata.items.find(obj => obj.key === "myStatus").value;
       updateUserInList(eventArgs.uid, value == "busy");
     }
   };
@@ -54,7 +53,6 @@ const ul = document.getElementById("members-list");
 const updateChannelMemberList = async function () {
   // Retrieve a list of users in the channel
   const members = await signalingChannel.getMembers();
-  showMessage(members.length);
   for (let i = 0; i < members.length; i++) {
     updateUserInList(members[i], false);
   }
@@ -100,7 +98,7 @@ const updateUserInList = async function (userID, busy) {
     ul.appendChild(li);
 
     // Subscribe to metadata change event for the user
-    await SignalingManagerMetadata.signalingEngine.subscribeUserMetadata(userID);
+    await signalingEngine.subscribeUserMetadata(userID);
   }
 };
 
@@ -115,7 +113,6 @@ const updateUserInList = async function (userID, busy) {
   // login
   document.getElementById("login").onclick = async function () {
     await login();
-    await setLocalUserMetadata();
     await handleMetadataEvents();
   };
 
