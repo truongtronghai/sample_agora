@@ -1,30 +1,66 @@
 import SignalingManager from '../SignalingManager/SignalingManager.js';
 
-const SignalingManagerMetadata = async (messageCallback) => {
+const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it
-  const signalingManager = await SignalingManager(messageCallback);
+  const signalingManager = await SignalingManager(messageCallback, eventsCallback);
 
-  // Add additional methods or override existing methods
-  const extendedMethod = () => {
-    // Custom functionality
+  const handleMetadataEvents = async function () {
+    signalingManager.signalingEngine.on("UserMetaDataUpdated", function (uid, rtmMetadata) {
+      if (typeof rtmMetadata !== "undefined") {
+        const eventArgs = { uid: uid, rtmMetadata: rtmMetadata }
+        eventsCallback("UserMetaDataUpdated", eventArgs)
+      }
+    });   
+  }
+
+  const setLocalUserMetadata = async function () {
+    // Clear previous metadata
+    try {
+      await signalingManager.signalingEngine.clearLocalUserMetadata();
+    } catch (status) {
+      if (status) {
+        const { code, message } = status;
+        console.log(code, message);
+      }
+    }
+    // Set local user metadata
+    const item1 = signalingManager.signalingEngine.createMetadataItem();
+    item1.setKey("myStatus");
+    item1.setValue("available");
+
+    try {
+      await client.setLocalUserMetadata([item1]);
+    } catch (status) {
+      if (status) {
+        console.log("set local catch");
+        const { code, message } = status;
+        console.log(code, message);
+      }
+    }
   };
 
-  // Override an existing method
-  signalingManager.join = async () => {
-    // Add custom logic before calling the original join method
-    // ...
+  const updateLocalUserMetadata = async function (key, value) {
+    const metadataItem  = signalingManager.signalingEngine.createMetadataItem();
+    metadataItem.setKey(key);
+    metadataItem.setValue(value);
 
-    // Call the original join method
-    await signalingManager.join();
-
-    // Add custom logic after calling the original join method
-    // ...
+    try {
+      await signalingManager.signalingEngine.updateLocalUserMetadata([metadataItem]);
+    } catch (status) {
+      if (status) {
+        const { code, message } = status;
+        showMessage("Error:" + code + ": " + message);
+      }
+    }
   };
+  
 
   // Return the extended signaling manager
   return {
     ...signalingManager,
-    extendedMethod
+    setLocalUserMetadata,
+    handleMetadataEvents,
+    updateLocalUserMetadata,
   };
 };
 

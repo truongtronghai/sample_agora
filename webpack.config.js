@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlBundlerPlugin = require("html-bundler-webpack-plugin");
 
 module.exports = {
+  mode: 'development',
   entry: {
     index: "./src/index.js",
     sdk_quickstart: "./src/sdk_quickstart/get_started.js",

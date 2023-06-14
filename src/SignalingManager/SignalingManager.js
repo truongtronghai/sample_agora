@@ -1,4 +1,4 @@
-const SignalingManager = async (messageCallback) => {
+const SignalingManager = async (messageCallback, eventsCallback) => {
   let signalingEngine = null;
   let signalingChannel = null;
   let uid = "";
@@ -22,28 +22,43 @@ const SignalingManager = async (messageCallback) => {
     // signalingEngine Event listeners
     // Display messages from peer
     signalingEngine.on("MessageFromPeer", function (message, peerId) {
+      const eventArgs = { message: message, peerId: peerId };
+      eventsCallback("MessageFromPeer", eventArgs)
       messageCallback("Received peer message from " + peerId + ": " + message.text);
     });
 
     // Display connection state changes
     signalingEngine.on("ConnectionStateChanged", function (state, reason) {
-      messageCallback("Connection state changed to: " + state + ", Reason: " + reason);
+      const eventArgs = { state: state, reason: reason };
+      eventsCallback("ConnectionStateChanged", eventArgs)
+      messageCallback(
+        "Connection state changed to: " + state + ", Reason: " + reason
+      );
     });
 
     // Display signalingChannel messages
     signalingChannel.on("ChannelMessage", function (message, memberId) {
-      messageCallback("Received channel message from " + memberId + ": " + message.text);
+      const eventArgs = { message: message, memberId: memberId };
+      eventsCallback("ChannelMessage", eventArgs)
+      messageCallback(
+        "Received channel message from " + memberId + ": " + message.text
+      );
     });
 
     // Display signalingChannel member stats
     signalingChannel.on("MemberJoined", function (memberId) {
-      messageCallback("A member joined the channel with ID: " + memberId);
+      const eventArgs = { memberId: memberId };
+      eventsCallback("MemberJoined", eventArgs)
+      messageCallback(memberId + " joined the channel");
     });
 
     // Display signalingChannel member stats
     signalingChannel.on("MemberLeft", function (memberId) {
-      messageCallback(memberId + " left the channel...");
+      const eventArgs = { memberId: memberId };
+      eventsCallback("MemberLeft", eventArgs)
+      messageCallback(memberId + " left the channel");
     });
+    
   };
 
   await setupSignallingEngine();
@@ -68,7 +83,7 @@ const SignalingManager = async (messageCallback) => {
         messageCallback("You have successfully left channel " + signalingChannel.channelId);
       });
     } else {
-      console.log("Channel is empty");
+      messageCallback("Channel is empty");
     }
   };
 

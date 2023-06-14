@@ -7,6 +7,21 @@ const showMessage = (message) => {
         .append(message);
 };
 
+const handleSignalingEvents = (eventName, eventArgs) => {
+  
+  if (eventName == "MessageFromPeer") {
+    
+  } else if (eventName == "ConnectionStateChanged") {
+    
+  } else if (eventName == "ChannelMessage") {
+    
+  } else if (eventName == "MemberJoined") {
+    
+  } else if (eventName == "MemberLeft") {
+    
+  }
+};
+
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Signaling Manager will create the engine and channel for you
@@ -20,7 +35,7 @@ window.onload = async () => {
     leave,
     sendPeerMessage,
     sendChannelMessage,
-  } = await SignalingManager(showMessage);
+  } = await SignalingManager(showMessage, handleSignalingEvents);
 
   // Display channel name
   document.getElementById("channelName").innerHTML = signalingChannel.channelId;
