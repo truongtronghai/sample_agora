@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug Webpack",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:9000",
+        "webRoot": "${workspaceFolder}/src",
+        "sourceMapPathOverrides": {
+          "webpack:///./*": "${webRoot}/*"
+        }
+      }
+    ]
+  }
+  

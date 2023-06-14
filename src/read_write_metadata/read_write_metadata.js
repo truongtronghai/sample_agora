@@ -1,24 +1,62 @@
 import SignalingManagerMetadata from "./SignalingManagerMetadata.js";
-import SignalingManager from "./SignalingManagerMetadata.js";
+//import SignalingManager from "./SignalingManagerMetadata.js";
 
-var isUserBusy = false; // track user status
+// The following code is solely related to UI implementation and not Agora-specific code
+window.onload = async () => {
+  const showMessage = (message) => {
+    document
+          .getElementById("log")
+          .appendChild(document.createElement("div"))
+          .append(message);
+  };
+
+  const handleSignalingEvents = (eventName, eventArgs) => {
+  
+    if (eventName == "MessageFromPeer") {
+      
+    } else if (eventName == "ConnectionStateChanged") {
+      
+    } else if (eventName == "ChannelMessage") {
+      
+    } else if (eventName == "MemberJoined") {
+      updateChannelMemberList();
+      showMessage("User joined");
+    } else if (eventName == "MemberLeft") {
+      //removeUserFromList(eventArgs.memberId);
+      showMessage("user left")
+    } else if (eventName == "UserMetaDataUpdated" ) {
+      showMessage("value:" + rtmMetadata.items[2].getValue());
+      value = rtmMetadata.items[2].getValue();
+      updateUserInList(eventArgs.uid, value == "busy");
+    }
+  };
+
+  // Signaling Manager will create the engine and channel for you
+  const {
+    signalingEngine,
+    signalingChannel,
+    uid,
+    login,
+    logout,
+    join,
+    leave,
+    sendPeerMessage,
+    sendChannelMessage,
+    setLocalUserMetadata,
+    handleMetadataEvents,
+    updateLocalUserMetadata,
+  } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
+
+
+  var isUserBusy = false; // track user status
 const ul = document.getElementById("members-list");
-
-const showMessage = (message) => {
-  document
-        .getElementById("log")
-        .appendChild(document.createElement("div"))
-        .append(message);
-};
 
 const updateChannelMemberList = async function () {
   // Retrieve a list of users in the channel
-  showMessage("1");
-  members = await SignalingManager.signalingChannel.getMembers();
-  showMessage("2");
+  const members = await signalingChannel.getMembers();
   showMessage(members.length);
-  for (i = 0; i < members.length; i++) {
-    updateUserInList(member[i], false);
+  for (let i = 0; i < members.length; i++) {
+    updateUserInList(members[i], false);
   }
 };
 
@@ -62,48 +100,11 @@ const updateUserInList = async function (userID, busy) {
     ul.appendChild(li);
 
     // Subscribe to metadata change event for the user
-    await SignalingManager.signalingEngine.subscribeUserMetadata(userID);
+    await SignalingManagerMetadata.signalingEngine.subscribeUserMetadata(userID);
   }
 };
 
-const handleSignalingEvents = (eventName, eventArgs) => {
-  
-  if (eventName == "MessageFromPeer") {
-    
-  } else if (eventName == "ConnectionStateChanged") {
-    
-  } else if (eventName == "ChannelMessage") {
-    
-  } else if (eventName == "MemberJoined") {
-    updateChannelMemberList();
-    showMessage("User joined");
-  } else if (eventName == "MemberLeft") {
-    //removeUserFromList(eventArgs.memberId);
-    showMessage("user left")
-  } else if (eventName == "UserMetaDataUpdated" ) {
-    messageCallback("value:" + rtmMetadata.items[2].getValue());
-    value = rtmMetadata.items[2].getValue();
-    updateUserInList(eventArgs.uid, value == "busy");
-  }
-};
 
-// The following code is solely related to UI implementation and not Agora-specific code
-window.onload = async () => {
-  // Signaling Manager will create the engine and channel for you
-  const {
-    signalingEngine,
-    signalingChannel,
-    uid,
-    login,
-    logout,
-    join,
-    leave,
-    sendPeerMessage,
-    sendChannelMessage,
-    setLocalUserMetadata,
-    handleMetadataEvents,
-    updateLocalUserMetadata,
-  } = await SignalingManager(showMessage, handleSignalingEvents);
 
   // Display channel name
   document.getElementById("channelName").innerHTML = signalingChannel.channelId;
