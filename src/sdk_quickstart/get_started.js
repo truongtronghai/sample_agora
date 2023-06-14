@@ -1,11 +1,5 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-
-const showMessage = (message) => {
-  document
-    .getElementById("log")
-    .appendChild(document.createElement("div"))
-    .append(message);
-};
+import showMessage from '../utils/utils.js';
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {

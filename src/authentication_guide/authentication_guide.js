@@ -1,11 +1,5 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-
-const showMessage = (message) => {
-  document
-    .getElementById("log")
-    .appendChild(document.createElement("div"))
-    .append(message);
-};
+import showMessage from "../utils/utils.js";
 
 var isLoggedIn = false;
 var token = ""; // Agora recommends that you renew a token regularly, such as every hour, in production.
