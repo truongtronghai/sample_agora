@@ -11,9 +11,10 @@ window.onload = async () => {
   const {
     signalingEngine,
     signalingChannel,
-    uid,
+    config,
     login,
     logout,
+    createChannel,
     join,
     leave,
     sendPeerMessage,
@@ -21,9 +22,9 @@ window.onload = async () => {
   } = await SignalingManager(showMessage);
 
   // Display channel name
-  document.getElementById("channelName").innerHTML = signalingChannel.channelId;
+  document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
-  document.getElementById("userId").innerHTML = uid;
+  document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
   // login
@@ -36,7 +37,12 @@ window.onload = async () => {
     await logout();
   };
 
-  // create and join channel
+  // create channel
+  document.getElementById("create_channel").onclick = async function () {
+    await createChannel();
+  };
+
+  // join channel
   document.getElementById("join").onclick = async function () {
     await join();
   };
