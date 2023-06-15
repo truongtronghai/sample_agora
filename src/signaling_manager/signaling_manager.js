@@ -48,8 +48,12 @@ const SignalingManager = async (messageCallback) => {
 
   await setupSignallingEngine();
 
-  const login = async () => {
-    signalingEngine.login({ uid: uid, token: config.token });
+  const login = async (uid, token) => {
+    const loginParams = {
+      uid: uid || config.uid,
+      token: token || config.token
+    };
+    signalingEngine.login(loginParams);
   };
 
   const logout = async () => {
