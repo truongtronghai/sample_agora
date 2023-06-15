@@ -1,5 +1,6 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-import showMessage from "../utils/utils.js";
+import showMessage from "../utils/showmessage.js";
+import projectSelector from "../utils/projectSelector.js";
 
 var isLoggedIn = false;
 var token = ""; // Agora recommends that you renew a token regularly, such as every hour, in production.
@@ -11,12 +12,15 @@ let options = {
   // Set token expire time: the number of seconds after which this token will expire
   expireTime: 60,
   // The base URL to your token server. For example, https://agora-token-service-production-92ff.up.railway.app".
-  serverUrl: "<your token server URL>",
+  serverUrl: "https://agora-token-service-production-32bb.up.railway.app",
 };
 
 window.onload = async () => {
+  // Set the project selector
+  setupProjectSelector();
+
   // Signaling Manager will create the engine and channel for you
-  const { signalingEngine, login, logout } = await SignalingManager(
+  const { login, logout } = await SignalingManager(
     showMessage
   );
 
@@ -66,3 +70,14 @@ async function FetchToken() {
       });
   });
 }
+
+const setupProjectSelector = async () => {
+  const resp = await fetch("/projectselector.html")
+  console.log(resp)
+  const html = await resp.text()
+  document.getElementById("projectSelector").innerHTML = html
+
+  document.getElementById("projectSelector").onclick = async function () {
+    projectSelector();
+  }
+};
