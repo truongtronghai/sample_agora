@@ -19,20 +19,22 @@ window.onload = async () => {
         setLocalUserMetadata();
       }
     } else if (eventName == "JoinedChannel") {
-        updateChannelMemberList();
+      updateChannelMemberList();
     } else if (eventName == "LeftChannel") {
-
+      clearChannelMemberList();
     } else if (eventName == "ChannelMessage") {
       
     } else if (eventName == "MemberJoined") {
       updateChannelMemberList();
     } else if (eventName == "MemberLeft") {
-      removeUserFromList(eventArgs.memberId);
+      removeMemberFromList(eventArgs.memberId);
     } else if (eventName == "UserMetaDataUpdated" ) {
       const item = eventArgs.rtmMetadata.items.find(obj => obj.key === "myStatus");
       if (item !== undefined) {
         const value = item.value;
-        updateUserInList(eventArgs.uid, item.value == "busy");
+        if (signalingChannel) {
+          updateMemberInList(eventArgs.uid, item.value == "busy");
+        }
       } 
     }
   };
@@ -58,35 +60,44 @@ window.onload = async () => {
   const ul = document.getElementById("members-list");
 
   const updateChannelMemberList = async function () {
-    // Retrieve a list of users in the channel
+    // Retrieve a list of members in the channel
     const members = await signalingChannel.getMembers();
     for (let i = 0; i < members.length; i++) {
-      updateUserInList(members[i], false);
+      updateMemberInList(members[i], false);
     }
   };
 
-  const removeUserFromList = function (userID) {
-    var member = ul.getElementById(userID);
-    ul.removeChild(member);
-  }
+  const removeMemberFromList = function (memberId) {
+    const member = document.getElementById(memberId);
+    if (member) {
+      member.parentNode.removeChild(member);
+    }
+  };  
 
-  const updateUserInList = async function (userID, busy) {
+  const updateMemberInList = async function (memberId, busy) {
     const busyIcon = "&#x1F6AB" ;
     const availableIcon = "&#x2705";
-    const member = document.getElementById(userID);
+    const member = document.getElementById(memberId);
 
     if (member !== null) {
       // User in list, update user
-      member.innerHTML =(busy ? busyIcon : availableIcon) + " " + userID;
+      member.innerHTML =(busy ? busyIcon : availableIcon) + " " + memberId;
     } else {
       // User does not in the list, add a new user
       const li = document.createElement("li");
-      li.setAttribute("id", userID);
-      li.innerHTML =(busy ? busyIcon : availableIcon) + " " + userID;
+      li.setAttribute("id", memberId);
+      li.innerHTML =(busy ? busyIcon : availableIcon) + " " + memberId;
       ul.appendChild(li);
 
       // Subscribe to metadata change event for the user
-      await signalingEngine.subscribeUserMetadata(userID);
+      await signalingEngine.subscribeUserMetadata(memberId);
+    }
+  };
+
+  const clearChannelMemberList = function () {
+    const membersList = document.getElementById("members-list");
+    while (membersList.firstChild) {
+      membersList.removeChild(membersList.firstChild);
     }
   };
 
