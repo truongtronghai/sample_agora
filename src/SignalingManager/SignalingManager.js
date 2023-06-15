@@ -74,6 +74,8 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
   const join = async () => {
     await signalingChannel.join().then(() => {
       messageCallback("You have successfully joined channel " + signalingChannel.channelId);
+      const eventArgs = { channelId: signalingChannel.channelId };
+      eventsCallback("JoinedChannel", eventArgs)
     });
   };
 
@@ -81,6 +83,8 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     if (signalingChannel != null) {
       await signalingChannel.leave().then(() => {
         messageCallback("You have successfully left channel " + signalingChannel.channelId);
+        const eventArgs = { channelId: signalingChannel.channelId };
+        eventsCallback("LeftChannel", eventArgs)
       });
     } else {
       messageCallback("Channel is empty");
