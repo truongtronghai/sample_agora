@@ -1,19 +1,20 @@
 import SignalingManagerMetadata from "./SignalingManagerMetadata.js";
-//import SignalingManager from "./SignalingManagerMetadata.js";
+import projectSelector from "../utils/projectSelector.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
+  // Set the project selector
+  setupProjectSelector();
+
   const showMessage = (message) => {
     document
-          .getElementById("log")
-          .appendChild(document.createElement("div"))
-          .append(message);
+      .getElementById("log")
+      .appendChild(document.createElement("div"))
+      .append(message);
   };
 
   const handleSignalingEvents = (eventName, eventArgs) => {
-  
     if (eventName == "MessageFromPeer") {
-      
     } else if (eventName == "ConnectionStateChanged") {
       if (eventArgs.state == "CONNECTED") {
         setLocalUserMetadata();
@@ -23,19 +24,20 @@ window.onload = async () => {
     } else if (eventName == "LeftChannel") {
       clearChannelMemberList();
     } else if (eventName == "ChannelMessage") {
-      
     } else if (eventName == "MemberJoined") {
       updateChannelMemberList();
     } else if (eventName == "MemberLeft") {
       removeMemberFromList(eventArgs.memberId);
-    } else if (eventName == "UserMetaDataUpdated" ) {
-      const item = eventArgs.rtmMetadata.items.find(obj => obj.key === "myStatus");
+    } else if (eventName == "UserMetaDataUpdated") {
+      const item = eventArgs.rtmMetadata.items.find(
+        (obj) => obj.key === "myStatus"
+      );
       if (item !== undefined) {
         const value = item.value;
         if (signalingChannel) {
           updateMemberInList(eventArgs.uid, item.value == "busy");
         }
-      } 
+      }
     }
   };
 
@@ -43,7 +45,7 @@ window.onload = async () => {
   const {
     signalingEngine,
     signalingChannel,
-    uid,
+    config,
     login,
     logout,
     join,
@@ -54,7 +56,6 @@ window.onload = async () => {
     handleMetadataEvents,
     updateLocalUserMetadata,
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
-
 
   var isUserBusy = false; // track user status
   const ul = document.getElementById("members-list");
@@ -72,21 +73,21 @@ window.onload = async () => {
     if (member) {
       member.parentNode.removeChild(member);
     }
-  };  
+  };
 
   const updateMemberInList = async function (memberId, busy) {
-    const busyIcon = "&#x1F6AB" ;
+    const busyIcon = "&#x1F6AB";
     const availableIcon = "&#x2705";
     const member = document.getElementById(memberId);
 
     if (member !== null) {
       // User in list, update user
-      member.innerHTML =(busy ? busyIcon : availableIcon) + " " + memberId;
+      member.innerHTML = (busy ? busyIcon : availableIcon) + " " + memberId;
     } else {
       // User does not in the list, add a new user
       const li = document.createElement("li");
       li.setAttribute("id", memberId);
-      li.innerHTML =(busy ? busyIcon : availableIcon) + " " + memberId;
+      li.innerHTML = (busy ? busyIcon : availableIcon) + " " + memberId;
       ul.appendChild(li);
 
       // Subscribe to metadata change event for the user
@@ -104,7 +105,7 @@ window.onload = async () => {
   // Display channel name
   document.getElementById("channelName").innerHTML = signalingChannel.channelId;
   // Display User name
-  document.getElementById("userId").innerHTML = uid;
+  document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
   // login
@@ -130,12 +131,17 @@ window.onload = async () => {
 
   // send peer-to-peer message
   document.getElementById("send_peer_message").onclick = async function () {
-    await sendPeerMessage();
+    let peerId = document.getElementById("peerId").value.toString();
+    let peerMessage = document.getElementById("peerMessage").value.toString();
+    await sendPeerMessage(peerId, peerMessage);
   };
 
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
-    await sendChannelMessage();
+    let channelMessage = document
+      .getElementById("channelMessage")
+      .value.toString();
+    await sendChannelMessage(channelMessage);
   };
 
   // Change status
@@ -147,8 +153,17 @@ window.onload = async () => {
       document.getElementById("statusIndicator").innerHTML = "Available";
     }
 
-    updateLocalUserMetadata("myStatus", isUserBusy ? "busy" : "available")
-    
+    updateLocalUserMetadata("myStatus", isUserBusy ? "busy" : "available");
   };
+};
 
+const setupProjectSelector = async () => {
+  const resp = await fetch("/projectselector.html");
+  console.log(resp);
+  const html = await resp.text();
+  document.getElementById("projectSelector").innerHTML = html;
+
+  document.getElementById("projectSelector").onclick = async function () {
+    projectSelector();
+  };
 };

@@ -1,4 +1,4 @@
-import SignalingManager from '../SignalingManager/SignalingManager.js';
+import SignalingManager from '../signaling_manager/signaling_manager.js';
 
 const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it

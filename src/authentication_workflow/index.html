@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Signaling Authentication Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/agora-rtm-sdk@1.6.0-205/index.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="authentication_workflow.js" type="module"></script>
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1>Signaling Authentication Guide</h1>
+
+    <label><a href="https://docs.agora.io/en/signaling/develop/authentication-workflow#deploy-a-token-server" target=”_blank” >Deploy a token server</a>, update <code>serverUrl</code> in this sample code, then retrieve a token for your userID.</label>
+    <p/>
+    <blockquote>
+    <div>
+      <label>User ID: </label>
+      <input type="text" placeholder="User id" id="uid" />
+      <button type="button" id="login">LOGIN</button>
+    </div>
+    </blockquote>
+    <hr />
+    <div id="log"></div>
+  </body>
+</html>

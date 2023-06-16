@@ -1,36 +1,21 @@
-import SignalingManager from "../SignalingManager/SignalingManager.js";
-
-const showMessage = (message) => {
-  document
-        .getElementById("log")
-        .appendChild(document.createElement("div"))
-        .append(message);
-};
-
-const handleSignalingEvents = (eventName, eventArgs) => {
-  
-  if (eventName == "MessageFromPeer") {
-    
-  } else if (eventName == "ConnectionStateChanged") {
-    
-  } else if (eventName == "ChannelMessage") {
-    
-  } else if (eventName == "MemberJoined") {
-    
-  } else if (eventName == "MemberLeft") {
-    
-  }
-};
+import SignalingManager from "../signaling_manager/signaling_manager.js";
+import showMessage from '../utils/showmessage.js';
+import projectSelector from "../utils/projectSelector.js";
+import handleSignalingEvents from "../utils/handleSignalingEvents.js"
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
+  // Set the project selector
+  setupProjectSelector();
+
   // Signaling Manager will create the engine and channel for you
   const {
     signalingEngine,
     signalingChannel,
-    uid,
+    config,
     login,
     logout,
+    createChannel,
     join,
     leave,
     sendPeerMessage,
@@ -38,9 +23,9 @@ window.onload = async () => {
   } = await SignalingManager(showMessage, handleSignalingEvents);
 
   // Display channel name
-  document.getElementById("channelName").innerHTML = signalingChannel.channelId;
+  document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
-  document.getElementById("userId").innerHTML = uid;
+  document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
   // login
@@ -53,7 +38,7 @@ window.onload = async () => {
     await logout();
   };
 
-  // create and join channel
+  // join channel
   document.getElementById("join").onclick = async function () {
     await join();
   };
@@ -65,11 +50,27 @@ window.onload = async () => {
 
   // send peer-to-peer message
   document.getElementById("send_peer_message").onclick = async function () {
-    await sendPeerMessage();
+    let peerId = document.getElementById("peerId").value.toString();
+    let peerMessage = document.getElementById("peerMessage").value.toString();
+    await sendPeerMessage(peerId, peerMessage);
   };
 
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
-    await sendChannelMessage();
+    let channelMessage = document
+      .getElementById("channelMessage")
+      .value.toString();
+    await sendChannelMessage(channelMessage);
   };
+};
+
+const setupProjectSelector = async () => {
+  const resp = await fetch("/projectselector.html")
+  console.log(resp)
+  const html = await resp.text()
+  document.getElementById("projectSelector").innerHTML = html
+
+  document.getElementById("projectSelector").onclick = async function () {
+    projectSelector();
+  }
 };
