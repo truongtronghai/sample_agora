@@ -1,6 +1,6 @@
 {
-    "uid": "1",
-    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
-    "channelName": "demoChannel",
-    "token": "00617cb7ec4e5d845498de0f75eeac4273aIABWMU/iHl77TdSUJ+2N7t3i6gIW0AACfKCFOXxVCo5J1Lfv3IMAAAAAEAA4azMExAmMZAEA6ANUxopk"
+    "uid": "<---- Your User ID ---->",
+    "appId": "<---- Your App ID ---->",
+    "channelName": "<---- Your Channel Name ---->",
+    "token": "<---- Your RTM Token ---->"
 }
