@@ -5,7 +5,7 @@ module.exports = {
   entry: {
     index: "./src/index.js",
     sdk_quickstart: "./src/sdk_quickstart/get_started.js",
-    authentication_guide: "./src/authentication_guide/authentication_guide.js",
+    authentication_workflow: "./src/authentication_workflow/authentication_workflow.js",
   },
   plugins: [
     new HtmlBundlerPlugin({

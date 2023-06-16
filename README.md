@@ -7,7 +7,7 @@ This repository holds the code examples used for the [Agora Signaling SDK for We
 The runnable code examples are:
 
 - [SDK quickstart](/src/sdk_quickstart/) - The minimum code you need to integrate low-latency, high-concurrency signaling features into your app using Signaling SDK.
-- [Authentication Guide](/src/authentication_guide/) - This project shows you how to create a Signaling token server and a Signaling client web app
+- [Authentication Workflow](/src/authentication_workflow/) - This project shows you how to create a Signaling token server and a Signaling client web app
 
 ## Run this project
 

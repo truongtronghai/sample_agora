@@ -9,7 +9,7 @@ const projectSelector = () => {
       window.location.assign("/sdk_quickstart/");
       return;
     case "authenticationGuide":
-      window.location.assign("/authentication_guide");
+      window.location.assign("/authentication_workflow");
     default:
       return null;
   }
