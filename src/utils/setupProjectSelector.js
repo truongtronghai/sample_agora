@@ -1,3 +1,14 @@
+const setupProjectSelector = async () => {
+  const resp = await fetch("/projectselector.html")
+  console.log(resp)
+  const html = await resp.text()
+  document.getElementById("projectSelector").innerHTML = html
+
+  document.getElementById("projectSelector").onclick = async function () {
+    projectSelector();
+  }
+};
+
 const projectSelector = () => {
   let example = document.getElementById("selectedExample").value.toString();
   console.log(example);
@@ -18,4 +29,4 @@ const projectSelector = () => {
   }
 };
 
-export default projectSelector;
+export default setupProjectSelector;

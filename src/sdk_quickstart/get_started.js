@@ -1,6 +1,6 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
 import showMessage from '../utils/showmessage.js';
-import projectSelector from "../utils/projectSelector.js";
+import setupProjectSelector from "../utils/setupProjectSelector.js";
 import handleSignalingEvents from "../utils/handleSignalingEvents.js"
 
 // The following code is solely related to UI implementation and not Agora-specific code
@@ -62,15 +62,4 @@ window.onload = async () => {
       .value.toString();
     await sendChannelMessage(channelMessage);
   };
-};
-
-const setupProjectSelector = async () => {
-  const resp = await fetch("/projectselector.html")
-  console.log(resp)
-  const html = await resp.text()
-  document.getElementById("projectSelector").innerHTML = html
-
-  document.getElementById("projectSelector").onclick = async function () {
-    projectSelector();
-  }
 };
