@@ -12,9 +12,6 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     // Create an Agora RTM instance
     signalingEngine = AgoraRTM.createInstance(config.appId);
 
-    // Create a signalingChannel
-    signalingChannel = signalingEngine.createChannel(config.channelName);
-
     // signalingEngine Event listeners
     // Display messages from peer
     signalingEngine.on("MessageFromPeer", function (message, peerId) {
@@ -33,6 +30,25 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
         "Connection state changed to: " + state + ", Reason: " + reason
       );
     });
+  };
+
+  await setupSignallingEngine();
+
+  const login = async (uid, token) => {
+    const loginParams = {
+      uid: uid || config.uid,
+      token: token || config.token,
+    };
+    signalingEngine.login(loginParams);
+  };
+
+  const logout = async () => {
+    signalingEngine.logout();
+  };
+
+  const createChannel = () => {
+    // Create a signalingChannel
+    signalingChannel = signalingEngine.createChannel(config.channelName);
 
     // Display signalingChannel messages
     signalingChannel.on("ChannelMessage", function (message, memberId) {
@@ -58,21 +74,12 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     });
   };
 
-  await setupSignallingEngine();
-
-  const login = async (uid, token) => {
-    const loginParams = {
-      uid: uid || config.uid,
-      token: token || config.token,
-    };
-    signalingEngine.login(loginParams);
-  };
-
-  const logout = async () => {
-    signalingEngine.logout();
-  };
-
   const join = async () => {
+    if (signalingChannel == null) {
+      createChannel();
+    }
+
+    // Join
     await signalingChannel.join().then(() => {
       messageCallback(
         "You have successfully joined channel " + signalingChannel.channelId
