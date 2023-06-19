@@ -19,7 +19,7 @@ const projectSelector = () => {
     case "getStarted":
       window.location.assign("/sdk_quickstart/");
       return;
-    case "authenticationGuide":
+    case "authenticationWorkflow":
       window.location.assign("/authentication_workflow");
       return
     case "readWriteMetadata":

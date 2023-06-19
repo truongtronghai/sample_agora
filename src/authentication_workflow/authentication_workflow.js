@@ -4,7 +4,7 @@ import setupProjectSelector from "../utils/setupProjectSelector.js";
 import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 
 var isLoggedIn = false;
-var token = ""; // Agora recommends that you renew a token regularly, such as every hour, in production.
+var token = ""; // Best practice is to renew the token regularly. For example, every hour.
 const proxyUrl = "http://localhost:8080/"; // Replace with the proxy server URL
 
 let options = {
