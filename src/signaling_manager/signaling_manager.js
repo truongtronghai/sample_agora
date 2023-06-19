@@ -1,3 +1,5 @@
+import showMessage from "../utils/showmessage";
+
 const SignalingManager = async (messageCallback, eventsCallback) => {
   let signalingEngine = null;
   let signalingChannel = null;
@@ -10,7 +12,13 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
   // Setup the signaling engine and channel
   const setupSignallingEngine = async () => {
     // Create an Agora RTM instance
-    signalingEngine = AgoraRTM.createInstance(config.appId);
+    // signalingEngine = AgoraRTM.createInstance(config.appId);
+    // Create an Agora RTM instance
+    const { RTM } = AgoraRTM;
+    signalingEngine = new RTM(config.appId, config.uid);
+
+   // const { RTM } = AgoraRTM;
+   // signalingEngine = new RTM(appId: config.appId, userId: config.uid);
 
     // signalingEngine Event listeners
     // Display messages from peer
@@ -35,11 +43,19 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
   await setupSignallingEngine();
 
   const login = async (uid, token) => {
-    const loginParams = {
+    /* const loginParams = {
       uid: uid || config.uid,
       token: token || config.token,
     };
-    signalingEngine.login(loginParams);
+    signalingEngine.login(loginParams); */
+
+    try {
+      const result = await signalingEngine.login();
+      showMessage(result);
+    } catch (status) {
+      showMessage(status);
+    }
+  
   };
 
   const logout = async () => {

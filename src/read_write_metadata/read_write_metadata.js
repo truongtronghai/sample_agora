@@ -57,6 +57,11 @@ window.onload = async () => {
     updateLocalUserMetadata,
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
 
+  // Display channel name
+  document.getElementById("channelName").innerHTML = config.channelName;
+  // Display User name
+  document.getElementById("userId").innerHTML = config.uid;
+
   var isUserBusy = false; // track user status
   const ul = document.getElementById("members-list");
 
@@ -102,10 +107,6 @@ window.onload = async () => {
     }
   };
 
-  // Display channel name
-  document.getElementById("channelName").innerHTML = signalingChannel.channelId;
-  // Display User name
-  document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
   // login
