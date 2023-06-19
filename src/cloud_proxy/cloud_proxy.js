@@ -16,6 +16,7 @@ window.onload = async () => {
     token: config.token,
     logLevel: "debug",
     useStringUserId: true,
+    cloudProxy: true
   };
   // Signaling Manager will create the engine and channel for you
   const {
@@ -53,11 +54,12 @@ window.onload = async () => {
   document.getElementById("leave").onclick = async function () {
     await leave(config.channelName);
   };
+
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
     let channelMessage = document
       .getElementById("channelMessage")
       .value.toString();
-    await sendChannelMessage(config.channelName, channelMessage);
-  };
+      await sendChannelMessage(config.channelName, channelMessage);
+    };
 };

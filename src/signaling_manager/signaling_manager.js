@@ -1,136 +1,99 @@
-const SignalingManager = async (messageCallback, eventsCallback) => {
+
+const SignalingManager = async (messageCallback) => {
   let signalingEngine = null;
-  let signalingChannel = null;
 
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
+  // Setup the signaling engine with the provided App ID, UID, and configuration
+  const setupSignalingEngine = async (appId, uid, rtmConfig) => {
+    try {
+      signalingEngine = new AgoraRTM.RTM(appId, uid, rtmConfig);
+    } catch (error) {
+      console.log("Error:", error);
+    }
 
-  // Setup the signaling engine and channel
-  const setupSignallingEngine = async () => {
-    // Create an Agora RTM instance
-    signalingEngine = AgoraRTM.createInstance(config.appId);
-
-    // Create a signalingChannel
-    signalingChannel = signalingEngine.createChannel(config.channelName);
-
-    // signalingEngine Event listeners
-    // Display messages from peer
-    signalingEngine.on("MessageFromPeer", function (message, peerId) {
-      const eventArgs = { message: message, peerId: peerId };
-      eventsCallback("MessageFromPeer", eventArgs);
-      messageCallback(
-        "Received peer message from " + peerId + ": " + message.text
-      );
-    });
-
-    // Display connection state changes
-    signalingEngine.on("ConnectionStateChanged", function (state, reason) {
-      const eventArgs = { state: state, reason: reason };
-      eventsCallback("ConnectionStateChanged", eventArgs);
-      messageCallback(
-        "Connection state changed to: " + state + ", Reason: " + reason
-      );
-    });
-
-    // Display signalingChannel messages
-    signalingChannel.on("ChannelMessage", function (message, memberId) {
-      const eventArgs = { message: message, memberId: memberId };
-      eventsCallback("ChannelMessage", eventArgs);
-      messageCallback(
-        "Received channel message from " + memberId + ": " + message.text
-      );
-    });
-
-    // Display signalingChannel member stats
-    signalingChannel.on("MemberJoined", function (memberId) {
-      const eventArgs = { memberId: memberId };
-      eventsCallback("MemberJoined", eventArgs);
-      messageCallback(memberId + " joined the channel");
-    });
-
-    // Display signalingChannel member stats
-    signalingChannel.on("MemberLeft", function (memberId) {
-      const eventArgs = { memberId: memberId };
-      eventsCallback("MemberLeft", eventArgs);
-      messageCallback(memberId + " left the channel");
+    // Event listener to handle incoming messages and connection status changes
+    signalingEngine.addEventListener({
+      message: (event) => {
+        messageCallback(
+          "Received peer message from " +
+            event.publisher +
+            ": " +
+            event.message
+        );
+      },
+      status: (event) => {
+        messageCallback(
+          "Connection state changed to: " +
+            event.status +
+            ", Reason: " +
+            event.reason
+        );
+      },
     });
   };
 
-  await setupSignallingEngine();
-
-  const login = async (uid, token) => {
-    const loginParams = {
-      uid: uid || config.uid,
-      token: token || config.token,
-    };
-    signalingEngine.login(loginParams);
+  // Login to the signaling engine
+  const login = async () => {
+    try {
+      const result = await signalingEngine.login();
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  // Logout from the signaling engine
   const logout = async () => {
     signalingEngine.logout();
   };
 
-  const join = async () => {
-    await signalingChannel.join().then(() => {
+  // Join a channel
+  const join = async (channelName) => {
+    try {
+      await signalingEngine.subscribe({ channelName: channelName });
       messageCallback(
-        "You have successfully joined channel " + signalingChannel.channelId
+        "You have successfully joined channel " + channelName
       );
-      const eventArgs = { channelId: signalingChannel.channelId };
-      eventsCallback("JoinedChannel", eventArgs);
-    });
-  };
-
-  const leave = async () => {
-    if (signalingChannel != null) {
-      await signalingChannel.leave().then(() => {
-        messageCallback(
-          "You have successfully left channel " + signalingChannel.channelId
-        );
-        const eventArgs = { channelId: signalingChannel.channelId };
-        eventsCallback("LeftChannel", eventArgs);
-      });
-    } else {
-      messageCallback("Channel is empty");
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const sendPeerMessage = async (peerId, peerMessage) => {
-    await signalingEngine
-      .sendMessageToPeer({ text: peerMessage }, peerId)
-      .then((sendResult) => {
-        if (sendResult.hasPeerReceived) {
-          messageCallback("Message received by " + peerId + ": " + peerMessage);
-        } else {
-          messageCallback("Message sent to: " + peerId + ": " + peerMessage);
-        }
-      });
-  };
-
-  const sendChannelMessage = async (channelMessage) => {
-    if (signalingChannel != null) {
-      await signalingChannel.sendMessage({ text: channelMessage }).then(() => {
-        messageCallback(
-          "Channel message from " +
-            signalingChannel.channelId +
-            ": " +
-            channelMessage
-        );
-      });
+  // Leave a channel
+  const leave = async (channelName) => {
+    try {
+      await signalingEngine.unsubscribe({ channelName: channelName });
+      messageCallback(
+        "You have successfully left channel " + channelName
+      );
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  // Send a message to a channel
+  const sendChannelMessage = async (channelName, Message) => {
+    const payload = { type: "text", message: Message };
+    const publishMessage = JSON.stringify(payload);
+    try {
+      const sendResult = await signalingEngine.publish(
+        channelName,
+        publishMessage
+      );
+      messageCallback(userId + ": " + publishMessage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Return the signaling engine and the available functions
   return {
     signalingEngine,
-    signalingChannel,
-    config,
     login,
     logout,
     join,
     leave,
-    sendPeerMessage,
     sendChannelMessage,
+    setupSignalingEngine,
   };
 };
 

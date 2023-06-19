@@ -19,6 +19,15 @@ const projectSelector = () => {
     case "getStarted":
       window.location.assign("/sdk_quickstart/");
       return;
+    case "cloudProxy":
+      window.location.assign("/cloud_proxy/");
+      return;
+    case "mediaEncryption":
+      window.location.assign("/data_encryption/");
+      return;
+    case "geofencing":
+      window.location.assign("/geofencing/");
+      return;
     case "authenticationGuide":
       window.location.assign("/authentication_workflow");
       return
