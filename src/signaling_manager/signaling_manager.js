@@ -46,9 +46,10 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     signalingEngine.logout();
   };
 
-  const createChannel = () => {
+  const createChannel = (channelName) => {
     // Create a signalingChannel
-    signalingChannel = signalingEngine.createChannel(config.channelName);
+    channelName = channelName || config.channelName;
+    signalingChannel = signalingEngine.createChannel(channelName);
 
     // Display signalingChannel messages
     signalingChannel.on("ChannelMessage", function (message, memberId) {
@@ -74,9 +75,9 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     });
   };
 
-  const join = async () => {
+  const join = async (channelName) => {
     if (signalingChannel == null) {
-      createChannel();
+      createChannel(channelName);
     }
 
     // Join
@@ -87,6 +88,8 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
       const eventArgs = { channelId: signalingChannel.channelId };
       eventsCallback("JoinedChannel", eventArgs);
     });
+
+    return signalingChannel;
   };
 
   const leave = async () => {
@@ -130,7 +133,6 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
 
   return {
     signalingEngine,
-    signalingChannel,
     config,
     login,
     logout,
