@@ -23,7 +23,74 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
    // const { RTM } = AgoraRTM;
    // signalingEngine = new RTM(appId: config.appId, userId: config.uid);
 
-    // signalingEngine Event listeners
+
+    // add message event listeners
+    signalingEngine.addEventListener({
+      // Message events
+      message : event => {
+          // event.channelType;      // Channel type, 'STREAM' or 'MESSAGE'.
+          // event.channelName;      // Channel name
+          // event.topicName;        // Topic name, available only when channelType is 'STREAM'.
+          // event.messageType;      // Message type, "string" or "binary" .
+          // event.customType;       // User-defined type
+          // event.publisher;        // Message publisher
+          // event.message;          // Message payload
+          // event.publishTime;      // Message timestamp
+      },
+      // Presence events
+      presence : event => {
+          // event.eventType;        // Action type, 'SNAPSHOT','INTERVAL','JOIN','LEAVE','TIMEOUT,'STATE_CHANGED','OUT_OF_SERVICE'.
+          // event.channelType;      // Channel type, 'STREAM' or 'MESSAGE'.
+          // event.channelName;      // Channel name
+          // event.publisher;        // User triggers this event
+          // event.stateChanged;     // User state payload
+          // event.interval;         // Interval payload
+          // event.snapshot;         // Snapshot payload
+      },
+      // Topic events
+      topic : event => {
+          // event.evenType;         // Action type, 'SNAPSHOT','JOIN',or 'LEAVE'.
+          // event.channelName;      // Channel name
+          // event.userId;           // User triggers this event
+          // event.topicInfos;       // Topic information payload
+          // event.totalTopics;      // Topic number
+      },
+      // Storage events
+      storage : event => {
+          // event.channelType;      // Channel type, 'STREAM' or 'MESSAGE'.
+          // event.channelName;      // Channel name
+          // event.publisher;        // User triggers this event
+          // event.storageType;      // Category of the metadata, 'USER or 'CHANNEL'
+          // event.eventType;        // Action type, 'SNAPSHOT', 'SET', 'REMOVE', 'UPDATE' or 'NONE'
+          // event.data;             // User metadata or channel metadata payload
+      },
+      // Lock events
+      lock : event => {
+          // event.channelType;      // Channel type, 'STREAM' or 'MESSAGE'.
+          // event.channelName;      // Channel name
+          // event.publisher;        // User triggers this event
+          // event.evenType;         // Action type, 'SET','REMOVED','ACQUIRED','RELEASED','EXPIRED', or 'SNAPSHOT'
+          // event.lockName;         // Lock name
+          // event.ttl;              // The ttl of this lock
+          // event.snapshot;         // Snapshot payload
+      },
+      // Connection State Change
+      status : event => {
+          // event.state;            // Connection state
+          // event.reason;           // Reason Why the user triggers this event
+          const eventArgs = { state: event.state, reason: event.reason };
+          eventsCallback("ConnectionStateChanged", eventArgs);
+          messageCallback(
+            "Connection state changed to: " + event.state + ", Reason: " + event.reason
+          );
+      },
+      // Token Privilege Will Expire
+      TokenPrivilegeWillExpire : (channelName) => {
+          //const channelName = channelName;            // Name of the channel in which the token is to expire
+      },
+    });
+
+  /*  // signalingEngine Event listeners
     // Display messages from peer
     signalingEngine.on("MessageFromPeer", function (message, peerId) {
       const eventArgs = { message: message, peerId: peerId };
@@ -40,7 +107,7 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
       messageCallback(
         "Connection state changed to: " + state + ", Reason: " + reason
       );
-    });
+    }); */
   };
 
   await setupSignallingEngine();
