@@ -1,5 +1,5 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-import showMessage from "../utils/showmessage.js";
+import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 

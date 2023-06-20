@@ -1,5 +1,3 @@
-import showMessage from "../utils/showmessage";
-
 const SignalingManager = async (messageCallback, eventsCallback) => {
   let signalingEngine = null;
   let signalingChannel = null;
@@ -15,7 +13,12 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     // signalingEngine = AgoraRTM.createInstance(config.appId);
     // Create an Agora RTM instance
     const { RTM } = AgoraRTM;
-    signalingEngine = new RTM(config.appId, config.uid);
+
+    const rtmConfig = {
+            token : config.token,
+    };
+
+    signalingEngine = new RTM(config.appId, config.uid, rtmConfig);
 
    // const { RTM } = AgoraRTM;
    // signalingEngine = new RTM(appId: config.appId, userId: config.uid);
@@ -50,10 +53,10 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     signalingEngine.login(loginParams); */
 
     try {
-      const result = await signalingEngine.login();
-      showMessage(result);
+      const result = await signalingEngine.login(config.uid, config.token);
+      messageCallback(result);
     } catch (status) {
-      showMessage(status);
+      messageCallback(status);
     }
   
   };
@@ -64,7 +67,7 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
 
   const createChannel = () => {
     // Create a signalingChannel
-    signalingChannel = signalingEngine.createChannel(config.channelName);
+    signalingChannel = signalingEngine.createStreamChannel(config.channelName);
 
     // Display signalingChannel messages
     signalingChannel.on("ChannelMessage", function (message, memberId) {
