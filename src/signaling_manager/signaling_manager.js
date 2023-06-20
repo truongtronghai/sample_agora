@@ -8,7 +8,7 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
   );
 
   // Setup the signaling engine and channel
-  const setupSignallingEngine = async () => {
+  const setupSignalingEngine = async () => {
     // Create an Agora RTM instance
     signalingEngine = AgoraRTM.createInstance(config.appId);
 
@@ -32,7 +32,7 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     });
   };
 
-  await setupSignallingEngine();
+  await setupSignalingEngine();
 
   const login = async (uid, token) => {
     const loginParams = {
@@ -45,6 +45,10 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
   const logout = async () => {
     signalingEngine.logout();
   };
+
+  const getSignalingChannel = () => {
+    return signalingChannel;
+  }
 
   const createChannel = (channelName) => {
     // Create a signalingChannel
@@ -88,8 +92,6 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
       const eventArgs = { channelId: signalingChannel.channelId };
       eventsCallback("JoinedChannel", eventArgs);
     });
-
-    return signalingChannel;
   };
 
   const leave = async () => {
@@ -102,7 +104,7 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
         eventsCallback("LeftChannel", eventArgs);
       });
     } else {
-      messageCallback("Channel is empty");
+      messageCallback("Channel is null");
     }
   };
 
@@ -134,6 +136,7 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
   return {
     signalingEngine,
     config,
+    getSignalingChannel,
     login,
     logout,
     join,
