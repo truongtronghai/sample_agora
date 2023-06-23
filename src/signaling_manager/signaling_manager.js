@@ -12,10 +12,14 @@ const SignalingManager = async (messageCallback, eventsCallback) => {
     // Create an Agora RTM instance
     // signalingEngine = AgoraRTM.createInstance(config.appId);
     // Create an Agora RTM instance
+
+    AgoraRTM.setArea({areaCodes: ['CHINA']});
     const { RTM } = AgoraRTM;
 
     const rtmConfig = {
             token : config.token,
+            useStringUserId: true,
+            logLevel: `debug`,
     };
 
     signalingEngine = new RTM(config.appId, config.uid, rtmConfig);
