@@ -1,7 +1,7 @@
-import SignalingManager from "../signaling_manager/signaling_manager.js";
 import showMessage from "../utils/showMessage.js";
 import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import SignalingManagerGeofencing from "./signaling_manager_geofencing.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -12,26 +12,17 @@ window.onload = async () => {
     res.json()
   );
 
-  // Start channel encryption
-  const rtmConfig = {
-    token: config.token,
-    logLevel: "debug",
-    useStringUserId: true,
-    cloudProxy: true,
-  };
-
   // Signaling Manager will create the engine and channel for you
   const {
-    signalingEngine,
-    getSignalingChannel,
+    _signalingEngine,
+    _getSignalingChannel,
     login,
     logout,
     join,
     leave,
     sendChannelMessage,
-  } = await SignalingManager(showMessage, handleSignalingEvents, rtmConfig);
+  } = await SignalingManagerGeofencing(showMessage, handleSignalingEvents);
 
-  AgoraRTM.setArea({ areaCodes: ["CHINA", "INDIA"], excludedArea: "JAPAN" });
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name

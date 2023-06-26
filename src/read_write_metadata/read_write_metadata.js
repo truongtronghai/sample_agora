@@ -138,7 +138,7 @@ window.onload = async () => {
     let channelMessage = document
       .getElementById("channelMessage")
       .value.toString();
-    await sendChannelMessage(channelMessage);
+    await sendChannelMessage(config.channelName, channelMessage);
   };
 
   // Change status
