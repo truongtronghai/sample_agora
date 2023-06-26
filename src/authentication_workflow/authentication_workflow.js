@@ -1,41 +1,42 @@
-import SignalingManager from "../signaling_manager/signaling_manager.js";
-import showMessage from "../utils/showmessage.js";
+import SignalingManagerAuthentication from "./signaling_manager_authentication.js";
+import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
-import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 
 var isLoggedIn = false;
-var token = ""; // Agora recommends that you renew a token regularly, such as every hour, in production.
-const proxyUrl = "http://localhost:8080/"; // Replace with the proxy server URL
-
-let options = {
-  // Set the user ID
-  uid: "",
-  // Set token expire time: the number of seconds after which this token will expire
-  expireTime: 60,
-  // The base URL to your token server. For example, https://agora-token-service-production-92ff.up.railway.app".
-  serverUrl: "<---- Your token server url ---->",
-};
 
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
 
-  // Signaling Manager will create the engine and channel for you
-  const { login, logout } = await SignalingManager(
-    showMessage,
-    handleSignalingEvents
-  );
+  const handleSignalingEvents = (eventName, _) => {
+    if (eventName == "TokenPrivilegeWillExpire") {
+      handleTokenExpiry();
+    }
+  };
+
+  // Signaling Manager will create the engine for you
+  const {
+    _signalingEngine,
+    _getSignalingChannel,
+    _login,
+    logout,
+    join,
+    leave,
+    sendChannelMessage,
+    handleTokenExpiry,
+    fetchTokenAndLogin,
+  } = await SignalingManagerAuthentication(showMessage, handleSignalingEvents);
 
   // Login with custom UID using token recieved from token generator
   document.getElementById("login").onclick = async function () {
     if (!isLoggedIn) {
-      options.uid = document.getElementById("uid").value.toString();
-      if (options.uid === "") {
+      uid = document.getElementById("uid").value.toString();
+      if (uid === "") {
         showMessage("Please enter a User ID.");
         return;
       }
-      token = await FetchToken(options);
-      await login(options.uid, token);
+
+      await fetchTokenAndLogin(uid);
 
       isLoggedIn = true;
       document.getElementById("login").innerHTML = "LOGOUT";
@@ -45,30 +46,23 @@ window.onload = async () => {
       document.getElementById("login").innerHTML = "LOGIN";
     }
   };
-};
 
-// Fetches the Signaling token
-async function FetchToken() {
-  return new Promise(function (resolve) {
-    axios
-      .get(
-        proxyUrl +
-          options.serverUrl +
-          "/rtm/" +
-          options.uid +
-          "/?expiry=" +
-          options.expireTime,
-        {
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-          },
-        }
-      )
-      .then((response) => {
-        resolve(response.data.rtmToken);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  });
-}
+  // join channel
+  document.getElementById("join").onclick = async function () {
+    channelName = document.getElementById("channelName").value.toString();
+    await join(channelName);
+  };
+
+  // leave channel
+  document.getElementById("leave").onclick = async function () {
+    await leave();
+  };
+
+  // send channel message
+  document.getElementById("send_channel_message").onclick = async function () {
+    let channelMessage = document
+      .getElementById("channelMessage")
+      .value.toString();
+    await sendChannelMessage(channelMessage);
+  };
+};

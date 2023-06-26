@@ -2,53 +2,43 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Read and Write Signaling Metadata</title>
-    <script src="https://cdn.jsdelivr.net/npm/agora-rtm-sdk@1.6.0-205/index.min.js"></script>
+    <title>Read write metadata</title>
+    <script src="../AgoraRTM-production.js"></script>
     <script src="read_write_metadata.js" type="module"></script>
   </head>
   <body>
     <div id="projectSelector"></div>
-    <h1>Read and Write Signaling Metadata</h1>
+    <h1>Read write metadata</h1>
+    <label>Read and write metadata with Signaling.</label>
+    <p/>
+    <blockquote>
     <div>
-      <label>User ID</label>
-      <label id="userId"></label>
-    </div>
-    <div>
+      <label>Current User ID is: </label>
+      <b><label id="userId"></label></b>
       <button type="button" id="login">LOGIN</button>
       <button type="button" id="logout">LOGOUT</button>
-    </div>
+    </div><p/>
     <div>
       <label>Channel name: </label>
       <label id="channelName"></label>
-    </div>
-    <div>
       <button type="button" id="join">JOIN</button>
       <button type="button" id="leave">LEAVE</button>
-    </div>
+    </div><p/>
     <div>
-      <label>Channel Message</label>
-      <input type="text" placeholder="channel message" id="channelMessage" />
-      <button type="button" id="send_channel_message">SEND</button>
-    </div>
-    <div>
-      <label>Peer Id</label>
-      <input type="text" placeholder="peer id" id="peerId" />
-    </div>
-    <div>
-      <label>Peer Message</label>
-      <input type="text" placeholder="peer message" id="peerMessage" />
-      <button type="button" id="send_peer_message">SEND</button>
-    </div>
-    <p></p>
+      <label>Send a message to the channel</label>:
+      <input type="text" placeholder="Message" id="channelMessage" />
+      <button type="button" id="send_channel_message">Send</button>
+    </div><p/>
     <div>
       <button type="button" id="changeStatus">Change My Status</button>
       <label id="statusLabel">Current Status: </label>
       <label id="statusIndicator">Available</label>
-    </div>
+    </div><p/>
     <div>
       <label>Users in the channel:</label>
       <ul id="members-list"></ul>
     </div>
+    </blockquote>
     <hr />
     <div id="log"></div>
   </body>

@@ -5,5 +5,8 @@
     "token": "<---- Your RTM Token ---->",
     "encryptionKey": "<---- Your encryption key ---->",
     "encryptionSaltBase64": "<---- Your salt in base64 fo",
-    "encryptionMode": "<---- Encryption mode for the encryption ---->"
+    "encryptionMode": "<---- Encryption mode for the encryption ---->",
+    "proxyUrl": "<---- Your Proxy Server URL ---->",
+    "serverUrl": "<---- Your Token Generator Server URL ---->",
+    "tokenExpiryTime": "<---- Time for tokens to expire (in seconds) ---->"
 }

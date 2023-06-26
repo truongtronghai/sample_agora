@@ -1,5 +1,6 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-import showMessage from '../utils/showmessage.js';
+import showMessage from "../utils/showMessage.js";
+import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 
 // In a production environment, you retrieve the key and salt from
@@ -20,7 +21,7 @@ function base64ToUint8Array(base64Str) {
 
 function hex2ascii(hexx) {
   const hex = hexx.toString(); //force conversion
-  let str = '';
+  let str = "";
   for (let i = 0; i < hex.length; i += 2) {
     str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
   }
@@ -51,18 +52,11 @@ window.onload = async () => {
     salt: encryptionSaltBase64,
     cipherKey: encryptionKey,
   };
-  // Signaling Manager will create the engine and channel for you
-  const {
-    signalingEngine,
-    login,
-    logout,
-    join,
-    leave,
-    sendChannelMessage,
-    setupSignalingEngine
-  } = await SignalingManager(showMessage);
 
-  setupSignalingEngine(config.appId, config.uid, rtmConfig);
+  // Signaling Manager will create the engine and channel for you
+  const { signalingEngine, getSignalingChannel, login, logout, join, leave, sendChannelMessage } =
+    await SignalingManager(showMessage, handleSignalingEvents, rtmConfig);
+
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
@@ -93,6 +87,6 @@ window.onload = async () => {
     let channelMessage = document
       .getElementById("channelMessage")
       .value.toString();
-      await sendChannelMessage(config.channelName, channelMessage);
-    };
+    await sendChannelMessage(config.channelName, channelMessage);
+  };
 };

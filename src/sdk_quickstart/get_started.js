@@ -1,6 +1,7 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-import showMessage from '../utils/showmessage.js';
+import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -11,28 +12,22 @@ window.onload = async () => {
     res.json()
   );
 
-  // Start channel encryption
-  const rtmConfig = {
-    token: config.token,
-    logLevel: "debug",
-    useStringUserId: true,
-  };
   // Signaling Manager will create the engine and channel for you
   const {
     signalingEngine,
+    getSignalingChannel,
     login,
     logout,
     join,
     leave,
     sendChannelMessage,
-    setupSignalingEngine
-  } = await SignalingManager(showMessage);
+  } = await SignalingManager(showMessage, handleSignalingEvents);
 
-  setupSignalingEngine(config.appId, config.uid, rtmConfig);
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
+
   // Buttons
   // login
   document.getElementById("login").onclick = async function () {

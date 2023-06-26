@@ -1,10 +1,15 @@
-import SignalingManagerMetadata from "./SignalingManagerMetadata.js";
+import SignalingManagerMetadata from "./signaling_manager_metadata.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+// import SignalingManager from "../signaling_manager/signaling_manager.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
+  // Get the config from config.json
+  const config = await fetch("/signaling_manager/config.json").then((res) =>
+    res.json()
+  );
 
   const showMessage = (message) => {
     document
@@ -34,23 +39,21 @@ window.onload = async () => {
       );
       if (item !== undefined) {
         const value = item.value;
-        if (signalingChannel) {
+        if (getSignalingChannel()) {
           updateMemberInList(eventArgs.uid, item.value == "busy");
         }
       }
     }
   };
 
-  // Signaling Manager will create the engine and channel for you
+  // Signaling Manager will create the engine for you
   const {
     signalingEngine,
-    signalingChannel,
-    config,
+    getSignalingChannel,
     login,
     logout,
     join,
     leave,
-    sendPeerMessage,
     sendChannelMessage,
     setLocalUserMetadata,
     handleMetadataEvents,
@@ -62,7 +65,8 @@ window.onload = async () => {
 
   const updateChannelMemberList = async function () {
     // Retrieve a list of members in the channel
-    const members = await signalingChannel.getMembers();
+    console.log(getSignalingChannel());
+    const members = await getSignalingChannel().getMembers();
     for (let i = 0; i < members.length; i++) {
       updateMemberInList(members[i], false);
     }
@@ -103,7 +107,7 @@ window.onload = async () => {
   };
 
   // Display channel name
-  document.getElementById("channelName").innerHTML = signalingChannel.channelId;
+  document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
 
@@ -121,19 +125,12 @@ window.onload = async () => {
 
   // create and join channel
   document.getElementById("join").onclick = async function () {
-    await join();
+    join();
   };
 
   // leave channel
   document.getElementById("leave").onclick = async function () {
     await leave();
-  };
-
-  // send peer-to-peer message
-  document.getElementById("send_peer_message").onclick = async function () {
-    let peerId = document.getElementById("peerId").value.toString();
-    let peerMessage = document.getElementById("peerMessage").value.toString();
-    await sendPeerMessage(peerId, peerMessage);
   };
 
   // send channel message

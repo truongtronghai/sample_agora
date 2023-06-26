@@ -1,5 +1,6 @@
 import SignalingManager from "../signaling_manager/signaling_manager.js";
-import showMessage from '../utils/showmessage.js';
+import showMessage from "../utils/showMessage.js";
+import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
@@ -16,21 +17,21 @@ window.onload = async () => {
     token: config.token,
     logLevel: "debug",
     useStringUserId: true,
-    cloudProxy: true
+    cloudProxy: true,
   };
+
   // Signaling Manager will create the engine and channel for you
   const {
     signalingEngine,
+    getSignalingChannel,
     login,
     logout,
     join,
     leave,
     sendChannelMessage,
-    setupSignalingEngine
-  } = await SignalingManager(showMessage);
+  } = await SignalingManager(showMessage, handleSignalingEvents, rtmConfig);
 
-  setupSignalingEngine(config.appId, config.uid, rtmConfig);
-  AgoraRTM.setArea({areaCodes: ['CHINA', 'INDIA'], excludedArea: 'JAPAN'})
+  AgoraRTM.setArea({ areaCodes: ["CHINA", "INDIA"], excludedArea: "JAPAN" });
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
@@ -60,6 +61,6 @@ window.onload = async () => {
     let channelMessage = document
       .getElementById("channelMessage")
       .value.toString();
-      await sendChannelMessage(config.channelName, channelMessage);
-    };
+    await sendChannelMessage(config.channelName, channelMessage);
+  };
 };
