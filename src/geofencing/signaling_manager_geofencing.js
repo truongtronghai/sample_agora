@@ -10,7 +10,7 @@ const SignalingManagerGeofencing = async (messageCallback, eventsCallback) => {
   const rtmConfig = {
     token: config.token,
     logLevel: "debug",
-    useStringUserId: true,
+    useStringUserId: false,
     cloudProxy: true,
   };
 

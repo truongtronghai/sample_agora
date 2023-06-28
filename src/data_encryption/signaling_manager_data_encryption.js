@@ -44,7 +44,7 @@ const SignalingManagerDataEncryption = async (
   const rtmConfig = {
     token: config.token,
     logLevel: "debug",
-    useStringUserId: true,
+    useStringUserId: false,
     encryptionMode: encryptionMode,
     salt: encryptionSaltBase64,
     cipherKey: encryptionKey,
