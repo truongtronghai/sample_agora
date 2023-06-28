@@ -16,7 +16,6 @@ const SignalingManagerStreamChannel = async (
     token: config.token,
     logLevel: "debug",
     useStringUserId: false,
-    cloudProxy: true,
   };
 
   // Extend the SignalingManager by importing it
@@ -80,13 +79,12 @@ const SignalingManagerStreamChannel = async (
       );
       return;
     }
-    signalingManager.join(channelName); // creates stream channel and subscribes to it
+    await signalingManager.join(streamChannelName); // creates stream channel and subscribes to it
     streamChannel = signalingManager.getSignalingChannel();
 
     if (isStreamChannelJoined === false) {
-      streamChannel
-        .join({
-          token: config.RtcToken,
+      await streamChannel
+        .join(config.rtcToken, {
           withPresence: true,
         })
         .then((response) => {
