@@ -21,8 +21,8 @@ const SignalingManagerStreamChannel = async (
 
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManager(
-    showMessage,
-    handleSignalingEvents,
+    messageCallback,
+    eventsCallback,
     rtmConfig
   );
 

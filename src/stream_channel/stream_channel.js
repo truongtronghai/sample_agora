@@ -10,7 +10,11 @@ window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
 
-  // Signaling Manager will create the engine and channel for you
+  // Get the config from config.json
+  const config = await fetch("/signaling_manager/config.json").then((res) =>
+    res.json()
+  );
+
   // Signaling Manager will create the engine and channel for you
   const {
     _signalingEngine,
@@ -27,7 +31,7 @@ window.onload = async () => {
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
   document.getElementById("streamChannelNameLbl").innerHTML =
-    "Stream channel name is: <b>" + streamChannelName + "</b>";
+    "Stream channel name is: <b>" + config.channelName + "</b>";
 
   // Buttons
   // login

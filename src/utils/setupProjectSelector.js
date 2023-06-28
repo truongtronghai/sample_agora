@@ -33,6 +33,10 @@ const projectSelector = () => {
       return;
     case "readWriteMetadata":
       window.location.assign("/read_write_metadata");
+      return;
+    case "streamChannel":
+      window.location.assign("/stream_channel");
+      return;
     default:
       return null;
   }
