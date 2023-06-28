@@ -45,14 +45,14 @@ window.onload = async () => {
   };
 
   document.getElementById("streamJoinAndLeave").onclick = async function () {
-    await streamChannelJoinAndLeave(isStreamChannelJoined); // Join and leave logic
+    await streamChannelJoinAndLeave(isStreamChannelJoined, config.channelName); // Join and leave logic
 
     // UI changes for join and leave
     isStreamChannelJoined = !isStreamChannelJoined;
     if (isStreamChannelJoined) {
-      document.getElementById("streamJoinLeave").innerHTML = "Leave";
+      document.getElementById("streamJoinAndLeave").innerHTML = "Leave";
     } else {
-      document.getElementById("streamJoinLeave").innerHTML = "Join";
+      document.getElementById("streamJoinAnd  Leave").innerHTML = "Join";
     }
   };
 
