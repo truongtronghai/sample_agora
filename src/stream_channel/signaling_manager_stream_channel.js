@@ -4,25 +4,12 @@ const SignalingManagerStreamChannel = async (
   messageCallback,
   eventsCallback
 ) => {
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
-
   let streamChannel = null;
-
-  // Start channel encryption
-  const rtmConfig = {
-    token: config.token,
-    logLevel: "debug",
-    useStringUserId: false,
-  };
 
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManager(
     messageCallback,
     eventsCallback,
-    rtmConfig
   );
 
   signalingManager.signalingEngine.addEventListener({
