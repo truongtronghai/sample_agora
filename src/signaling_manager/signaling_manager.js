@@ -128,7 +128,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   // Leave a channel
   const leave = async (channelName) => {
     try {
-      await signalingEngine.unsubscribe({ channelName: channelName });
+      await signalingEngine.unsubscribe(channelName);
       messageCallback("You have successfully left channel " + channelName);
     } catch (error) {
       console.log(error);
