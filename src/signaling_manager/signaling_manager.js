@@ -109,14 +109,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         console.log("this is the channel object", signalingChannel);
       }
 
-      const joinOptions = {
-        token: config.rtcToken,
-        withPresence: true,
-        withMetadata: false,
-        withLock: false,
-      };
-      await signalingChannel.join(joinOptions);
-
       const subscribeOptions = {
         withMessage: true,
         withPresence: true,
