@@ -1,0 +1,13 @@
+{
+    "uid": "<---- Your User ID ---->",
+    "appId": "<---- Your App ID ---->",
+    "channelName": "<---- Your Channel Name ---->",
+    "token": "<---- Your RTM Token ---->",
+    "rtcToken": "<---- Your RTC Token ---->",
+    "encryptionKey": "<---- Your encryption key ---->",
+    "encryptionSaltBase64": "<---- Your salt in base64 fo",
+    "encryptionMode": "<---- Encryption mode for the encryption ---->",
+    "proxyUrl": "<---- Your Proxy Server URL (example: http://localhost:8080/) ---->",
+    "serverUrl": "<---- Your Token Generator Server URL (example: https://agora-token-service-production-10e3.up.railway.app) ---->",
+    "tokenExpiryTime": "<---- Time for tokens to expire (in seconds) ---->"
+}

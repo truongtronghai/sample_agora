@@ -1,31 +1,32 @@
-import SignalingManager from "../SignalingManager/SignalingManager.js";
-
-const showMessage = (message) => {
-  document
-        .getElementById("log")
-        .appendChild(document.createElement("div"))
-        .append(message);
-};
+import SignalingManager from "../signaling_manager/signaling_manager.js";
+import showMessage from "../utils/showMessage.js";
+import setupProjectSelector from "../utils/setupProjectSelector.js";
+import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
+  // Set the project selector
+  setupProjectSelector();
+  // Get the config from config.json
+  const config = await fetch("/signaling_manager/config.json").then((res) =>
+    res.json()
+  );
+
   // Signaling Manager will create the engine and channel for you
   const {
     signalingEngine,
-    signalingChannel,
-    uid,
+    getSignalingChannel,
     login,
     logout,
     join,
     leave,
-    sendPeerMessage,
     sendChannelMessage,
-  } = await SignalingManager(showMessage);
+  } = await SignalingManager(showMessage, handleSignalingEvents);
 
   // Display channel name
-  document.getElementById("channelName").innerHTML = signalingChannel.channelId;
+  document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
-  document.getElementById("userId").innerHTML = uid;
+  document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
   // login
@@ -38,23 +39,20 @@ window.onload = async () => {
     await logout();
   };
 
-  // create and join channel
+  // join channel
   document.getElementById("join").onclick = async function () {
-    await join();
+    await join(config.channelName);
   };
 
   // leave channel
   document.getElementById("leave").onclick = async function () {
-    await leave();
+    await leave(config.channelName);
   };
-
-  // send peer-to-peer message
-  document.getElementById("send_peer_message").onclick = async function () {
-    await sendPeerMessage();
-  };
-
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
-    await sendChannelMessage();
+    let channelMessage = document
+      .getElementById("channelMessage")
+      .value.toString();
+    await sendChannelMessage(config.channelName, channelMessage);
   };
 };
