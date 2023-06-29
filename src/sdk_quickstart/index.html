@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Signaling Quickstart</title>
     <script src="get_started.js" type="module"></script>
-    <script src="../AgoraRTM-production.js"></script>
+    <script src="../agora-rtm.2.1.2.min.js"></script>
   </head>
   <body>
     <div id="projectSelector"></div>
@@ -33,6 +33,11 @@
         <label>Send a message to the channel</label>:
         <input type="text" placeholder="Message" id="channelMessage" />
         <button type="button" id="send_channel_message">Send</button>
+      </div>
+      <p />
+      <div>
+        <label>Users in the channel:</label>
+        <ul id="members-list"></ul>
       </div>
       <p />
     </blockquote>
