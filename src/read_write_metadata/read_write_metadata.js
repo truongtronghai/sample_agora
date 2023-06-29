@@ -1,6 +1,5 @@
 import SignalingManagerMetadata from "./signaling_manager_metadata.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
-// import SignalingManager from "../signaling_manager/signaling_manager.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -22,7 +21,7 @@ window.onload = async () => {
     if (eventName == "MessageFromPeer") {
     } else if (eventName == "ConnectionStateChanged") {
       if (eventArgs.state == "CONNECTED") {
-        setLocalUserMetadata();
+        setUserMetadata(config.uid, "myStatus", "");
       }
     } else if (eventName == "JoinedChannel") {
       updateChannelMemberList();
@@ -55,9 +54,9 @@ window.onload = async () => {
     join,
     leave,
     sendChannelMessage,
-    setLocalUserMetadata,
+    setUserMetadata,
     handleMetadataEvents,
-    updateLocalUserMetadata,
+    updateUserMetadata,
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
 
   // Display channel name
@@ -130,12 +129,12 @@ window.onload = async () => {
 
   // create and join channel
   document.getElementById("join").onclick = async function () {
-    join();
+    join(config.channelName);
   };
 
   // leave channel
   document.getElementById("leave").onclick = async function () {
-    await leave();
+    await leave(config.channelName);
   };
 
   // send channel message
@@ -155,6 +154,11 @@ window.onload = async () => {
       document.getElementById("statusIndicator").innerHTML = "Available";
     }
 
-    updateLocalUserMetadata("myStatus", isUserBusy ? "busy" : "available");
+    try {
+      updateUserMetadata(config.uid, "myStatus", isUserBusy ? "busy" : "available");
+      showMessage("Status updated in storage");
+    } catch (status) {
+        console.log(status);
+    };
   };
 };

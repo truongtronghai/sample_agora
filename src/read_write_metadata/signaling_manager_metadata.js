@@ -5,51 +5,74 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   const signalingManager = await SignalingManager(messageCallback, eventsCallback);
 
   const handleMetadataEvents = async function () {
-    signalingManager.signalingEngine.on("UserMetaDataUpdated", function (uid, rtmMetadata) {
+    
+    // Add storage event listener
+    rtm.addEventListener({
+      storage : event => {
+          // event.channelType;      // Channel type, 'STREAM' or 'MESSAGE'.
+          // event.channelName;      // Channel name
+          // event.publisher;        // User triggers this event
+          // event.storageType;      // Category of the metadata, 'USER or 'CHANNEL'
+          // event.eventType;        // Action type, 'SNAPSHOT', 'SET', 'REMOVE', 'UPDATE' or 'NONE'
+          // event.data;             // User metadata or channel metadata payload
+
+          const eventArgs = { 
+            event: event,
+          }
+          eventsCallback("Storage", eventArgs)
+      },
+    });
+
+    /* signalingManager.signalingEngine.on("UserMetaDataUpdated", function (uid, rtmMetadata) {
       if (typeof rtmMetadata !== "undefined") {
         const eventArgs = { uid: uid, rtmMetadata: rtmMetadata }
         eventsCallback("UserMetaDataUpdated", eventArgs)
       }
-    });   
+    });   */
   }
 
-  const setLocalUserMetadata = async function () {
-    // Clear previous metadata
+  const setUserMetadata = async function (uid, key, value) {
+    const data = [
+      {
+          key : key,
+          value : value,
+          revision : -1
+      },
+    ];
+    const options = {
+        userId : uid,
+        majorRevision : -1,
+        addTimeStamp : true,
+        addUserId : true
+    };
     try {
-      await signalingManager.signalingEngine.clearLocalUserMetadata();
+        const result = await signalingManager.signalingEngine.storage.setUserMetadata(data);
+        console.log(result);
     } catch (status) {
-      if (status) {
-        const { code, message } = status;
-        console.log(code, message);
-      }
-    }
-    // Set local user metadata
-    const item1 = signalingManager.signalingEngine.createMetadataItem();
-    item1.setKey("myStatus");
-    item1.setValue("available");
+        console.log(status);
+    };
+  }
 
+  const updateUserMetadata = async function (uid, key, value) {
+
+    const data = [
+        {
+            key : key,
+            value : value,
+            revision : -1
+        },
+    ];
+    const options = {
+        userId : uid,
+        majorRevision : -1,
+        addTimeStamp : true,
+        addUserId : true
+    };
     try {
-      await signalingManager.signalingEngine.setLocalUserMetadata([item1]);
+        const result = await signalingManager.signalingEngine.storage.setUserMetadata(data);
+        console.log(result);
     } catch (status) {
-      if (status) {
-        const { code, message } = status;
-        messageCallback(code + ": " +  message);
-      }
-    }
-  };
-
-  const updateLocalUserMetadata = async function (key, value) {
-    const metadataItem  = signalingManager.signalingEngine.createMetadataItem();
-    metadataItem.setKey(key);
-    metadataItem.setValue(value);
-
-    try {
-      await signalingManager.signalingEngine.updateLocalUserMetadata([metadataItem]);
-    } catch (status) {
-      if (status) {
-        const { code, message } = status;
-        messageCallback("Error:" + code + ": " + message);
-      }
+        console.log(status);
     }
   };
   
@@ -57,9 +80,9 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   // Return the extended signaling manager
   return {
     ...signalingManager,
-    setLocalUserMetadata,
+    setUserMetadata,
     handleMetadataEvents,
-    updateLocalUserMetadata,
+    updateUserMetadata,
   };
 };
 
