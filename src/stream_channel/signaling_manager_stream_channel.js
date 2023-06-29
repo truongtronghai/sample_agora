@@ -76,7 +76,8 @@ const SignalingManagerStreamChannel = async (
 
     if (isStreamChannelJoined === false) {
       await streamChannel
-        .join(config.rtcToken, {
+        .join({
+          token: config.rtcToken,
           withPresence: true,
         })
         .then((response) => {
