@@ -9,9 +9,9 @@ const SignalingManagerCloudProxy = async (messageCallback, eventsCallback) => {
 
   // Set cloud proxy
   const rtmConfig = {
-    token: config.token,
-    logLevel: "debug",
-    useStringUserId: false,
+    token: config.rtmConfig.token,
+    logLevel: config.rtmConfig.logFilter,
+    useStringUserId: config.rtmConfig.useStringUserId,
     cloudProxy: true,
   };
 

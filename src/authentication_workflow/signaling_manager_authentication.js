@@ -41,7 +41,7 @@ const SignalingManagerAuthentication = async (
           });
       });
     } else {
-      return config.token;
+      return config.rtmConfig.token;
     }
   }
 

@@ -11,9 +11,8 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   const setupSignalingEngine = async (rtmConfig) => {
     try {
       rtmConfig = rtmConfig || {
-        token: config.token,
-        // logLevel: "debug",
-        useStringUserId: false,
+        token: config.rtmConfig.token,
+        useStringUserId: config.rtmConfig.useStringUserId,
       };
       AgoraRTM.setArea({ areaCodes: ["ASIA"] });
       signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);

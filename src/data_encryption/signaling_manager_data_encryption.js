@@ -35,17 +35,17 @@ const SignalingManagerDataEncryption = async (
   }
 
   // Convert the encryptionSaltBase64 string to base64ToUint8Array.
-  encryptionSaltBase64 = base64ToUint8Array(config.encryptionSaltBase64);
+  encryptionSaltBase64 = base64ToUint8Array(config.rtmConfig.salt);
   // Convert the encryptionKey string to hex2ascii.
-  encryptionKey = hex2ascii(config.encryptionKey);
+  encryptionKey = hex2ascii(config.rtmConfig.cipherKey);
   // Set an encryption mode.
-  encryptionMode = config.encryptionMode;
+  encryptionMode = config.rtmConfig.encryptionMode;
   // Start channel encryption
   const rtmConfig = {
-    token: config.token,
-    logLevel: "debug",
-    useStringUserId: false,
-    encryptionMode: encryptionMode,
+    token: config.rtmConfig.token,
+    logLevel: config.rtmConfig.logFilter,
+    useStringUserId: config.rtmConfig.useStringUserId,
+    encryptionMode: config.rtmConfig.encryptionMode,
     salt: encryptionSaltBase64,
     cipherKey: encryptionKey,
   };
