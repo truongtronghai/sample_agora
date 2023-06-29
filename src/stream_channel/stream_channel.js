@@ -31,7 +31,7 @@ window.onload = async () => {
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
   document.getElementById("streamChannelNameLbl").innerHTML =
-    "Stream channel name is: <b>" + config.channelName + "</b>";
+    config.channelName;
 
   // Buttons
   // login

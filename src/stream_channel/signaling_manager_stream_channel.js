@@ -6,10 +6,15 @@ const SignalingManagerStreamChannel = async (
 ) => {
   let streamChannel = null;
 
+  // Get the config from config.json
+  const config = await fetch("/signaling_manager/config.json").then((res) =>
+    res.json()
+  );
+
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManager(
     messageCallback,
-    eventsCallback,
+    eventsCallback
   );
 
   signalingManager.signalingEngine.addEventListener({
