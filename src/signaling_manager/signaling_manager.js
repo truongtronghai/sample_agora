@@ -44,7 +44,9 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       presence: (event) => {
         eventsCallback(event);
         if (event.eventType === "SNAPSHOT") {
-          messageCallback(event.snapshot[0].userId + " joined " + event.channelName);
+          messageCallback(
+            event.snapshot[0].userId + " joined " + event.channelName
+          );
         } else {
           messageCallback(event.publisher + " is " + event.eventType);
         }
@@ -131,6 +133,11 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   const leave = async (channelName) => {
     try {
       await signalingEngine.unsubscribe(channelName);
+      eventsCallback({
+        eventType: "LEAVE_CHANNEL",
+        channelName: channelName,
+        channelType: "MESSAGE",
+      });
       messageCallback("You have successfully left channel " + channelName);
     } catch (error) {
       console.log(error);

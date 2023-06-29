@@ -14,6 +14,8 @@ window.onload = async () => {
   const handleSignalingEvents = (event) => {
     if (event.eventType == "SNAPSHOT") {
       updateChannelMemberList(event);
+    } else if (event.eventType == "LEAVE_CHANNEL") {
+      updateChannelMemberList(event);
     }
   };
 
@@ -32,15 +34,22 @@ window.onload = async () => {
 
   const updateChannelMemberList = async function (event) {
     // Retrieve a list of members in the channel
-    const result = await signalingEngine.presence.whoNow(event.channelName, event.channelType)
-    const members = result.occupants
+    const result = await signalingEngine.presence.whoNow(
+      event.channelName,
+      event.channelType
+    );
+    const members = result.occupants;
 
+    // Update the list with online members
     for (let i = 0; i < members.length; i++) {
-      updateMemberInList(members[i].userId);
+      addOnlineMembers(members[i].userId);
     }
+
+    // Clean offline members from the list
+    removeOfflineMembers(members);
   };
 
-  const updateMemberInList = async function (memberId) {
+  const addOnlineMembers = async function (memberId) {
     const member = document.getElementById(memberId);
 
     if (member !== null) {
@@ -51,6 +60,25 @@ window.onload = async () => {
       li.setAttribute("id", memberId);
       li.innerHTML = memberId + "is in the channel";
       ul.appendChild(li);
+    }
+  };
+
+  const removeOfflineMembers = async function (members) {
+    let idToRemove = [];
+    let memberIds = [];
+
+    for (let i = 0; i < members.length; i++) {
+      memberIds.push(members[i].userId);
+    }
+
+    for (let i = 0; i < ul.childNodes.length; i++) {
+      if (!memberIds.includes(ul.childNodes[i].id)) {
+        idToRemove.push(ul.childNodes[i].id);
+      }
+    }
+
+    for (let i = 0; i < idToRemove.length; i++) {
+      ul.removeChild(document.getElementById(idToRemove[i]));
     }
   };
 
