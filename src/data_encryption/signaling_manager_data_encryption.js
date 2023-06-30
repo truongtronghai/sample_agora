@@ -35,23 +35,23 @@ const SignalingManagerDataEncryption = async (
   }
 
   // Convert the encryptionSaltBase64 string to base64ToUint8Array.
-  encryptionSaltBase64 = base64ToUint8Array(config.rtmConfig.salt);
+  encryptionSaltBase64 = base64ToUint8Array(config.salt);
   // Convert the encryptionKey string to hex2ascii.
-  encryptionKey = hex2ascii(config.rtmConfig.cipherKey);
+  encryptionKey = hex2ascii(config.cipherKey);
   // Set an encryption mode.
-  encryptionMode = config.rtmConfig.encryptionMode;
+  encryptionMode = config.encryptionMode;
   // Start channel encryption
   const rtmConfig = {
-    token: config.rtmConfig.token,
-    logLevel: config.rtmConfig.logFilter,
-    useStringUserId: config.rtmConfig.useStringUserId,
-    encryptionMode: config.rtmConfig.encryptionMode,
+    token: config.token,
+    logLevel: config.logFilter,
+    useStringUserId: config.useStringUserId,
+    encryptionMode: config.encryptionMode,
     salt: encryptionSaltBase64,
     cipherKey: encryptionKey,
   };
 
   // Signaling Manager will create the engine and channel for you
-  const signalingManager = await SignalingManager(showMessage, handleSignalingEvents, rtmConfig);
+  const signalingManager = await SignalingManager(messageCallback, eventsCallback, rtmConfig);
 
   // Return the extended signaling manager
   return {

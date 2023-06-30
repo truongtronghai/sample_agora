@@ -3,8 +3,8 @@ import SignalingManager from "../signaling_manager/signaling_manager.js";
 const SignalingManagerGeofencing = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManager(
-    showMessage,
-    handleSignalingEvents
+    messageCallback,
+    eventsCallback
   );
 
   // Set whitelist and blacklist areas

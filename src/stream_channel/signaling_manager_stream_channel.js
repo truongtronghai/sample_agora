@@ -92,6 +92,30 @@ const SignalingManagerStreamChannel = async (
     }
   };
 
+  const topicJoinAndLeave = async function (isTopicJoined, topicName) {
+    if (config.rtcToken === null) {
+      console.log(
+        "please create a rtc token from the console and add the token to the RtcToken variable in 'src/signaling_manager/config.json'"
+      );
+      return;
+    }
+    await signalingManager.join(topicName); // creates stream channel and subscribes to it
+    streamChannel = signalingManager.getSignalingChannel();
+
+    if (isTopicJoined === false) {
+      await streamChannel
+        .joinTopic(topicName)
+        .then((response) => {
+          messageCallback("Joined the topic: " + response.topicName)
+        });
+    } else {
+      streamChannel.leaveTopic(topicName).then((response) => {
+        console.log(response);
+        messageCallback("left topic: " + response.topicName);
+      });
+    }
+  };
+
   const sendTopicMessage = function (message, topicName) {
     if (message === "" || topicName === "") {
       console.log(
@@ -99,12 +123,10 @@ const SignalingManagerStreamChannel = async (
       );
       return;
     }
-    streamChannel
-      .publishTopicMessage(topicName, message)
-      .then((response) => {
-        console.log(response);
-        messageCallback("Topic: " + topicName + ",  Message:" + message);
-      });
+    streamChannel.publishTopicMessage(topicName, message).then((response) => {
+      console.log(response);
+      messageCallback("Topic: " + topicName + ",  Message:" + message);
+    });
   };
 
   // Return the extended signaling manager
@@ -112,6 +134,7 @@ const SignalingManagerStreamChannel = async (
     ...signalingManager,
     streamChannelJoinAndLeave,
     sendTopicMessage,
+    topicJoinAndLeave,
   };
 };
 

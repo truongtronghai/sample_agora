@@ -1,4 +1,3 @@
-import { RtmStatusCode } from "agora-rtm-sdk";
 import SignalingManager from "../signaling_manager/signaling_manager.js";
 
 const SignalingManagerCloudProxy = async (messageCallback, eventsCallback) => {
@@ -9,10 +8,8 @@ const SignalingManagerCloudProxy = async (messageCallback, eventsCallback) => {
 
   // Set cloud proxy
   const rtmConfig = {
-    token: config.rtmConfig.token,
-    logLevel: config.rtmConfig.logFilter,
-    useStringUserId: config.rtmConfig.useStringUserId,
-    cloudProxy: true,
+    token: config.token,
+    cloudProxy: config.cloudProxy,
   };
 
   // Extend the SignalingManager by importing it

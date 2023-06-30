@@ -11,8 +11,8 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   const setupSignalingEngine = async (rtmConfig) => {
     try {
       rtmConfig = rtmConfig || {
-        token: config.rtmConfig.token,
-        useStringUserId: config.rtmConfig.useStringUserId,
+        token: config.token,
+        useStringUserId: config.useStringUserId,
       };
       AgoraRTM.setArea({ areaCodes: ["ASIA"] });
       signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);
@@ -130,6 +130,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
   // Leave a channel
   const leave = async (channelName) => {
+    channelName = channelName || config.channelName;
     try {
       await signalingEngine.unsubscribe(channelName);
       eventsCallback({
