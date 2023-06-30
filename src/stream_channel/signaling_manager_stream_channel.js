@@ -4,25 +4,17 @@ const SignalingManagerStreamChannel = async (
   messageCallback,
   eventsCallback
 ) => {
+  let streamChannel = null;
+
   // Get the config from config.json
   const config = await fetch("/signaling_manager/config.json").then((res) =>
     res.json()
   );
 
-  let streamChannel = null;
-
-  // Start channel encryption
-  const rtmConfig = {
-    token: config.token,
-    logLevel: "debug",
-    useStringUserId: false,
-  };
-
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManager(
     messageCallback,
-    eventsCallback,
-    rtmConfig
+    eventsCallback
   );
 
   signalingManager.signalingEngine.addEventListener({
@@ -84,7 +76,8 @@ const SignalingManagerStreamChannel = async (
 
     if (isStreamChannelJoined === false) {
       await streamChannel
-        .join(config.rtcToken, {
+        .join({
+          token: config.rtcToken,
           withPresence: true,
         })
         .then((response) => {
@@ -93,8 +86,32 @@ const SignalingManagerStreamChannel = async (
     } else {
       streamChannel.leave().then((response) => {
         console.log(response);
-        showMessage("left channel: " + streamChannelName);
+        messageCallback("left channel: " + streamChannelName);
         streamChannel = null;
+      });
+    }
+  };
+
+  const topicJoinAndLeave = async function (isTopicJoined, topicName) {
+    if (config.rtcToken === null) {
+      console.log(
+        "please create a rtc token from the console and add the token to the RtcToken variable in 'src/signaling_manager/config.json'"
+      );
+      return;
+    }
+    await signalingManager.join(topicName); // creates stream channel and subscribes to it
+    streamChannel = signalingManager.getSignalingChannel();
+
+    if (isTopicJoined === false) {
+      await streamChannel
+        .joinTopic(topicName)
+        .then((response) => {
+          messageCallback("Joined the topic: " + response.topicName)
+        });
+    } else {
+      streamChannel.leaveTopic(topicName).then((response) => {
+        console.log(response);
+        messageCallback("left topic: " + response.topicName);
       });
     }
   };
@@ -106,12 +123,10 @@ const SignalingManagerStreamChannel = async (
       );
       return;
     }
-    streamChannel
-      .publishTopicMessage(topicName, message, { customType: string })
-      .then((response) => {
-        console.log(response);
-        showMessage("Topic: " + topicName + ",  Message:" + message);
-      });
+    streamChannel.publishTopicMessage(topicName, message).then((response) => {
+      console.log(response);
+      messageCallback("Topic: " + topicName + ",  Message:" + message);
+    });
   };
 
   // Return the extended signaling manager
@@ -119,6 +134,7 @@ const SignalingManagerStreamChannel = async (
     ...signalingManager,
     streamChannelJoinAndLeave,
     sendTopicMessage,
+    topicJoinAndLeave,
   };
 };
 

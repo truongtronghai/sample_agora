@@ -1,13 +1,24 @@
 {
-    "uid": "100",
-    "appId": "9d2498880e934632b38b0a68fa2f1622",
-    "channelName": "demo",
-    "token": "007eJxSYPhsfWItL4Ns/yHT49MZFx/1P/xVf8Gymu5NeZkH9bhuvV2nwGCZYmRiaWFhYZBqaWxiZmyUZGyRZJBoZpGWaJRmaGZkFG0/J+X36Tkpv9mTGBkZmBgYGRgZQHxmBkMDA0AAAAD//zxrIgU=",
-    "rtcToken": "007eJxTYNAXvsqik7LM8n+X56LYr2WfHaNNPvILMwS5abI0bNriPUWBwTLFyMTSwsLCINXS2MTM2CjJ2CLJINHMIi3RKM3QzMhImnVOSkMgI8ObOkkmRgYIBPFZGFJSc/MZGABEhhtp",
-    "encryptionKey": "<---- Your encryption key ---->",
-    "encryptionSaltBase64": "<---- Your salt in base64 fo",
-    "encryptionMode": "<---- Encryption mode for the encryption ---->",
-    "proxyUrl": "<---- Your Proxy Server URL (example: http://localhost:8080/) ---->",
-    "serverUrl": "<---- Your Token Generator Server URL (example: https://agora-token-service-production-10e3.up.railway.app) ---->",
-    "tokenExpiryTime": "<---- Time for tokens to expire (in seconds) ---->"
+    "uid": 1,
+    "appId": "",
+    "channelName": "",
+    "rtcToken": "",
+    "proxyUrl": "http://localhost:8080/",
+    "serverUrl": "",
+    "tokenExpiryTime": "600",
+    "token": 	"",
+    "encryptionMode": 7,
+    "salt": "",
+    "cipherKey": "",
+    "presenceTimeout": 300,
+    "logUpload": false,
+    "logFilter": {
+        "error": true,
+        "warn": true,
+        "info": true,
+        "track": true,
+        "debug": false
+    },
+    "cloudProxy": true,
+    "useStringUserId": false
 }

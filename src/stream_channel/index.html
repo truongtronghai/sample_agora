@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Stream Channel</title>
     <script src="stream_channel.js" type="module"></script>
-    <script src="../AgoraRTM-production.js"></script>
+    <script src="../agora-rtm.2.1.2.min.js"></script>
   </head>
   <body>
     <div id="projectSelector"></div>
@@ -26,8 +26,10 @@
       </div>
       <div>
         <h3>Send Messages:</h3>
-        <label>Specify the topic and the message:</label>
+        <label>Join any topic: </label>
         <input type="text" id="topicName" placeholder="Topic name" />
+        <button type="button" id="joinTopic">Join topic</button><br />
+        <label>Send message to the joined topic: </label>
         <input type="text" id="topicMessage" placeholder="Topic message" />
         <button type="button" id="sendTopicMessage">Send</button>
       </div>

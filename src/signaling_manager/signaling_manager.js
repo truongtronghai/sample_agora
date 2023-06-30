@@ -12,8 +12,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     try {
       rtmConfig = rtmConfig || {
         token: config.token,
-        logLevel: "debug",
-        useStringUserId: false,
+        useStringUserId: config.useStringUserId,
       };
       AgoraRTM.setArea({ areaCodes: ["ASIA"] });
       signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);
@@ -23,14 +22,15 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
     // Event listener to handle incoming messages and connection status changes
     signalingEngine.addEventListener({
+      // Message event handler
       message: (event) => {
         eventsCallback(event);
         messageCallback(
           "Received peer message from " + event.publisher + ": " + event.message
         );
       },
+      // State event handler
       status: (event) => {
-        console.log("this is the event", event);
         eventsCallback(event);
         messageCallback(
           "Connection state changed to: " +
@@ -38,6 +38,17 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
             ", Reason: " +
             event.reason
         );
+      },
+      // Presence event handler.
+      presence: (event) => {
+        eventsCallback(event);
+        if (event.eventType === "SNAPSHOT") {
+          messageCallback(
+            event.snapshot[0].userId + " joined " + event.channelName
+          );
+        } else {
+          messageCallback(event.publisher + " is " + event.eventType);
+        }
       },
     });
   };
@@ -69,10 +80,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     channelName = channelName || config.channelName;
     try {
       signalingChannel = await signalingEngine.createStreamChannel(channelName);
-      console.log(
-        "Create stream channel successful for channel name: ",
-        channelName
-      );
     } catch (error) {
       console.error(error);
     }
@@ -103,10 +110,10 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
   // Join a channel
   const join = async (channelName) => {
+    channelName = channelName || config.channelName;
     try {
       if (signalingChannel === null) {
         await createChannel(channelName);
-        console.log("this is the channel object", signalingChannel);
       }
 
       const subscribeOptions = {
@@ -116,10 +123,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         withLock: false,
       };
       await signalingEngine.subscribe(channelName, subscribeOptions);
-
-      messageCallback(
-        "You have successfully joined & subscribed channel " + signalingChannel.channelName
-      );
     } catch (error) {
       console.log(error);
     }
@@ -127,8 +130,14 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
   // Leave a channel
   const leave = async (channelName) => {
+    channelName = channelName || config.channelName;
     try {
       await signalingEngine.unsubscribe(channelName);
+      eventsCallback({
+        eventType: "LEAVE_CHANNEL",
+        channelName: channelName,
+        channelType: "MESSAGE",
+      });
       messageCallback("You have successfully left channel " + channelName);
     } catch (error) {
       console.log(error);

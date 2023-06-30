@@ -55,7 +55,8 @@ window.onload = async () => {
 
   // leave channel
   document.getElementById("leave").onclick = async function () {
-    await leave();
+    channelName = document.getElementById("channelName").value.toString();
+    await leave(channelName);
   };
 
   // send channel message
