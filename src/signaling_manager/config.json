@@ -1,26 +1,24 @@
 {
-    "uid": "<---- Your user ID ---->",
-    "appId": "<---- Your app ID ---->",
-    "channelName": "<---- Your channel ID ---->",
-    "rtcToken": "<---- Your rtc token ---->",
+    "uid": 1,
+    "appId": "",
+    "channelName": "",
+    "rtcToken": "",
     "proxyUrl": "http://localhost:8080/",
-    "serverUrl": "<---- Your proxy URL (for ex. https://agora-token-service-production-10e3.up.railway.app) ---->",
-    "tokenExpiryTime": "<---- Expiry time for generated token (in seconds) ---->",
-    "rtmConfig": {
-        "token": "<---- Your rtm token ---->",
-        "encryptionMode": "<---- Encryption mode for the encryption ---->",
-        "salt": "<---- Your salt in base64 format ---->",
-        "cipherKey": "<---- Your encryption key ---->",
-        "presenceTimeout": 300,
-        "logUpload": false,
-        "logFilter": {
-            "error": true,
-            "warn": true,
-            "info": true,
-            "track": true,
-            "debug": false
-        },
-        "cloudProxy": false,
-        "useStringUserId": false
-    }
+    "serverUrl": "",
+    "tokenExpiryTime": "600",
+    "token": 	"",
+    "encryptionMode": 7,
+    "salt": "",
+    "cipherKey": "",
+    "presenceTimeout": 300,
+    "logUpload": false,
+    "logFilter": {
+        "error": true,
+        "warn": true,
+        "info": true,
+        "track": true,
+        "debug": false
+    },
+    "cloudProxy": true,
+    "useStringUserId": false
 }
