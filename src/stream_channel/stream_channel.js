@@ -57,8 +57,9 @@ window.onload = async () => {
   };
 
   document.getElementById("sendTopicMessage").onclick = async function () {
-    let message = document.getElementById("topicMessage").textContent;
-    let topicName = document.getElementById("topicName").innerHTML;
+    let message = document.getElementById("topicMessage").value.toString() ;
+    let topicName = document.getElementById("topicName").value.toString();
+    console.log(message, topicName);
     sendTopicMessage(message, topicName);
   };
 };

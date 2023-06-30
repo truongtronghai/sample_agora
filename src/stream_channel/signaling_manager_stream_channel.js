@@ -86,7 +86,7 @@ const SignalingManagerStreamChannel = async (
     } else {
       streamChannel.leave().then((response) => {
         console.log(response);
-        showMessage("left channel: " + streamChannelName);
+        messageCallback("left channel: " + streamChannelName);
         streamChannel = null;
       });
     }
@@ -100,10 +100,10 @@ const SignalingManagerStreamChannel = async (
       return;
     }
     streamChannel
-      .publishTopicMessage(topicName, message, { customType: string })
+      .publishTopicMessage(topicName, message)
       .then((response) => {
         console.log(response);
-        showMessage("Topic: " + topicName + ",  Message:" + message);
+        messageCallback("Topic: " + topicName + ",  Message:" + message);
       });
   };
 
