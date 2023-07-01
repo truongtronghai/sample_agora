@@ -7,7 +7,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   const handleMetadataEvents = async function () {
     
     // Add storage event listener
-    rtm.addEventListener({
+    signalingManager.signalingEngine.addEventListener({
       storage : event => {
           // event.channelType;      // Channel type, 'STREAM' or 'MESSAGE'.
           // event.channelName;      // Channel name
@@ -75,7 +75,39 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
         console.log(status);
     }
   };
-  
+
+  const setChannelMetadata = async function (channelName, key, value) {
+    const metaData = [
+      {
+          key : key,
+          value : value,
+          revision : -1
+      },
+    ];
+    const options = {
+        majorRevision : -1,
+        lockName: '',
+        addTimeStamp : true,
+        addUserId : true
+    };
+    try {
+        const result = await signalingManager.signalingEngine.storage.setChannelMetadata(
+          channelName, "MESSAGE", metaData, options);
+        console.log(result);
+    } catch (status) {
+        console.log(status);
+    };
+  }
+
+  const getChannelMetadata = async function (channelName, channelType) {
+    try {
+      const result = await signalingManager.signalingEngine.storage.getChannelMetadata(channelName, channelType);
+      return result.metadata;
+      //console.log(result);
+    } catch (status) {
+        console.log(status);
+    }
+  }
 
   // Return the extended signaling manager
   return {
@@ -83,6 +115,8 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
     setUserMetadata,
     handleMetadataEvents,
     updateUserMetadata,
+    setChannelMetadata,
+    getChannelMetadata,
   };
 };
 

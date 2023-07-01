@@ -57,6 +57,8 @@ window.onload = async () => {
     setUserMetadata,
     handleMetadataEvents,
     updateUserMetadata,
+    setChannelMetadata,
+    getChannelMetadata,
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
 
   // Display channel name
@@ -155,10 +157,38 @@ window.onload = async () => {
     }
 
     try {
-      updateUserMetadata(config.uid, "myStatus", isUserBusy ? "busy" : "available");
+      setChannelMetadata(config.channelName, "channelDescription", "Friends hangout");
+      //updateUserMetadata(config.uid, "myStatus", isUserBusy ? "busy" : "available");
       showMessage("Status updated in storage");
     } catch (status) {
         console.log(status);
     };
+
+    const metaData = await getChannelMetadata(config.channelName, "MESSAGE");
+
+    for (const key in metaData) {
+      if (metaData.hasOwnProperty(key)) {
+        const metaDataDetail = metaData[key];
+  
+        // Access the properties of the MetaDataDetail
+        const value = metaDataDetail.value;
+        const revision = metaDataDetail.revision;
+        const updated = metaDataDetail.updated;
+        const authorUid = metaDataDetail.authorUid;
+  
+        // Display the values
+        console.log(`Key: ${key}, Value: ${value}`);
+        //console.log(`Value: ${value}`);
+        //console.log(`Revision: ${revision}`);
+        //console.log(`Updated: ${updated}`);
+        //console.log(`Author UID: ${authorUid}`);
+        //console.log('--------------------------------------');
+        const dataElement = document.getElementById("members-list");
+        const item = document.createElement("div");
+        item.setAttribute("id", key);
+        item.innerHTML = `Key: ${key}, Value: ${value}`;
+        dataElement.appendChild(item);
+      }
+    }
   };
 };
