@@ -10,38 +10,67 @@ window.onload = async () => {
     res.json()
   );
 
-  const showMessage = (message) => {
+  /*const showMessage = (message) => {
     document
       .getElementById("log")
       .appendChild(document.createElement("div"))
       .append(message);
+  }; */
+
+  const showMessage = (message) => {
+    const log = document.getElementById("log");
+    const newMessage = document.createElement("div");
+    newMessage.textContent = message;
+    
+    log.insertBefore(newMessage, log.firstChild);
   };
 
-  const handleSignalingEvents = (eventName, eventArgs) => {
-    if (eventName == "MessageFromPeer") {
-    } else if (eventName == "ConnectionStateChanged") {
-      if (eventArgs.state == "CONNECTED") {
-        setUserMetadata(config.uid, "myStatus", "");
-      }
-    } else if (eventName == "JoinedChannel") {
-      updateChannelMemberList();
-    } else if (eventName == "LeftChannel") {
-      clearChannelMemberList();
-    } else if (eventName == "ChannelMessage") {
-    } else if (eventName == "MemberJoined") {
-      updateChannelMemberList();
-    } else if (eventName == "MemberLeft") {
-      removeMemberFromList(eventArgs.memberId);
-    } else if (eventName == "UserMetaDataUpdated") {
-      const item = eventArgs.rtmMetadata.items.find(
-        (obj) => obj.key === "myStatus"
-      );
-      if (item !== undefined) {
-        const value = item.value;
-        if (getSignalingChannel()) {
-          updateMemberInList(eventArgs.uid, item.value == "busy");
+  const handleSignalingEvents = (event, eventArgs) => {
+
+    switch (event) {
+      case "message":
+        
+        break;
+      case "presence":
+        if (eventArgs.eventType == 'SNAPSHOT') { // local user logged in
+          const currentTime = new Date();
+          const options = { timeZoneName: 'short' };
+          const timeString = currentTime.toLocaleString(undefined, options);
+          // Set channel metadata
+          setChannelMetadata(config.channelName, 'lastLogin', timeString);
+          // Set user metadata
+          setUserMetadata(config.uid, 'userBio', 'Agora Signaling implementor');
+          // Fill the list of users
+          updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
+        } else if (eventArgs.eventType == 'REMOTE_JOIN' ) {
+          subscribeUserMetadata(eventArgs.publisher);
+          updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
+        } else if (eventArgs.eventType == 'REMOTE_LEAVE' ) {
+          updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
         }
-      }
+        break;
+      case "storage":
+        if (eventArgs.storageType == 'CHANNEL') {
+          showChannelMetadata(eventArgs.data.metadata);
+        } else if (eventArgs.storageType == 'USER') {
+          showMessage('Metadata event ' + eventArgs.eventType + ', User: ' + eventArgs.publisher);
+          showUserMetadata(eventArgs.data.metadata);
+        }
+        break;
+      case "topic":
+        
+        break;
+      case "lock":
+        
+        break;
+      case "status":
+        
+        break;
+      case "TokenPrivilegeWillExpire":
+        
+        break;
+      default:
+        console.log("Unknown eventType");
     }
   };
 
@@ -55,8 +84,8 @@ window.onload = async () => {
     leave,
     sendChannelMessage,
     setUserMetadata,
-    handleMetadataEvents,
-    updateUserMetadata,
+    getUserMetadata,
+    subscribeUserMetadata,
     setChannelMetadata,
     getChannelMetadata,
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
@@ -67,48 +96,69 @@ window.onload = async () => {
   document.getElementById("userId").innerHTML = config.uid;
 
   var isUserBusy = false; // track user status
-  const ul = document.getElementById("members-list");
+  const ul = document.getElementById("users-list");
 
-  const updateChannelMemberList = async function () {
-    // Retrieve a list of members in the channel
-    console.log(getSignalingChannel());
-    const members = await getSignalingChannel().getMembers();
-    for (let i = 0; i < members.length; i++) {
-      updateMemberInList(members[i], false);
+  const updateChannelUserList = async function (channelName, channelType) {
+    // Retrieve a list of users in the channel
+    const result = await signalingEngine.presence.whoNow(channelName, channelType);
+    const users = result.occupants;
+  
+    // Create a Set to store the existing userIds
+    const existingUsers = new Set();
+  
+    // Update the list with online users
+    for (let i = 0; i < users.length; i++) {
+      const userId = users[i].userId;
+      updateUserInList(userId);
+      existingUsers.add(userId);
     }
+  
+    // Remove offline users from the list
+    const userList = document.getElementById("user-list");
+    const allUsers = userList.querySelectorAll("li");
+    allUsers.forEach((user) => {
+      const userId = user.getAttribute("id");
+      if (!existingUsers.has(userId)) {
+        user.remove();
+      }
+    });
   };
-
-  const removeMemberFromList = function (memberId) {
-    const member = document.getElementById(memberId);
-    if (member) {
-      member.parentNode.removeChild(member);
-    }
-  };
-
-  const updateMemberInList = async function (memberId, busy) {
-    const busyIcon = "&#x1F6AB";
-    const availableIcon = "&#x2705";
-    const member = document.getElementById(memberId);
-
-    if (member !== null) {
+  
+  const updateUserInList = async function (userId, busy) {
+    const user = document.getElementById(userId);
+  
+    if (user !== null) {
       // User in list, update user
-      member.innerHTML = (busy ? busyIcon : availableIcon) + " " + memberId;
+      // user.innerHTML = userId;
     } else {
-      // User does not in the list, add a new user
+      // User does not exist in the list, add a new user
       const li = document.createElement("li");
-      li.setAttribute("id", memberId);
-      li.innerHTML = (busy ? busyIcon : availableIcon) + " " + memberId;
-      ul.appendChild(li);
+      li.setAttribute("id", userId);
+      li.innerHTML = userId;
+  
+      const userList = document.getElementById("users-list");
+      userList.appendChild(li);
+  
+      // Add click event listener to the list item
+      li.addEventListener("click", () => {
+        onUserClick(userId);
+      });
 
       // Subscribe to metadata change event for the user
-      await signalingEngine.subscribeUserMetadata(memberId);
+      subscribeUserMetadata(userId);
     }
   };
 
-  const clearChannelMemberList = function () {
-    const membersList = document.getElementById("members-list");
-    while (membersList.firstChild) {
-      membersList.removeChild(membersList.firstChild);
+  const onUserClick = async function(uid) {
+    //showMessage('you clicked ' + userId);
+    const metaData = await getUserMetadata(uid);
+    showUserMetadata(metaData);
+  }
+ 
+  const clearChannelUsersList = function () {
+    const usersList = document.getElementById("users-list");
+    while (usersList.firstChild) {
+      usersList.removeChild(usersList.firstChild);
     }
   };
 
@@ -121,7 +171,6 @@ window.onload = async () => {
   // login
   document.getElementById("login").onclick = async function () {
     await login();
-    await handleMetadataEvents();
   };
 
   // logout
@@ -159,13 +208,31 @@ window.onload = async () => {
     try {
       setChannelMetadata(config.channelName, "channelDescription", "Friends hangout");
       //updateUserMetadata(config.uid, "myStatus", isUserBusy ? "busy" : "available");
-      showMessage("Status updated in storage");
     } catch (status) {
         console.log(status);
     };
 
     const metaData = await getChannelMetadata(config.channelName, "MESSAGE");
+      showChannelMetadata(metaData);
+  };
 
+  const showUserMetadata = async function (metaData) {
+    //const metaData = await getUserMetadata(uid);
+    for (const key in metaData) {
+      if (metaData.hasOwnProperty(key)) {
+        const metaDataDetail = metaData[key];
+        const value = metaDataDetail.value;
+        showMessage(key + ': ' + value);
+      }
+    }
+  }
+
+  const showChannelMetadata = async function(metaData) {
+    const dataElement = document.getElementById("channel-metadata");
+  
+    // Get all existing metadata items
+    const existingItems = Array.from(dataElement.children);
+  
     for (const key in metaData) {
       if (metaData.hasOwnProperty(key)) {
         const metaDataDetail = metaData[key];
@@ -176,19 +243,28 @@ window.onload = async () => {
         const updated = metaDataDetail.updated;
         const authorUid = metaDataDetail.authorUid;
   
-        // Display the values
-        console.log(`Key: ${key}, Value: ${value}`);
-        //console.log(`Value: ${value}`);
-        //console.log(`Revision: ${revision}`);
-        //console.log(`Updated: ${updated}`);
-        //console.log(`Author UID: ${authorUid}`);
-        //console.log('--------------------------------------');
-        const dataElement = document.getElementById("members-list");
-        const item = document.createElement("div");
-        item.setAttribute("id", key);
-        item.innerHTML = `Key: ${key}, Value: ${value}`;
-        dataElement.appendChild(item);
+        // Find existing item with the same key
+        const existingItem = existingItems.find(item => item.id === key);
+  
+        if (existingItem) {
+          // Update existing item
+          existingItem.innerHTML = `Key: ${key}, Value: ${value}, Revision: ${revision}, Updated: ${updated}, AuthorUid: ${authorUid}`;
+  
+          // Remove the item from the existing items array
+          const index = existingItems.indexOf(existingItem);
+          existingItems.splice(index, 1);
+        } else {
+          // Create new item
+          const item = document.createElement("div");
+          item.setAttribute("id", key);
+          item.innerHTML = `Key: ${key}, Value: ${value}, Revision: ${revision}, Updated: ${updated}, AuthorUid: ${authorUid}`;
+          dataElement.appendChild(item);
+        }
       }
     }
+  
+    // Remove any remaining existing items (items that are no longer present in metaData)
+    existingItems.forEach(item => item.remove());
   };
+  
 };

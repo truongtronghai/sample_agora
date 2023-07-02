@@ -24,14 +24,14 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     signalingEngine.addEventListener({
       // Message event handler
       message: (event) => {
-        eventsCallback(event);
+        eventsCallback("message", event);
         messageCallback(
-          "Received peer message from " + event.publisher + ": " + event.message
+          "Received message from " + event.publisher + ": " + event.message
         );
       },
       // State event handler
       status: (event) => {
-        eventsCallback(event);
+        eventsCallback("status", event);
         messageCallback(
           "Connection state changed to: " +
             event.state +
@@ -41,14 +41,30 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       },
       // Presence event handler.
       presence: (event) => {
-        eventsCallback(event);
+        eventsCallback("presence", event);
         if (event.eventType === "SNAPSHOT") {
           messageCallback(
             event.snapshot[0].userId + " joined " + event.channelName
           );
         } else {
-          messageCallback(event.publisher + " is " + event.eventType);
+          messageCallback(event.eventType + ', publisher: ' + event.publisher);
         }
+      },
+      // Storage event handler
+      storage: (event) => {
+        eventsCallback("storage", event);
+      },
+      // Topic event handler
+      topic: (event) => {
+        eventsCallback("topic", event);
+      },
+      // Lock event handler
+      lock: (event) => {
+        eventsCallback("lock", event);
+      },        
+      // TokenPrivilegeWillExpire event handler
+      lock: (event) => {
+        eventsCallback("TokenPrivilegeWillExpire ", event);
       },
     });
   };
@@ -119,8 +135,8 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       const subscribeOptions = {
         withMessage: true,
         withPresence: true,
-        withMetadata: false,
-        withLock: false,
+        withMetadata: true,
+        withLock: true,
       };
       await signalingEngine.subscribe(channelName, subscribeOptions);
     } catch (error) {
@@ -133,11 +149,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     channelName = channelName || config.channelName;
     try {
       await signalingEngine.unsubscribe(channelName);
-      eventsCallback({
-        eventType: "LEAVE_CHANNEL",
-        channelName: channelName,
-        channelType: "MESSAGE",
-      });
       messageCallback("You have successfully left channel " + channelName);
     } catch (error) {
       console.log(error);
