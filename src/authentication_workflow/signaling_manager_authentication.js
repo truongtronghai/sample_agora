@@ -21,7 +21,7 @@ const SignalingManagerAuthentication = async (
       return new Promise(function (resolve) {
         axios
           .get(
-            config.proxyUrl +
+            //config.proxyUrl +
               config.serverUrl +
               "/rtm/" +
               uid +

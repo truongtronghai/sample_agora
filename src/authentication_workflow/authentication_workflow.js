@@ -30,7 +30,7 @@ window.onload = async () => {
   // Login with custom UID using token recieved from token generator
   document.getElementById("login").onclick = async function () {
     if (!isLoggedIn) {
-      uid = document.getElementById("uid").value.toString();
+      const uid = document.getElementById("uid").value.toString();
       if (uid === "") {
         showMessage("Please enter a User ID.");
         return;
