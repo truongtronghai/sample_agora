@@ -86,6 +86,16 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     await signalingEngine.logout();
   };
 
+  const createChannel = async (channelName) => {
+    // Create a signalingChannel
+    channelName = channelName || config.channelName;
+    try {
+      signalingChannel = await signalingEngine.createStreamChannel(channelName);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Subscribe to a channel
   const subscribe = async (channelName) => {
     channelName = channelName || config.channelName;
@@ -137,6 +147,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     signalingEngine,
     login,
     logout,
+    createChannel,
     subscribe,
     unsubscribe,
     sendChannelMessage,

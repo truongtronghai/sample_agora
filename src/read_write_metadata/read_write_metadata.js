@@ -1,5 +1,6 @@
 import SignalingManagerMetadata from "./signaling_manager_metadata.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import showMessage from "../utils/showMessage.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -10,15 +11,7 @@ window.onload = async () => {
     res.json()
   );
 
-  const showMessage = (message) => {
-    const log = document.getElementById("log");
-    const newMessage = document.createElement("div");
-    newMessage.textContent = message;
-    log.insertBefore(newMessage, log.firstChild);
-  };
-
   const handleSignalingEvents = (event, eventArgs) => {
-
     switch (event) {
       case "message":
         
@@ -105,9 +98,9 @@ window.onload = async () => {
     }
   
     // Remove offline users from the list
-    const userList = document.getElementById("user-list");
+    const userList = document.getElementById("users-list");
     const allUsers = userList.querySelectorAll("li");
-    if (allUsers == null) return;
+    if (allUsers.length === 0) return;
     allUsers.forEach((user) => {
       const userId = user.getAttribute("id");
       if (!existingUsers.has(userId)) {
@@ -167,6 +160,14 @@ window.onload = async () => {
   // Unsubscribe a channel
   document.getElementById("unsubscribe").onclick = async function () {
     await unsubscribe(config.channelName);
+  };
+
+  document.getElementById("updateBio").onclick = async function () {
+    let bio = document
+    .getElementById("bioText")
+    .value.toString();
+
+    setUserMetadata(config.uid, 'userBio', bio);
   };
 
   // Send a message to the channel
