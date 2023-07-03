@@ -4,7 +4,7 @@ This README provides information about the configuration file [`config.json`](co
 
 ```json
 {
-  "uid": 1,
+  "uid": "1",
   "appId": "",
   "channelName": "",
   "rtcToken": "",

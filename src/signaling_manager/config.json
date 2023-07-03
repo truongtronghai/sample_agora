@@ -1,7 +1,7 @@
 {
-    "uid": 200,
-    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
-    "channelName": "demoChannel",
+    "uid": "1",
+    "appId": "",
+    "channelName": "",
     "rtcToken": "",
     "proxyUrl": "http://localhost:8080/",
     "serverUrl": "https://agora-token-service-production-10e3.up.railway.app",
