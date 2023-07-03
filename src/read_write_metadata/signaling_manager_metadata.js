@@ -7,16 +7,16 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   const setUserMetadata = async function (uid, key, value) {
     const data = [
       {
-          key : key,
-          value : value,
-          revision : -1
+        key : key,
+        value : value,
+        revision : -1
       },
     ];
     const options = {
-        userId : uid,
-        majorRevision : -1,
-        addTimeStamp : true,
-        addUserId : true
+      userId : uid,
+      majorRevision : -1,
+      addTimeStamp : true,
+      addUserId : true
     };
     try {
         const result = await signalingManager.signalingEngine.storage.setUserMetadata(data, options);

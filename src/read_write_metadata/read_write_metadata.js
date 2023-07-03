@@ -72,8 +72,8 @@ window.onload = async () => {
     signalingEngine,
     login,
     logout,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
     setUserMetadata,
     getUserMetadata,
@@ -107,6 +107,7 @@ window.onload = async () => {
     // Remove offline users from the list
     const userList = document.getElementById("user-list");
     const allUsers = userList.querySelectorAll("li");
+    if (allUsers == null) return;
     allUsers.forEach((user) => {
       const userId = user.getAttribute("id");
       if (!existingUsers.has(userId)) {
@@ -160,12 +161,12 @@ window.onload = async () => {
 
   // Subscribe to a channel
   document.getElementById("subscribe").onclick = async function () {
-    join(config.channelName);
+    subscribe(config.channelName);
   };
 
   // Unsubscribe a channel
   document.getElementById("unsubscribe").onclick = async function () {
-    await leave(config.channelName);
+    await unsubscribe(config.channelName);
   };
 
   // Send a message to the channel
