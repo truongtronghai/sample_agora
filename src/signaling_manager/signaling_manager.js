@@ -47,7 +47,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
             event.snapshot[0].userId + " joined " + event.channelName
           );
         } else {
-          messageCallback(event.eventType + ', publisher: ' + event.publisher);
+          messageCallback(event.eventType + ', User: ' + event.publisher);
         }
       },
       // Storage event handler

@@ -10,18 +10,10 @@ window.onload = async () => {
     res.json()
   );
 
-  /*const showMessage = (message) => {
-    document
-      .getElementById("log")
-      .appendChild(document.createElement("div"))
-      .append(message);
-  }; */
-
   const showMessage = (message) => {
     const log = document.getElementById("log");
     const newMessage = document.createElement("div");
     newMessage.textContent = message;
-    
     log.insertBefore(newMessage, log.firstChild);
   };
 
@@ -39,20 +31,21 @@ window.onload = async () => {
           // Set channel metadata
           setChannelMetadata(config.channelName, 'lastLogin', timeString);
           // Set user metadata
-          setUserMetadata(config.uid, 'userBio', 'Agora Signaling implementor');
-          // Fill the list of users
+          setUserMetadata(config.uid, 'userBio', 'I want to learn about Agora Signaling');
+          // Fill the list of users in the channel
           updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
-        } else if (eventArgs.eventType == 'REMOTE_JOIN' ) {
-          subscribeUserMetadata(eventArgs.publisher);
+        } else if (eventArgs.eventType == 'REMOTE_JOIN' ) { 
+          // A remote user joined the channel
           updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
-        } else if (eventArgs.eventType == 'REMOTE_LEAVE' ) {
+        } else if (eventArgs.eventType == 'REMOTE_LEAVE' ) { 
+          // A remote user left the channel
           updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
         }
         break;
       case "storage":
-        if (eventArgs.storageType == 'CHANNEL') {
+        if (eventArgs.storageType == 'CHANNEL') { // channel metadata was updated
           showChannelMetadata(eventArgs.data.metadata);
-        } else if (eventArgs.storageType == 'USER') {
+        } else if (eventArgs.storageType == 'USER') { // user metadata was updated
           showMessage('Metadata event ' + eventArgs.eventType + ', User: ' + eventArgs.publisher);
           showUserMetadata(eventArgs.data.metadata);
         }
@@ -77,7 +70,6 @@ window.onload = async () => {
   // Signaling Manager will create the engine for you
   const {
     signalingEngine,
-    getSignalingChannel,
     login,
     logout,
     join,
@@ -95,7 +87,6 @@ window.onload = async () => {
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
 
-  var isUserBusy = false; // track user status
   const ul = document.getElementById("users-list");
 
   const updateChannelUserList = async function (channelName, channelType) {
@@ -124,13 +115,10 @@ window.onload = async () => {
     });
   };
   
-  const updateUserInList = async function (userId, busy) {
+  const updateUserInList = async function (userId) {
     const user = document.getElementById(userId);
   
-    if (user !== null) {
-      // User in list, update user
-      // user.innerHTML = userId;
-    } else {
+    if (user == null) {
       // User does not exist in the list, add a new user
       const li = document.createElement("li");
       li.setAttribute("id", userId);
@@ -150,45 +138,37 @@ window.onload = async () => {
   };
 
   const onUserClick = async function(uid) {
-    //showMessage('you clicked ' + userId);
+    // Show user metadata
     const metaData = await getUserMetadata(uid);
     showUserMetadata(metaData);
   }
  
-  const clearChannelUsersList = function () {
-    const usersList = document.getElementById("users-list");
-    while (usersList.firstChild) {
-      usersList.removeChild(usersList.firstChild);
-    }
-  };
-
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
 
-  // Buttons
-  // login
+  // Login
   document.getElementById("login").onclick = async function () {
     await login();
   };
 
-  // logout
+  // Logout
   document.getElementById("logout").onclick = async function () {
     await logout();
   };
 
-  // create and join channel
-  document.getElementById("join").onclick = async function () {
+  // Subscribe to a channel
+  document.getElementById("subscribe").onclick = async function () {
     join(config.channelName);
   };
 
-  // leave channel
-  document.getElementById("leave").onclick = async function () {
+  // Unsubscribe a channel
+  document.getElementById("unsubscribe").onclick = async function () {
     await leave(config.channelName);
   };
 
-  // send channel message
+  // Send a message to the channel
   document.getElementById("send_channel_message").onclick = async function () {
     let channelMessage = document
       .getElementById("channelMessage")
@@ -196,28 +176,8 @@ window.onload = async () => {
     await sendChannelMessage(config.channelName, channelMessage);
   };
 
-  // Change status
-  document.getElementById("changeStatus").onclick = async function () {
-    isUserBusy = !isUserBusy; // Switch status
-    if (isUserBusy) {
-      document.getElementById("statusIndicator").innerHTML = "Busy";
-    } else {
-      document.getElementById("statusIndicator").innerHTML = "Available";
-    }
-
-    try {
-      setChannelMetadata(config.channelName, "channelDescription", "Friends hangout");
-      //updateUserMetadata(config.uid, "myStatus", isUserBusy ? "busy" : "available");
-    } catch (status) {
-        console.log(status);
-    };
-
-    const metaData = await getChannelMetadata(config.channelName, "MESSAGE");
-      showChannelMetadata(metaData);
-  };
-
   const showUserMetadata = async function (metaData) {
-    //const metaData = await getUserMetadata(uid);
+    // Display a user's metadata in the log
     for (const key in metaData) {
       if (metaData.hasOwnProperty(key)) {
         const metaDataDetail = metaData[key];
@@ -228,6 +188,7 @@ window.onload = async () => {
   }
 
   const showChannelMetadata = async function(metaData) {
+    // Display the channel metadata
     const dataElement = document.getElementById("channel-metadata");
   
     // Get all existing metadata items

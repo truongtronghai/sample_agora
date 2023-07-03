@@ -61,8 +61,8 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
 
   const getUserMetadata = async function (uid) {
     try {
-      const getUserMetadataResponse = await signalingManager.signalingEngine.storage.getUserMetadata(uid);
-      return getUserMetadataResponse.metadata;
+      const result = await signalingManager.signalingEngine.storage.getUserMetadata(uid);
+      return result.metadata;
     } catch (status) {
         console.log(status);
     }
