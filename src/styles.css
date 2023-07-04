@@ -3,15 +3,25 @@ h1 {
 }
 p {
   text-align: center;
+  font-size: x-large;
 }
 div {
+  font-size: x-large;
   text-align: center;
 }
 label {
   text-align: center;
+  font-size: x-large;
+}
+body {
+  margin: 0;
+  font-size: x-large;
+}
+a {
+  font-size: x-large;
 }
 .button {
-  background-color: #099DFD; /* Agora blue */
+  background-color: #099dfd;
   border: none;
   border-radius: 5px;
   color: white;
@@ -28,4 +38,97 @@ label {
 .button:hover {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+/* HOME PAGE */
+.main-content {
+  margin: 0;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+.main-content__checkmark {
+  font-size: 4.0625rem;
+  line-height: 1;
+  color: #24b663;
+}
+.main-content__body {
+  margin: 20px 0 0;
+  font-size: 2.5rem;
+  line-height: 1.4;
+}
+.site-header {
+  margin: 0 auto;
+  padding: 80px 0 0;
+  max-width: 820px;
+}
+.site-header__title {
+  margin: 0;
+  font-family: Montserrat, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+@media only screen and (min-width: 40em) {
+  .site-header {
+    padding-top: 150px;
+  }
+  .site-header__title {
+    font-size: 3.25rem;
+  }
+  .main-content__checkmark {
+    font-size: 9.75rem;
+  }
+  .main-content__body {
+    font-size: 2.5rem;
+  }
+  .site-footer {
+    padding: 145px 0 25px;
+  }
+  .site-footer__fineprint {
+    font-size: 1.125rem;
+  }
+}
+/* NAVBAR STYLING STARTS */
+li {
+  list-style: none;
+  margin: 0;
+}
+.navbar {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background-color: #000e4b;
+  color: #fff;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* LOGO */
+.logo {
+  padding-top: 14px;
+}
+
+/* NAVBAR MENU */
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 18px;
+}
+
+.menu li:hover {
+  background-color: #099dfd;
+}
+
+.menu li {
+  padding: 5px 14px;
 }
