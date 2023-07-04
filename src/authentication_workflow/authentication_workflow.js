@@ -18,6 +18,7 @@ window.onload = async () => {
   }
 
   // Signaling Manager will create the engine for you
+
   const {
     logout,
     subscribe,
@@ -27,7 +28,7 @@ window.onload = async () => {
     fetchTokenAndLogin,
   } = await SignalingManagerAuthentication(showMessage, handleSignalingEvents);
 
-  // Login with custom UID using token recieved from token generator
+  // Login with custom UID using token received from token generator
   document.getElementById("login").onclick = async function () {
     if (!isLoggedIn) {
       const uid = document.getElementById("uid").value.toString();
@@ -65,5 +66,6 @@ window.onload = async () => {
       .getElementById("channelMessage")
       .value.toString();
     await sendChannelMessage(channelName, channelMessage);
+    await handleTokenExpiry();
   };
 };

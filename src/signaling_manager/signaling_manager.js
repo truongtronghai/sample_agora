@@ -15,7 +15,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         useStringUserId: config.useStringUserId,
       };
       AgoraRTM.setArea({ areaCodes: ["ASIA"] });
-      signalingEngine = new AgoraRTM.RTM(config.appId, config.uid.toString(), rtmConfig);
+      signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);
     } catch (error) {
       console.log("Error:", error);
     }
@@ -69,17 +69,23 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     });
   };
 
-  await setupSignalingEngine(rtmConfig);
-
   // Login to the signaling engine
-  const login = async () => {
+  const login = async (uid, token) => {
     try {
+      if (uid !== undefined) config.uid = uid;
+      if (token !== undefined) config.token = token;
+
+      await setupSignalingEngine(rtmConfig);
       const result = await signalingEngine.login();
       console.log(result);
     } catch (error) {
       console.log(error);
     }
   };
+
+  const getSignalingEngine = () =>{
+    return signalingEngine;
+  }
 
   // Logout from the signaling engine
   const logout = async () => {
@@ -144,7 +150,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
   // Return the signaling engine and the available functions
   return {
-    signalingEngine,
+    getSignalingEngine,
     login,
     logout,
     createChannel,
