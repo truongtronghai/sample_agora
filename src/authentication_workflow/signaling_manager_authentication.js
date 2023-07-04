@@ -14,14 +14,14 @@ const SignalingManagerAuthentication = async (
   const config = await fetch("/signaling_manager/config.json").then((res) =>
     res.json()
   );
-
+ 
   // Fetches the Signaling token
-  async function FetchToken(uid) {
+  async function fetchToken(uid) {
     if (config.serverUrl !== "") {
       return new Promise(function (resolve) {
         axios
           .get(
-            //config.proxyUrl +
+            config.proxyUrl +
               config.serverUrl +
               "/rtm/" +
               uid +
@@ -46,16 +46,16 @@ const SignalingManagerAuthentication = async (
   }
 
   const fetchTokenAndLogin = async (uid) => {
-    const token = await FetchToken(uid);
+    const token = await fetchToken(uid);
     signalingManager.login(uid, token);
   };
 
   const handleTokenExpiry = async () => {
-    // Event triggers when token is about to expire in 30 seconds
+    // Event triggers when token is about to expire
     signalingManager.signalingEngine.on(
       "TokenPrivilegeWillExpire",
       async function () {
-        const token = await FetchToken();
+        const token = await fetchToken();
         signalingManager.signalingEngine.renewToken(token);
         console.log("token renewed...");
       }

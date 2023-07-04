@@ -5,7 +5,7 @@
     "rtcToken": "",
     "proxyUrl": "http://localhost:8080/",
     "serverUrl": "https://agora-token-service-production-10e3.up.railway.app",
-    "tokenExpiryTime": "600",
+    "tokenExpiryTime": "45",
     "token": "007eJxSYNh9ion7Bd+yLyJTCuXNkmWW6rhuO7xz5w+Zqu6mrp+e//UVGAzNk5PMU5NNUk1TLExMTSwtUlIN0sxNU1MTk02MzI0TO2ctSuksF0htvsPBzMjAxMDIwMgA4jMzGBkYAAIAAP//Cv8gKw==",
     "encryptionMode": 7,
     "salt": "",

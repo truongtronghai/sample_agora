@@ -63,7 +63,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         eventsCallback("lock", eventArgs);
       },        
       // TokenPrivilegeWillExpire event handler
-      lock: (eventArgs) => {
+      TokenPrivilegeWillExpire: (eventArgs) => {
         eventsCallback("TokenPrivilegeWillExpire ", eventArgs);
       },
     });
