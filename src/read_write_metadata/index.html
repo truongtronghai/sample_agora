@@ -2,47 +2,50 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Read write metadata</title>
+    <title>Store channel and user data</title>
     <script src="../agora-rtm.2.1.2.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="read_write_metadata.js" type="module"></script>
   </head>
   <body>
     <div id="projectSelector"></div>
-    <h1>Read write metadata</h1>
-    <label>Read and write metadata with Signaling.</label>
-    <p/>
+    <h1>Store channel and user data</h1>
+    <label>Use metadata to enhance user and channel features in Signaling clients.</label>
+    <p />
     <blockquote>
-    <div>
-      <label>Current User ID is: </label>
-      <b><label id="userId"></label></b>
-      <button type="button" id="login">Login</button>
-      <button type="button" id="logout">Logout</button>
-    </div><p/>
-    <div>
-      <label>Channel name: </label>
-      <b><label id="channelName"></label></b>
-      <button type="button" id="subscribe">Subscribe</button>
-      <button type="button" id="unsubscribe">Unsubscribe</button>
-    </div><p/>
-    <div>
-      <label>Send a message to the channel</label>:
-      <input type="text" placeholder="Message" id="channelMessage" />
-      <button type="button" id="send_channel_message">Send</button>
-    </div><p/>
-    <div>
-      <label>Save your bio to user metadata</label>
-      <input type="text" placeholder="Your bio" id="bioText" />
-      <button type="button" id="updateBio">Update Bio</button>
-    </div><p/>
-    <div>
-      <label>Users in the channel:</label><br>
-      <label>(Select a user to view their metadata.)</label>
-      <ul id="users-list"></ul>
-    </div>
-    
-    <label>Channel Metadata:</label>
-    <div id="channel-metadata">
-    </div>
+      <div>
+        <label>User ID: </label>
+        <input type="text" placeholder="User id" id="uid" />
+        <button type="button" id="login">Login</button>
+      </div>
+      <p />
+      <div>
+        <label>Channel name: </label>
+        <input type="text" placeholder="Channel Name" id="channelName" />
+        <button type="button" id="subscribe">Subscribe</button>
+        <button type="button" id="unsubscribe">Unsubscribe</button>
+      </div>
+      <p />
+      <div>
+        <label>Send a message to the channel</label>:
+        <input type="text" placeholder="Message" id="channelMessage" />
+        <button type="button" id="send_channel_message">Send</button>
+      </div>
+      <p />
+      <div>
+        <label>Save your bio to user metadata</label>
+        <input type="text" placeholder="Your bio" id="bioText" />
+        <button type="button" id="updateBio">Update Bio</button>
+      </div>
+      <p />
+      <div>
+        <label>Users in the channel:</label><br />
+        <label>(Select a user to view their metadata.)</label>
+        <ul id="users-list"></ul>
+      </div>
+
+      <label>Channel Metadata:</label>
+      <div id="channel-metadata"></div>
     </blockquote>
     <hr />
     <div id="log"></div>

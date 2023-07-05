@@ -151,6 +151,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   // Return the signaling engine and the available functions
   return {
     getSignalingEngine,
+    config,
     login,
     logout,
     createChannel,

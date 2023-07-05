@@ -10,11 +10,9 @@ const SignalingManagerAuthentication = async (
     eventsCallback
   );
 
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
- 
+  // Get the config
+  const config = signalingManager.config;
+
   // Fetches the Signaling token
   async function fetchToken(uid) {
     if (config.serverUrl !== "") {
@@ -50,13 +48,15 @@ const SignalingManagerAuthentication = async (
     signalingManager.login(uid, token);
   };
 
-  const handleTokenExpiry = async () => {
+  const renewToken = async () => {
     const token = await fetchToken();
-    const result = await signalingManager.getSignalingEngine().renewToken(token);
+    const result = await signalingManager
+      .getSignalingEngine()
+      .renewToken(token);
     messageCallback(result.toString());
-  
+
     // Event triggers when token is about to expire
-   /* signalingManager.signalingEngine.on(
+    /* signalingManager.signalingEngine.on(
       "TokenPrivilegeWillExpire",
       async function () {
         const token = await fetchToken();
@@ -69,7 +69,7 @@ const SignalingManagerAuthentication = async (
   // Return the extended signaling manager
   return {
     ...signalingManager,
-    handleTokenExpiry,
+    renewToken,
     fetchTokenAndLogin,
   };
 };

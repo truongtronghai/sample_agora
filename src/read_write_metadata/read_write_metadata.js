@@ -1,15 +1,20 @@
 import SignalingManagerMetadata from "./signaling_manager_metadata.js";
+//import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import showMessage from "../utils/showMessage.js";
+import SignalingManager from "../signaling_manager/signaling_manager.js";
+//import SignalingManager from "../authentication_workflow/signaling_manager_authentication.js";
+
+var isLoggedIn = false;
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
+  // Get the config 
+  /*const config = await fetch("/signaling_manager/config.json").then((res) =>
     res.json()
-  );
+  );*/
 
   const handleSignalingEvents = (event, eventArgs) => {
     switch (event) {
@@ -30,7 +35,8 @@ window.onload = async () => {
         } else if (eventArgs.eventType == 'REMOTE_JOIN' ) { 
           // A remote user joined the channel
           updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
-        } else if (eventArgs.eventType == 'REMOTE_LEAVE' ) { 
+        } else if (eventArgs.eventType == 'REMOTE_LEAVE' 
+          || eventArgs.eventType == 'REMOTE_TIMEOUT' ) { 
           // A remote user left the channel
           updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
         }
@@ -40,7 +46,7 @@ window.onload = async () => {
           showChannelMetadata(eventArgs.data.metadata);
         } else if (eventArgs.storageType == 'USER') { // user metadata was updated
           showMessage('Metadata event ' + eventArgs.eventType + ', User: ' + eventArgs.publisher);
-          showUserMetadata(eventArgs.data.metadata);
+          showUserMetadata(eventArgs.publisher, eventArgs.data.metadata);
         }
         break;
       case "topic":
@@ -53,17 +59,19 @@ window.onload = async () => {
         
         break;
       case "TokenPrivilegeWillExpire":
-        
+        renewToken();
         break;
       default:
-        console.log("Unknown eventType");
+        console.log("Unknown eventType: " + event);
     }
   };
 
   // Signaling Manager will create the engine for you
   const {
-    signalingEngine,
+    config,
+    getSignalingEngine,
     login,
+    fetchTokenAndLogin,
     logout,
     subscribe,
     unsubscribe,
@@ -72,19 +80,16 @@ window.onload = async () => {
     getUserMetadata,
     subscribeUserMetadata,
     setChannelMetadata,
-    getChannelMetadata,
+    getChannelMetadata, 
+    renewToken,
+    whoNow,    
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
-
-  // Display channel name
-  document.getElementById("channelName").innerHTML = config.channelName;
-  // Display User name
-  document.getElementById("userId").innerHTML = config.uid;
 
   const ul = document.getElementById("users-list");
 
   const updateChannelUserList = async function (channelName, channelType) {
     // Retrieve a list of users in the channel
-    const result = await signalingEngine.presence.whoNow(channelName, channelType);
+    const result = await whoNow(channelName, channelType);
     const users = result.occupants;
   
     // Create a Set to store the existing userIds
@@ -134,27 +139,33 @@ window.onload = async () => {
   const onUserClick = async function(uid) {
     // Show user metadata
     const metaData = await getUserMetadata(uid);
-    showUserMetadata(metaData);
+    showUserMetadata(uid, metaData);
   }
  
-  // Display channel name
-  document.getElementById("channelName").innerHTML = config.channelName;
-  // Display User name
-  document.getElementById("userId").innerHTML = config.uid;
-
   // Login
   document.getElementById("login").onclick = async function () {
-    await login();
-  };
+    if (!isLoggedIn) {
+      const uid = document.getElementById("uid").value.toString();
+      if (uid === "") {
+        showMessage("Please enter a User ID.");
+        return;
+      }
 
-  // Logout
-  document.getElementById("logout").onclick = async function () {
-    await logout();
+      await fetchTokenAndLogin(uid);
+
+      isLoggedIn = true;
+      document.getElementById("login").innerHTML = "Logout";
+    } else {
+      await logout();
+      isLoggedIn = false;
+      document.getElementById("login").innerHTML = "Login";
+    }
   };
 
   // Subscribe to a channel
   document.getElementById("subscribe").onclick = async function () {
-    subscribe(config.channelName);
+    config.channelName = document.getElementById("channelName").value.toString();
+    await subscribe(config.channelName);
   };
 
   // Unsubscribe a channel
@@ -178,13 +189,13 @@ window.onload = async () => {
     await sendChannelMessage(config.channelName, channelMessage);
   };
 
-  const showUserMetadata = async function (metaData) {
+  const showUserMetadata = async function (uid, metaData) {
     // Display a user's metadata in the log
     for (const key in metaData) {
       if (metaData.hasOwnProperty(key)) {
         const metaDataDetail = metaData[key];
         const value = metaDataDetail.value;
-        showMessage(key + ': ' + value);
+        showMessage(`Metadata for user ${uid}: key: ${key}, Value: ${value}`);
       }
     }
   }

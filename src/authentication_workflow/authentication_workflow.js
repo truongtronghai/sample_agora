@@ -12,19 +12,18 @@ window.onload = async () => {
   const handleSignalingEvents = (event, eventArgs) => {
     switch (event) {
       case "TokenPrivilegeWillExpire":
-        handleTokenExpiry();
+        renewToken();
         break;
     }
   }
 
   // Signaling Manager will create the engine for you
-
   const {
     logout,
     subscribe,
     unsubscribe,
     sendChannelMessage,
-    handleTokenExpiry,
+    renewToken,
     fetchTokenAndLogin,
   } = await SignalingManagerAuthentication(showMessage, handleSignalingEvents);
 
@@ -66,6 +65,6 @@ window.onload = async () => {
       .getElementById("channelMessage")
       .value.toString();
     await sendChannelMessage(channelName, channelMessage);
-    await handleTokenExpiry();
+    await renewToken();
   };
 };
