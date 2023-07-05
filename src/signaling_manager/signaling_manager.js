@@ -49,7 +49,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         eventsCallback("presence", eventArgs);
         if (eventArgs.eventType === "SNAPSHOT") {
           messageCallback(
-            eventArgs.snapshot[0].userId + " joined " + eventArgs.channelName
+            `User ${eventArgs.snapshot[0].userId} joined channel ${eventArgs.channelName}`
           );
         } else {
           messageCallback(
@@ -152,7 +152,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         channelName,
         publishMessage
       );
-      messageCallback(config.uid + ": " + publishMessage);
+      messageCallback(`Message sent to channel ${channelName}: ${Message}`);
     } catch (error) {
       console.log(error);
     }
