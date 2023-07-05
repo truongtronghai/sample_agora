@@ -1,8 +1,13 @@
-import SignalingManager from '../signaling_manager/signaling_manager.js';
+import SignalingManagerAuthentication from '../authentication_workflow/signaling_manager_authentication.js';
 
 const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it
-  const signalingManager = await SignalingManager(messageCallback, eventsCallback);
+  const signalingManager = await SignalingManagerAuthentication(messageCallback, eventsCallback);
+
+  const whoNow = async function (channelName, channelType) {
+    const result = await signalingManager.getSignalingEngine().presence.whoNow(channelName, channelType);
+    return result;
+  }
 
   const setUserMetadata = async function (uid, key, value) {
     const data = [
@@ -19,13 +24,12 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
       addUserId : true
     };
     try {
-        const result = await signalingManager.signalingEngine.storage.setUserMetadata(data, options);
-        messageCallback(`user metadata ${key} set successfully`);
+        const result = await signalingManager.getSignalingEngine().storage.setUserMetadata(data, options);
+        messageCallback(`user metadata key ${key} saved`);
     } catch (status) {
         console.log(status);
     };
   }
-
   
   const setChannelMetadata = async function (channelName, key, value) {
     const metaData = [
@@ -42,7 +46,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
         addUserId : true
     };
     try {
-        const result = await signalingManager.signalingEngine.storage.setChannelMetadata(
+        const result = await signalingManager.getSignalingEngine().storage.setChannelMetadata(
           channelName, "MESSAGE", metaData, options);
         messageCallback(`channel metadata ${key} set successfully`);
     } catch (status) {
@@ -52,7 +56,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
 
   const getChannelMetadata = async function (channelName, channelType) {
     try {
-      const result = await signalingManager.signalingEngine.storage.getChannelMetadata(channelName, channelType);
+      const result = await signalingManager.getSignalingEngine().storage.getChannelMetadata(channelName, channelType);
       return result.metadata;
     } catch (status) {
         console.log(status);
@@ -61,7 +65,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
 
   const getUserMetadata = async function (uid) {
     try {
-      const result = await signalingManager.signalingEngine.storage.getUserMetadata(uid);
+      const result = await signalingManager.getSignalingEngine().storage.getUserMetadata(uid);
       return result.metadata;
     } catch (status) {
         console.log(status);
@@ -70,7 +74,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
 
   const subscribeUserMetadata = async function (uid) {
       try {
-        const result = await signalingManager.signalingEngine.storage.subscribeUserMetadata(uid);
+        const result = await signalingManager.getSignalingEngine().storage.subscribeUserMetadata(uid);
         messageCallback("Subscribed to metadata events from " + uid);
       } catch (status) {
           console.log(status);
@@ -79,6 +83,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   // Return the extended signaling manager
   return {
     ...signalingManager,
+    whoNow,
     setUserMetadata,
     getUserMetadata,
     subscribeUserMetadata,
