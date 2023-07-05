@@ -1,65 +1,94 @@
-import SignalingManager from '../signaling_manager/signaling_manager.js';
+import SignalingManagerAuthentication from '../authentication_workflow/signaling_manager_authentication.js';
 
 const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it
-  const signalingManager = await SignalingManager(messageCallback, eventsCallback);
+  const signalingManager = await SignalingManagerAuthentication(messageCallback, eventsCallback);
 
-  const handleMetadataEvents = async function () {
-    signalingManager.signalingEngine.on("UserMetaDataUpdated", function (uid, rtmMetadata) {
-      if (typeof rtmMetadata !== "undefined") {
-        const eventArgs = { uid: uid, rtmMetadata: rtmMetadata }
-        eventsCallback("UserMetaDataUpdated", eventArgs)
-      }
-    });   
+  const whoNow = async function (channelName, channelType) {
+    const result = await signalingManager.getSignalingEngine().presence.whoNow(channelName, channelType);
+    return result;
   }
 
-  const setLocalUserMetadata = async function () {
-    // Clear previous metadata
+  const setUserMetadata = async function (uid, key, value) {
+    const data = [
+      {
+        key : key,
+        value : value,
+        revision : -1
+      },
+    ];
+    const options = {
+      userId : uid,
+      majorRevision : -1,
+      addTimeStamp : true,
+      addUserId : true
+    };
     try {
-      await signalingManager.signalingEngine.clearLocalUserMetadata();
+        const result = await signalingManager.getSignalingEngine().storage.setUserMetadata(data, options);
+        messageCallback(`user metadata key ${key} saved`);
     } catch (status) {
-      if (status) {
-        const { code, message } = status;
-        console.log(code, message);
-      }
-    }
-    // Set local user metadata
-    const item1 = signalingManager.signalingEngine.createMetadataItem();
-    item1.setKey("myStatus");
-    item1.setValue("available");
-
-    try {
-      await signalingManager.signalingEngine.setLocalUserMetadata([item1]);
-    } catch (status) {
-      if (status) {
-        const { code, message } = status;
-        messageCallback(code + ": " +  message);
-      }
-    }
-  };
-
-  const updateLocalUserMetadata = async function (key, value) {
-    const metadataItem  = signalingManager.signalingEngine.createMetadataItem();
-    metadataItem.setKey(key);
-    metadataItem.setValue(value);
-
-    try {
-      await signalingManager.signalingEngine.updateLocalUserMetadata([metadataItem]);
-    } catch (status) {
-      if (status) {
-        const { code, message } = status;
-        messageCallback("Error:" + code + ": " + message);
-      }
-    }
-  };
+        console.log(status);
+    };
+  }
   
+  const setChannelMetadata = async function (channelName, key, value) {
+    const metaData = [
+      {
+          key : key,
+          value : value,
+          revision : -1
+      },
+    ];
+    const options = {
+        majorRevision : -1,
+        lockName: '',
+        addTimeStamp : true,
+        addUserId : true
+    };
+    try {
+        const result = await signalingManager.getSignalingEngine().storage.setChannelMetadata(
+          channelName, "MESSAGE", metaData, options);
+        messageCallback(`channel metadata ${key} set successfully`);
+    } catch (status) {
+        console.log(status);
+    };
+  }
 
+  const getChannelMetadata = async function (channelName, channelType) {
+    try {
+      const result = await signalingManager.getSignalingEngine().storage.getChannelMetadata(channelName, channelType);
+      return result.metadata;
+    } catch (status) {
+        console.log(status);
+    }
+  }
+
+  const getUserMetadata = async function (uid) {
+    try {
+      const result = await signalingManager.getSignalingEngine().storage.getUserMetadata(uid);
+      return result.metadata;
+    } catch (status) {
+        console.log(status);
+    }
+  }
+
+  const subscribeUserMetadata = async function (uid) {
+      try {
+        const result = await signalingManager.getSignalingEngine().storage.subscribeUserMetadata(uid);
+        messageCallback("Subscribed to metadata events from " + uid);
+      } catch (status) {
+          console.log(status);
+      }
+  }
   // Return the extended signaling manager
   return {
     ...signalingManager,
-    setLocalUserMetadata,
-    handleMetadataEvents,
-    updateLocalUserMetadata,
+    whoNow,
+    setUserMetadata,
+    getUserMetadata,
+    subscribeUserMetadata,
+    setChannelMetadata,
+    getChannelMetadata,
   };
 };
 

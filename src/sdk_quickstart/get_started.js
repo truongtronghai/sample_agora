@@ -6,79 +6,76 @@ import setupProjectSelector from "../utils/setupProjectSelector.js";
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
 
-  const handleSignalingEvents = (event) => {
-    if (event.eventType == "SNAPSHOT") {
-      updateChannelMemberList(event);
-    } else if (event.eventType == "LEAVE_CHANNEL") {
-      updateChannelMemberList(event);
+  const handleSignalingEvents = (event, eventArgs) => {
+    switch (event) {
+      case "message":
+        break;
+      case "presence":
+        switch (eventArgs.eventType) {
+          case "SNAPSHOT":
+          case "REMOTE_JOIN":
+          case "REMOTE_LEAVE":
+            updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
+            break;
+        }
+        break;
     }
   };
 
   // Signaling Manager will create the engine and channel for you
   const {
-    signalingEngine,
-    getSignalingChannel,
+    getSignalingEngine,
+    config,
     login,
     logout,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
   } = await SignalingManagerGetStarted(showMessage, handleSignalingEvents);
 
   const ul = document.getElementById("members-list");
 
-  const updateChannelMemberList = async function (event) {
-    // Retrieve a list of members in the channel
-    const result = await signalingEngine.presence.whoNow(
-      event.channelName,
-      event.channelType
+  const updateChannelUserList = async function (channelName, channelType) {
+    // Retrieve a list of users in the channel
+    const result = await getSignalingEngine().presence.whoNow(
+      channelName,
+      channelType
     );
-    const members = result.occupants;
+    const users = result.occupants;
 
-    // Update the list with online members
-    for (let i = 0; i < members.length; i++) {
-      addOnlineMembers(members[i].userId);
+    // Create a Set to store the existing userIds
+    const existingUsers = new Set();
+
+    // Update the list with online users
+    for (let i = 0; i < users.length; i++) {
+      const userId = users[i].userId;
+      updateUserInList(userId);
+      existingUsers.add(userId);
     }
 
-    // Clean offline members from the list
-    removeOfflineMembers(members);
-  };
-
-  const addOnlineMembers = async function (memberId) {
-    const member = document.getElementById(memberId);
-
-    if (member !== null) {
-      // User in list, do nothing
-    } else {
-      // User does not in the list, add a new user
-      const li = document.createElement("li");
-      li.setAttribute("id", memberId);
-      li.innerHTML = memberId + "is in the channel";
-      ul.appendChild(li);
-    }
-  };
-
-  const removeOfflineMembers = async function (members) {
-    let idToRemove = [];
-    let memberIds = [];
-
-    for (let i = 0; i < members.length; i++) {
-      memberIds.push(members[i].userId);
-    }
-
-    for (let i = 0; i < ul.childNodes.length; i++) {
-      if (!memberIds.includes(ul.childNodes[i].id)) {
-        idToRemove.push(ul.childNodes[i].id);
+    // Remove offline users from the list
+    const userList = document.getElementById("users-list");
+    const allUsers = userList.querySelectorAll("li");
+    if (allUsers == null) return;
+    allUsers.forEach((user) => {
+      const userId = user.getAttribute("id");
+      if (!existingUsers.has(userId)) {
+        user.remove();
       }
-    }
+    });
+  };
 
-    for (let i = 0; i < idToRemove.length; i++) {
-      ul.removeChild(document.getElementById(idToRemove[i]));
+  const updateUserInList = async function (userId) {
+    const user = document.getElementById(userId);
+
+    if (user == null) {
+      // User does not exist in the list, add a new list item
+      const li = document.createElement("li");
+      li.setAttribute("id", userId);
+      li.innerHTML = userId;
+      const userList = document.getElementById("users-list");
+      userList.appendChild(li);
     }
   };
 
@@ -98,15 +95,16 @@ window.onload = async () => {
     await logout();
   };
 
-  // join channel
-  document.getElementById("join").onclick = async function () {
-    await join(config.channelName);
+  // Subscribe to a channel
+  document.getElementById("subscribe").onclick = async function () {
+    await subscribe(config.channelName);
   };
 
-  // leave channel
-  document.getElementById("leave").onclick = async function () {
-    await leave(config.channelName);
+  // Unsubscribe a channel
+  document.getElementById("unsubscribe").onclick = async function () {
+    await unsubscribe(config.channelName);
   };
+
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
     let channelMessage = document

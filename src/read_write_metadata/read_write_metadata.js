@@ -1,139 +1,188 @@
 import SignalingManagerMetadata from "./signaling_manager_metadata.js";
+//import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
-// import SignalingManager from "../signaling_manager/signaling_manager.js";
+import showMessage from "../utils/showMessage.js";
+import SignalingManager from "../signaling_manager/signaling_manager.js";
+//import SignalingManager from "../authentication_workflow/signaling_manager_authentication.js";
+
+var uid;
+var isLoggedIn = false;
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
+  // Get the config 
+  /*const config = await fetch("/signaling_manager/config.json").then((res) =>
     res.json()
-  );
+  );*/
 
-  const showMessage = (message) => {
-    document
-      .getElementById("log")
-      .appendChild(document.createElement("div"))
-      .append(message);
-  };
-
-  const handleSignalingEvents = (eventName, eventArgs) => {
-    if (eventName == "MessageFromPeer") {
-    } else if (eventName == "ConnectionStateChanged") {
-      if (eventArgs.state == "CONNECTED") {
-        setLocalUserMetadata();
-      }
-    } else if (eventName == "JoinedChannel") {
-      updateChannelMemberList();
-    } else if (eventName == "LeftChannel") {
-      clearChannelMemberList();
-    } else if (eventName == "ChannelMessage") {
-    } else if (eventName == "MemberJoined") {
-      updateChannelMemberList();
-    } else if (eventName == "MemberLeft") {
-      removeMemberFromList(eventArgs.memberId);
-    } else if (eventName == "UserMetaDataUpdated") {
-      const item = eventArgs.rtmMetadata.items.find(
-        (obj) => obj.key === "myStatus"
-      );
-      if (item !== undefined) {
-        const value = item.value;
-        if (getSignalingChannel()) {
-          updateMemberInList(eventArgs.uid, item.value == "busy");
+  const handleSignalingEvents = (event, eventArgs) => {
+    switch (event) {
+      case "message":
+        
+        break;
+      case "presence":
+        if (eventArgs.eventType == 'SNAPSHOT') { // local user logged in
+          const currentTime = new Date();
+          const options = { timeZoneName: 'short' };
+          const timeString = currentTime.toLocaleString(undefined, options);
+          // Set channel metadata
+          setChannelMetadata(config.channelName, 'lastLogin', timeString);
+          // Set user metadata
+          setUserMetadata(config.uid, 'userBio', 'I want to learn about Agora Signaling');
+          // Fill the list of users in the channel
+          updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
+        } else if (eventArgs.eventType == 'REMOTE_JOIN' ) { 
+          // A remote user joined the channel
+          updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
+        } else if (eventArgs.eventType == 'REMOTE_LEAVE' 
+          || eventArgs.eventType == 'REMOTE_TIMEOUT' ) { 
+          // A remote user left the channel
+          updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
         }
-      }
+        break;
+      case "storage":
+        if (eventArgs.storageType == 'CHANNEL') { // channel metadata was updated
+          showChannelMetadata(eventArgs.data.metadata);
+        } else if (eventArgs.storageType == 'USER') { // user metadata was updated
+          showMessage('Metadata event ' + eventArgs.eventType + ', User: ' + eventArgs.publisher);
+          showUserMetadata(eventArgs.publisher, eventArgs.data.metadata);
+        }
+        break;
+      case "topic":
+        
+        break;
+      case "lock":
+        
+        break;
+      case "status":
+        
+        break;
+      case "TokenPrivilegeWillExpire":
+        renewToken(uid);
+        break;
+      default:
+        console.log("Unknown eventType: " + event);
     }
   };
 
   // Signaling Manager will create the engine for you
   const {
-    signalingEngine,
-    getSignalingChannel,
+    config,
+    getSignalingEngine,
     login,
+    fetchTokenAndLogin,
     logout,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
-    setLocalUserMetadata,
-    handleMetadataEvents,
-    updateLocalUserMetadata,
+    setUserMetadata,
+    getUserMetadata,
+    subscribeUserMetadata,
+    setChannelMetadata,
+    getChannelMetadata, 
+    renewToken,
+    whoNow,    
   } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
 
-  var isUserBusy = false; // track user status
-  const ul = document.getElementById("members-list");
+  const ul = document.getElementById("users-list");
 
-  const updateChannelMemberList = async function () {
-    // Retrieve a list of members in the channel
-    console.log(getSignalingChannel());
-    const members = await getSignalingChannel().getMembers();
-    for (let i = 0; i < members.length; i++) {
-      updateMemberInList(members[i], false);
+  const updateChannelUserList = async function (channelName, channelType) {
+    // Retrieve a list of users in the channel
+    const result = await whoNow(channelName, channelType);
+    const users = result.occupants;
+  
+    // Create a Set to store the existing userIds
+    const existingUsers = new Set();
+  
+    // Update the list with online users
+    for (let i = 0; i < users.length; i++) {
+      const userId = users[i].userId;
+      updateUserInList(userId);
+      existingUsers.add(userId);
     }
+  
+    // Remove offline users from the list
+    const userList = document.getElementById("users-list");
+    const allUsers = userList.querySelectorAll("li");
+    if (allUsers.length === 0) return;
+    allUsers.forEach((user) => {
+      const userId = user.getAttribute("id");
+      if (!existingUsers.has(userId)) {
+        user.remove();
+      }
+    });
   };
-
-  const removeMemberFromList = function (memberId) {
-    const member = document.getElementById(memberId);
-    if (member) {
-      member.parentNode.removeChild(member);
-    }
-  };
-
-  const updateMemberInList = async function (memberId, busy) {
-    const busyIcon = "&#x1F6AB";
-    const availableIcon = "&#x2705";
-    const member = document.getElementById(memberId);
-
-    if (member !== null) {
-      // User in list, update user
-      member.innerHTML = (busy ? busyIcon : availableIcon) + " " + memberId;
-    } else {
-      // User does not in the list, add a new user
+  
+  const updateUserInList = async function (userId) {
+    const user = document.getElementById(userId);
+  
+    if (user == null) {
+      // User does not exist in the list, add a new user
       const li = document.createElement("li");
-      li.setAttribute("id", memberId);
-      li.innerHTML = (busy ? busyIcon : availableIcon) + " " + memberId;
-      ul.appendChild(li);
+      li.setAttribute("id", userId);
+      li.innerHTML = userId;
+  
+      const userList = document.getElementById("users-list");
+      userList.appendChild(li);
+  
+      // Add click event listener to the list item
+      li.addEventListener("click", () => {
+        onUserClick(userId);
+      });
 
       // Subscribe to metadata change event for the user
-      await signalingEngine.subscribeUserMetadata(memberId);
+      subscribeUserMetadata(userId);
     }
   };
 
-  const clearChannelMemberList = function () {
-    const membersList = document.getElementById("members-list");
-    while (membersList.firstChild) {
-      membersList.removeChild(membersList.firstChild);
-    }
-  };
-
-  // Display channel name
-  document.getElementById("channelName").innerHTML = config.channelName;
-  // Display User name
-  document.getElementById("userId").innerHTML = config.uid;
-
-  // Buttons
-  // login
+  const onUserClick = async function(uid) {
+    // Show user metadata
+    const metaData = await getUserMetadata(uid);
+    showUserMetadata(uid, metaData);
+  }
+ 
+  // Login
   document.getElementById("login").onclick = async function () {
-    await login();
-    await handleMetadataEvents();
+    if (!isLoggedIn) {
+      uid = document.getElementById("uid").value.toString();
+      if (uid === "") {
+        showMessage("Please enter a User ID.");
+        return;
+      }
+
+      await fetchTokenAndLogin(uid);
+
+      isLoggedIn = true;
+      document.getElementById("login").innerHTML = "Logout";
+    } else {
+      await logout();
+      isLoggedIn = false;
+      document.getElementById("login").innerHTML = "Login";
+    }
   };
 
-  // logout
-  document.getElementById("logout").onclick = async function () {
-    await logout();
+  // Subscribe to a channel
+  document.getElementById("subscribe").onclick = async function () {
+    config.channelName = document.getElementById("channelName").value.toString();
+    await subscribe(config.channelName);
   };
 
-  // create and join channel
-  document.getElementById("join").onclick = async function () {
-    join();
+  // Unsubscribe a channel
+  document.getElementById("unsubscribe").onclick = async function () {
+    await unsubscribe(config.channelName);
   };
 
-  // leave channel
-  document.getElementById("leave").onclick = async function () {
-    await leave();
+  document.getElementById("updateBio").onclick = async function () {
+    let bio = document
+    .getElementById("bioText")
+    .value.toString();
+
+    setUserMetadata(config.uid, 'userBio', bio);
   };
 
-  // send channel message
+  // Send a message to the channel
   document.getElementById("send_channel_message").onclick = async function () {
     let channelMessage = document
       .getElementById("channelMessage")
@@ -141,15 +190,56 @@ window.onload = async () => {
     await sendChannelMessage(config.channelName, channelMessage);
   };
 
-  // Change status
-  document.getElementById("changeStatus").onclick = async function () {
-    isUserBusy = !isUserBusy; // Switch status
-    if (isUserBusy) {
-      document.getElementById("statusIndicator").innerHTML = "Busy";
-    } else {
-      document.getElementById("statusIndicator").innerHTML = "Available";
+  const showUserMetadata = async function (uid, metaData) {
+    // Display a user's metadata in the log
+    for (const key in metaData) {
+      if (metaData.hasOwnProperty(key)) {
+        const metaDataDetail = metaData[key];
+        const value = metaDataDetail.value;
+        showMessage(`Metadata for user ${uid}: key: ${key}, Value: ${value}`);
+      }
     }
+  }
 
-    updateLocalUserMetadata("myStatus", isUserBusy ? "busy" : "available");
+  const showChannelMetadata = async function(metaData) {
+    // Display the channel metadata
+    const dataElement = document.getElementById("channel-metadata");
+  
+    // Get all existing metadata items
+    const existingItems = Array.from(dataElement.children);
+  
+    for (const key in metaData) {
+      if (metaData.hasOwnProperty(key)) {
+        const metaDataDetail = metaData[key];
+  
+        // Access the properties of the MetaDataDetail
+        const value = metaDataDetail.value;
+        const revision = metaDataDetail.revision;
+        const updated = metaDataDetail.updated;
+        const authorUid = metaDataDetail.authorUid;
+  
+        // Find existing item with the same key
+        const existingItem = existingItems.find(item => item.id === key);
+  
+        if (existingItem) {
+          // Update existing item
+          existingItem.innerHTML = `Key: ${key}, Value: ${value}, Revision: ${revision}, Updated: ${updated}, AuthorUid: ${authorUid}`;
+  
+          // Remove the item from the existing items array
+          const index = existingItems.indexOf(existingItem);
+          existingItems.splice(index, 1);
+        } else {
+          // Create new item
+          const item = document.createElement("div");
+          item.setAttribute("id", key);
+          item.innerHTML = `Key: ${key}, Value: ${value}, Revision: ${revision}, Updated: ${updated}, AuthorUid: ${authorUid}`;
+          dataElement.appendChild(item);
+        }
+      }
+    }
+  
+    // Remove any remaining existing items (items that are no longer present in metaData)
+    existingItems.forEach(item => item.remove());
   };
+  
 };

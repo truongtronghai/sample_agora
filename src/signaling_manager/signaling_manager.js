@@ -23,41 +23,59 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     // Event listener to handle incoming messages and connection status changes
     signalingEngine.addEventListener({
       // Message event handler
-      message: (event) => {
-        eventsCallback(event);
+      message: (eventArgs) => {
+        eventsCallback("message", eventArgs);
         messageCallback(
-          "Received peer message from " + event.publisher + ": " + event.message
+          "Received message from " + eventArgs.publisher + ": " + eventArgs.message
         );
       },
       // State event handler
-      status: (event) => {
-        eventsCallback(event);
+      status: (eventArgs) => {
+        eventsCallback("status", eventArgs);
         messageCallback(
           "Connection state changed to: " +
-            event.state +
+          eventArgs.state +
             ", Reason: " +
-            event.reason
+            eventArgs.reason
         );
       },
       // Presence event handler.
-      presence: (event) => {
-        eventsCallback(event);
-        if (event.eventType === "SNAPSHOT") {
+      presence: (eventArgs) => {
+        eventsCallback("presence", eventArgs);
+        if (eventArgs.eventType === "SNAPSHOT") {
           messageCallback(
-            event.snapshot[0].userId + " joined " + event.channelName
+            eventArgs.snapshot[0].userId + " joined " + eventArgs.channelName
           );
         } else {
-          messageCallback(event.publisher + " is " + event.eventType);
+          messageCallback("Presence event: " + eventArgs.eventType + ', User: ' + eventArgs.publisher);
         }
+      },
+      // Storage event handler
+      storage: (eventArgs) => {
+        eventsCallback("storage", eventArgs);
+      },
+      // Topic event handler
+      topic: (eventArgs) => {
+        eventsCallback("topic", eventArgs);
+      },
+      // Lock event handler
+      lock: (eventArgs) => {
+        eventsCallback("lock", eventArgs);
+      },        
+      // TokenPrivilegeWillExpire event handler
+      TokenPrivilegeWillExpire: (eventArgs) => {
+        eventsCallback("TokenPrivilegeWillExpire ", eventArgs);
       },
     });
   };
 
-  await setupSignalingEngine(rtmConfig);
-
   // Login to the signaling engine
-  const login = async () => {
+  const login = async (uid, token) => {
     try {
+      if (uid !== undefined) config.uid = uid;
+      if (token !== undefined) config.token = token;
+
+      await setupSignalingEngine(rtmConfig);
       const result = await signalingEngine.login();
       console.log(result);
     } catch (error) {
@@ -65,14 +83,13 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     }
   };
 
+  const getSignalingEngine = () =>{
+    return signalingEngine;
+  }
+
   // Logout from the signaling engine
   const logout = async () => {
     await signalingEngine.logout();
-  };
-
-  // Get signaling Channel instance
-  const getSignalingChannel = () => {
-    return signalingChannel;
   };
 
   const createChannel = async (channelName) => {
@@ -83,33 +100,10 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     } catch (error) {
       console.error(error);
     }
-
-    // Display signalingChannel messages
-    signalingChannel.on("ChannelMessage", function (message, memberId) {
-      const eventArgs = { message: message, memberId: memberId };
-      eventsCallback("ChannelMessage", eventArgs);
-      messageCallback(
-        "Received channel message from " + memberId + ": " + message.text
-      );
-    });
-
-    // Display signalingChannel member stats
-    signalingChannel.on("MemberJoined", function (memberId) {
-      const eventArgs = { memberId: memberId };
-      eventsCallback("MemberJoined", eventArgs);
-      messageCallback(memberId + " joined the channel");
-    });
-
-    // Display signalingChannel member stats
-    signalingChannel.on("MemberLeft", function (memberId) {
-      const eventArgs = { memberId: memberId };
-      eventsCallback("MemberLeft", eventArgs);
-      messageCallback(memberId + " left the channel");
-    });
   };
 
-  // Join a channel
-  const join = async (channelName) => {
+  // Subscribe to a channel
+  const subscribe = async (channelName) => {
     channelName = channelName || config.channelName;
     try {
       if (signalingChannel === null) {
@@ -119,8 +113,8 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       const subscribeOptions = {
         withMessage: true,
         withPresence: true,
-        withMetadata: false,
-        withLock: false,
+        withMetadata: true,
+        withLock: true,
       };
       await signalingEngine.subscribe(channelName, subscribeOptions);
     } catch (error) {
@@ -128,16 +122,11 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     }
   };
 
-  // Leave a channel
-  const leave = async (channelName) => {
+  // Unsubscribe a channel
+  const unsubscribe = async (channelName) => {
     channelName = channelName || config.channelName;
     try {
       await signalingEngine.unsubscribe(channelName);
-      eventsCallback({
-        eventType: "LEAVE_CHANNEL",
-        channelName: channelName,
-        channelType: "MESSAGE",
-      });
       messageCallback("You have successfully left channel " + channelName);
     } catch (error) {
       console.log(error);
@@ -161,13 +150,13 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
   // Return the signaling engine and the available functions
   return {
-    signalingEngine,
-    getSignalingChannel,
+    getSignalingEngine,
+    config,
     login,
     logout,
     createChannel,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
   };
 };

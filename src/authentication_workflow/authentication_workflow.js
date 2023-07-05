@@ -3,31 +3,32 @@ import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 
 var isLoggedIn = false;
+var uid;
+var channelName;
 
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
 
-  const handleSignalingEvents = (eventName, _) => {
-    if (eventName == "TokenPrivilegeWillExpire") {
-      handleTokenExpiry();
+  const handleSignalingEvents = (event, eventArgs) => {
+    switch (event) {
+      case "TokenPrivilegeWillExpire":
+        renewToken(uid);
+        break;
     }
-  };
+  }
 
   // Signaling Manager will create the engine for you
   const {
-    _signalingEngine,
-    _getSignalingChannel,
-    _login,
     logout,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
-    handleTokenExpiry,
+    renewToken,
     fetchTokenAndLogin,
   } = await SignalingManagerAuthentication(showMessage, handleSignalingEvents);
 
-  // Login with custom UID using token recieved from token generator
+  // Login with custom UID using token received from token generator
   document.getElementById("login").onclick = async function () {
     if (!isLoggedIn) {
       uid = document.getElementById("uid").value.toString();
@@ -50,13 +51,13 @@ window.onload = async () => {
   // join channel
   document.getElementById("join").onclick = async function () {
     channelName = document.getElementById("channelName").value.toString();
-    await join(channelName);
+    await subscribe(channelName);
   };
 
   // leave channel
   document.getElementById("leave").onclick = async function () {
     channelName = document.getElementById("channelName").value.toString();
-    await leave(channelName);
+    await unsubscribe(channelName);
   };
 
   // send channel message
