@@ -48,22 +48,12 @@ const SignalingManagerAuthentication = async (
     signalingManager.login(uid, token);
   };
 
-  const renewToken = async () => {
-    const token = await fetchToken();
+  const renewToken = async (uid) => {
+    const token = await fetchToken(uid);
     const result = await signalingManager
       .getSignalingEngine()
       .renewToken(token);
-    messageCallback(result.toString());
-
-    // Event triggers when token is about to expire
-    /* signalingManager.signalingEngine.on(
-      "TokenPrivilegeWillExpire",
-      async function () {
-        const token = await fetchToken();
-        signalingManager.signalingEngine.renewToken(token);
-        console.log("token renewed...");
-      }
-    ); */
+    messageCallback("Token was about to expire so it was renewed...")
   };
 
   // Return the extended signaling manager

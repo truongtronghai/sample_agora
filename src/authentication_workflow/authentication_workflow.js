@@ -3,6 +3,7 @@ import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 
 var isLoggedIn = false;
+var uid;
 var channelName;
 
 window.onload = async () => {
@@ -12,7 +13,7 @@ window.onload = async () => {
   const handleSignalingEvents = (event, eventArgs) => {
     switch (event) {
       case "TokenPrivilegeWillExpire":
-        renewToken();
+        renewToken(uid);
         break;
     }
   }
@@ -30,7 +31,7 @@ window.onload = async () => {
   // Login with custom UID using token received from token generator
   document.getElementById("login").onclick = async function () {
     if (!isLoggedIn) {
-      const uid = document.getElementById("uid").value.toString();
+      uid = document.getElementById("uid").value.toString();
       if (uid === "") {
         showMessage("Please enter a User ID.");
         return;
@@ -65,6 +66,5 @@ window.onload = async () => {
       .getElementById("channelMessage")
       .value.toString();
     await sendChannelMessage(channelName, channelMessage);
-    await renewToken();
   };
 };

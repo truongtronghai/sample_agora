@@ -5,6 +5,7 @@ import showMessage from "../utils/showMessage.js";
 import SignalingManager from "../signaling_manager/signaling_manager.js";
 //import SignalingManager from "../authentication_workflow/signaling_manager_authentication.js";
 
+var uid;
 var isLoggedIn = false;
 
 // The following code is solely related to UI implementation and not Agora-specific code
@@ -59,7 +60,7 @@ window.onload = async () => {
         
         break;
       case "TokenPrivilegeWillExpire":
-        renewToken();
+        renewToken(uid);
         break;
       default:
         console.log("Unknown eventType: " + event);
@@ -145,7 +146,7 @@ window.onload = async () => {
   // Login
   document.getElementById("login").onclick = async function () {
     if (!isLoggedIn) {
-      const uid = document.getElementById("uid").value.toString();
+      uid = document.getElementById("uid").value.toString();
       if (uid === "") {
         showMessage("Please enter a User ID.");
         return;
