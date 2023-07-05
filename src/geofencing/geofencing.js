@@ -7,19 +7,14 @@ import SignalingManagerGeofencing from "./signaling_manager_geofencing.js";
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
 
   // Signaling Manager will create the engine and channel for you
   const {
-    _signalingEngine,
-    _getSignalingChannel,
+    config,
     login,
     logout,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
   } = await SignalingManagerGeofencing(showMessage, handleSignalingEvents);
 
@@ -40,12 +35,12 @@ window.onload = async () => {
 
   // join channel
   document.getElementById("join").onclick = async function () {
-    await join(config.channelName);
+    await subscribe(config.channelName);
   };
 
   // leave channel
   document.getElementById("leave").onclick = async function () {
-    await leave(config.channelName);
+    await unsubscribe(config.channelName);
   };
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
