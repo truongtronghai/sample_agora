@@ -67,3 +67,12 @@ let channel = config.channel;
 ```
 
 Please ensure that the [`config.json`](config.json) file is correctly populated with the required values before running the application.
+
+# Run tests
+
+The project is e2e tested using cypress testing. To start tests:
+- Run the project using `npm run start:dev`.
+- Run `npx cypress open` in the root directory of the project in another terminal.
+- Select `E2E Testing` in the dialog box that opens.
+- Choose any browser from the options shown.
+- Click on the test you want to run, for example, `sdk_quickstart.cy.js` tests the `sdk_quickstart` project, and so on.
