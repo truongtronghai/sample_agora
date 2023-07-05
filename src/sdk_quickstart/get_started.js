@@ -6,33 +6,27 @@ import setupProjectSelector from "../utils/setupProjectSelector.js";
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
-
 
   const handleSignalingEvents = (event, eventArgs) => {
-
     switch (event) {
       case "message":
-        
         break;
       case "presence":
         switch (eventArgs.eventType) {
-          case 'SNAPSHOT':
-          case 'REMOTE_JOIN':
-          case 'REMOTE_LEAVE':
+          case "SNAPSHOT":
+          case "REMOTE_JOIN":
+          case "REMOTE_LEAVE":
             updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
             break;
         }
         break;
-      }
     }
+  };
 
   // Signaling Manager will create the engine and channel for you
   const {
-    signalingEngine,
+    getSignalingEngine,
+    config,
     login,
     logout,
     subscribe,
@@ -44,19 +38,22 @@ window.onload = async () => {
 
   const updateChannelUserList = async function (channelName, channelType) {
     // Retrieve a list of users in the channel
-    const result = await signalingEngine.presence.whoNow(channelName, channelType);
+    const result = await getSignalingEngine().presence.whoNow(
+      channelName,
+      channelType
+    );
     const users = result.occupants;
-  
+
     // Create a Set to store the existing userIds
     const existingUsers = new Set();
-  
+
     // Update the list with online users
     for (let i = 0; i < users.length; i++) {
       const userId = users[i].userId;
       updateUserInList(userId);
       existingUsers.add(userId);
     }
-  
+
     // Remove offline users from the list
     const userList = document.getElementById("users-list");
     const allUsers = userList.querySelectorAll("li");
@@ -68,10 +65,10 @@ window.onload = async () => {
       }
     });
   };
-  
+
   const updateUserInList = async function (userId) {
     const user = document.getElementById(userId);
-  
+
     if (user == null) {
       // User does not exist in the list, add a new list item
       const li = document.createElement("li");
@@ -107,7 +104,7 @@ window.onload = async () => {
   document.getElementById("unsubscribe").onclick = async function () {
     await unsubscribe(config.channelName);
   };
-  
+
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
     let channelMessage = document
