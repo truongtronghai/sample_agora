@@ -5,34 +5,40 @@
     <title>Data Encryption</title>
     <script src="data_encryption.js" type="module"></script>
     <script src="../agora-rtm.2.1.3.min.js"></script>
+    <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
     <div id="projectSelector"></div>
     <h1>Data Encryption</h1>
-    <label>Secure your channel with the data encryption</label>
-    <p/>
+    <div><label>Secure your channel with the data encryption</label></div>
+    <p />
     <blockquote>
-    <div>
-      <label>Current user ID is </label>
-      <b><label id="userId"></label></b>:
-      <button type="button" id="login">Login</button>
-      <button type="button" id="logout">Logout</button>
-    </div><p/>
-    <div>
-      <label>Current channel name is </label>
-      <b><label id="channelName"></label></b>:
-      <button type="button" id="join">Join</button>
-      <button type="button" id="leave">Leave</button>
-    </div><p/>
-    <div>
-      <label>Send a message to the channel</label>:
-      <input type="text" placeholder="Message" id="channelMessage" />
-      <button type="button" id="send_channel_message">Send</button>
-    </div><p/>
+      <div>
+        <label>Current user ID is </label>
+        <b><label id="userId"></label></b>:
+        <button class="button" type="button" id="login">Login</button>
+        <button class="button" type="button" id="logout">Logout</button>
+      </div>
+      <p />
+      <div>
+        <label>Current channel name is </label>
+        <b><label id="channelName"></label></b>:
+        <button class="button" type="button" id="join">Join</button>
+        <button class="button" type="button" id="leave">Leave</button>
+      </div>
+      <p />
+      <div>
+        <label>Send a message to the channel</label>:
+        <input type="text" placeholder="Message" id="channelMessage" />
+        <button class="button" type="button" id="send_channel_message">
+          Send
+        </button>
+      </div>
+      <p />
     </blockquote>
     <hr />
     <blockquote>
-    <div id="log"></div>
+      <div id="log"></div>
     </blockquote>
   </body>
 </html>
