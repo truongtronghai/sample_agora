@@ -137,6 +137,11 @@ window.onload = async () => {
     }
   };
 
+  const clearChannelUserList = () => {
+    const userList = document.getElementById("users-list");
+    userList.innerHTML = "";
+  };
+
   const onUserClick = async function(uid) {
     // Show user metadata
     const metaData = await getUserMetadata(uid);
@@ -172,6 +177,7 @@ window.onload = async () => {
   // Unsubscribe a channel
   document.getElementById("unsubscribe").onclick = async function () {
     await unsubscribe(config.channelName);
+    clearChannelUserList();
   };
 
   document.getElementById("updateBio").onclick = async function () {
