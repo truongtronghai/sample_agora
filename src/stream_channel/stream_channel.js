@@ -11,20 +11,11 @@ window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
 
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
-
   // Signaling Manager will create the engine and channel for you
   const {
-    _signalingEngine,
-    _getSignalingChannel,
+    config,
     login,
     logout,
-    join,
-    leave,
-    sendChannelMessage,
     streamChannelJoinAndLeave,
     sendTopicMessage,
     topicJoinAndLeave,
@@ -54,7 +45,7 @@ window.onload = async () => {
     if (isStreamChannelJoined) {
       document.getElementById("streamJoinAndLeave").innerHTML = "Leave";
     } else {
-      document.getElementById("streamJoinAnd  Leave").innerHTML = "Join";
+      document.getElementById("streamJoinAndLeave").innerHTML = "Join";
     }
   };
 
