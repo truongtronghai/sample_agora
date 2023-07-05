@@ -9,10 +9,10 @@ describe("Test the get started sample", () => {
     cy.contains("LOGIN_SUCCESS");
 
     // Subscribe to a channel
-    cy.get(".button").contains("Join").click();
+    cy.get(".button").contains("Subscribe").click();
     cy.wait(1000);
-    cy.contains("joined"); // Joine the channel
-    cy.contains("is in the channel"); // presence works
+    cy.contains("joined"); // Joined the channel
+    cy.get("[id=users-list]").contains("1"); // presence works
 
     // type a message and hit send
     cy.get('[id="channelMessage"]').type("Hello World!");
@@ -23,7 +23,7 @@ describe("Test the get started sample", () => {
     cy.get("[id=log]").contains("Hello World!");
 
     // Unsubscribe channel
-    cy.get(".button").contains("Leave").click();
+    cy.get(".button").contains("Unsubscribe").click();
     cy.wait(1000);
     cy.get("[id=log]").contains("successfully left channel");
 
