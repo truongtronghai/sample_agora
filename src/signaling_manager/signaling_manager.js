@@ -13,6 +13,8 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       rtmConfig = rtmConfig || {
         token: config.token,
         useStringUserId: config.useStringUserId,
+        logUpload: config.logUpload,
+        presenceTimeout: config.presenceTimeout,
       };
       AgoraRTM.setArea({ areaCodes: ["ASIA"] });
       signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);
@@ -26,7 +28,10 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       message: (eventArgs) => {
         eventsCallback("message", eventArgs);
         messageCallback(
-          "Received message from " + eventArgs.publisher + ": " + eventArgs.message
+          "Received message from " +
+            eventArgs.publisher +
+            ": " +
+            eventArgs.message
         );
       },
       // State event handler
@@ -34,7 +39,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         eventsCallback("status", eventArgs);
         messageCallback(
           "Connection state changed to: " +
-          eventArgs.state +
+            eventArgs.state +
             ", Reason: " +
             eventArgs.reason
         );
@@ -47,7 +52,12 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
             eventArgs.snapshot[0].userId + " joined " + eventArgs.channelName
           );
         } else {
-          messageCallback("Presence event: " + eventArgs.eventType + ', User: ' + eventArgs.publisher);
+          messageCallback(
+            "Presence event: " +
+              eventArgs.eventType +
+              ", User: " +
+              eventArgs.publisher
+          );
         }
       },
       // Storage event handler
@@ -61,7 +71,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
       // Lock event handler
       lock: (eventArgs) => {
         eventsCallback("lock", eventArgs);
-      },        
+      },
       // TokenPrivilegeWillExpire event handler
       TokenPrivilegeWillExpire: (eventArgs) => {
         eventsCallback("TokenPrivilegeWillExpire ", eventArgs);
@@ -83,9 +93,9 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     }
   };
 
-  const getSignalingEngine = () =>{
+  const getSignalingEngine = () => {
     return signalingEngine;
-  }
+  };
 
   // Logout from the signaling engine
   const logout = async () => {
