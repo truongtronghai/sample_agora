@@ -2,6 +2,9 @@ import SignalingManagerGetStarted from "./signaling_manager_get_started.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 
+var isLoggedIn = false;
+var isSubscribed = false;
+
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Set the project selector
@@ -85,24 +88,30 @@ window.onload = async () => {
   document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
-  // login
+  // login and logout
   document.getElementById("login").onclick = async function () {
-    await login();
+    if (!isLoggedIn) {
+      await login();
+      isLoggedIn = true;
+      document.getElementById("login").innerHTML = "Logout";
+    } else {
+      await logout();
+      isLoggedIn = false;
+      document.getElementById("login").innerHTML = "Login";
+    }
   };
 
-  // logout
-  document.getElementById("logout").onclick = async function () {
-    await logout();
-  };
-
-  // Subscribe to a channel
+  // Subscribe to a channel and unsubscribe
   document.getElementById("subscribe").onclick = async function () {
-    await subscribe(config.channelName);
-  };
-
-  // Unsubscribe a channel
-  document.getElementById("unsubscribe").onclick = async function () {
-    await unsubscribe(config.channelName);
+    if (!isSubscribed) {
+      await subscribe(config.channelName);
+      isSubscribed = true;
+      document.getElementById("subscribe").innerHTML = "Unsubscribe";
+    } else {
+      await unsubscribe(config.channelName);
+      isSubscribed = false;
+      document.getElementById("subscribe").innerHTML = "Subscribe";
+    }
   };
 
   // send channel message
