@@ -11,35 +11,41 @@
   <body>
     <div id="projectSelector"></div>
     <h1>Store channel and user data</h1>
-    <label
-      >Use metadata to enhance user and channel features in Signaling
-      clients.</label
-    >
+    <div>
+      <label
+        >Use metadata to enhance user and channel features in Signaling
+        clients.</label
+      >
+    </div>
     <p />
     <blockquote>
       <div>
         <label>User ID: </label>
         <input type="text" placeholder="User id" id="uid" />
-        <button type="button" id="login">Login</button>
+        <button class="button" type="button" id="login">Login</button>
       </div>
       <p />
       <div>
         <label>Channel name: </label>
         <input type="text" placeholder="Channel Name" id="channelName" />
-        <button type="button" id="subscribe">Subscribe</button>
-        <button type="button" id="unsubscribe">Unsubscribe</button>
+        <button class="button" type="button" id="subscribe">Subscribe</button>
+        <button class="button" type="button" id="unsubscribe">
+          Unsubscribe
+        </button>
       </div>
       <p />
       <div>
         <label>Send a message to the channel</label>:
         <input type="text" placeholder="Message" id="channelMessage" />
-        <button type="button" id="send_channel_message">Send</button>
+        <button class="button" type="button" id="send_channel_message">
+          Send
+        </button>
       </div>
       <p />
       <div>
         <label>Save your bio to user metadata</label>
         <input type="text" placeholder="Your bio" id="bioText" />
-        <button type="button" id="updateBio">Update Bio</button>
+        <button class="button" type="button" id="updateBio">Update Bio</button>
       </div>
       <p />
       <div>
@@ -47,7 +53,7 @@
         <label>(Select a user to view their metadata.)</label>
         <ul id="users-list"></ul>
       </div>
-      <label>Channel Metadata:</label>
+      <div><label>Channel Metadata:</label></div>
       <div id="channel-metadata"></div>
     </blockquote>
     <hr />
