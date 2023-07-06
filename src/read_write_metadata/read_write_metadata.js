@@ -1,9 +1,6 @@
 import SignalingManagerMetadata from "./signaling_manager_metadata.js";
-//import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import showMessage from "../utils/showMessage.js";
-import SignalingManager from "../signaling_manager/signaling_manager.js";
-//import SignalingManager from "../authentication_workflow/signaling_manager_authentication.js";
 
 var uid;
 var isLoggedIn = false;
@@ -12,10 +9,6 @@ var isLoggedIn = false;
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config 
-  /*const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );*/
 
   const handleSignalingEvents = (event, eventArgs) => {
     switch (event) {
@@ -31,6 +24,7 @@ window.onload = async () => {
           setChannelMetadata(config.channelName, 'lastLogin', timeString);
           // Set user metadata
           setUserMetadata(config.uid, 'userBio', 'I want to learn about Agora Signaling');
+          setUserMetadata(config.uid, 'email', `user_${config.uid}@example.com`);
           // Fill the list of users in the channel
           updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
         } else if (eventArgs.eventType == 'REMOTE_JOIN' ) { 
@@ -47,7 +41,7 @@ window.onload = async () => {
           showChannelMetadata(eventArgs.data.metadata);
         } else if (eventArgs.storageType == 'USER') { // user metadata was updated
           showMessage('Metadata event ' + eventArgs.eventType + ', User: ' + eventArgs.publisher);
-          showUserMetadata(eventArgs.publisher, eventArgs.data.metadata);
+          //showUserMetadata(eventArgs.publisher, eventArgs.data.metadata);
         }
         break;
       case "topic":
@@ -70,14 +64,13 @@ window.onload = async () => {
   // Signaling Manager will create the engine for you
   const {
     config,
-    getSignalingEngine,
-    login,
     fetchTokenAndLogin,
     logout,
     subscribe,
     unsubscribe,
     sendChannelMessage,
     setUserMetadata,
+    updateUserMetadata,
     getUserMetadata,
     subscribeUserMetadata,
     setChannelMetadata,
@@ -143,8 +136,9 @@ window.onload = async () => {
   };
 
   const onUserClick = async function(uid) {
-    // Show user metadata
+    // Call getUserMetadata to retrieve the users data
     const metaData = await getUserMetadata(uid);
+    // Show metadata
     showUserMetadata(uid, metaData);
   }
  
@@ -181,11 +175,8 @@ window.onload = async () => {
   };
 
   document.getElementById("updateBio").onclick = async function () {
-    let bio = document
-    .getElementById("bioText")
-    .value.toString();
-
-    setUserMetadata(config.uid, 'userBio', bio);
+    const bio = document.getElementById("bioText").value.toString();
+    updateUserMetadata(config.uid, 'userBio', bio);
   };
 
   // Send a message to the channel

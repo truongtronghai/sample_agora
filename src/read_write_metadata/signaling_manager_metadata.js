@@ -17,20 +17,46 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
         revision : -1
       },
     ];
+
     const options = {
       userId : uid,
       majorRevision : -1,
       addTimeStamp : true,
       addUserId : true
     };
+
     try {
-        const result = await signalingManager.getSignalingEngine().storage.setUserMetadata(data, options);
-        messageCallback(`user metadata key ${key} saved`);
+        await signalingManager.getSignalingEngine().storage.setUserMetadata(data, options);
+        messageCallback(`User metadata key ${key} saved`);
     } catch (status) {
         console.log(status);
     };
   }
   
+  const updateUserMetadata = async function (uid, key, value) {
+    const data = [
+      {
+        key : key,
+        value : value,
+        revision : -1
+      },
+    ];
+
+    const options = {
+      userId : uid,
+      majorRevision : -1,
+      addTimeStamp : true,
+      addUserId : true
+    };
+
+    try {
+        await signalingManager.getSignalingEngine().storage.updateUserMetadata(data, options);
+        messageCallback(`User metadata key ${key} saved`);
+    } catch (status) {
+        console.log(status);
+    };
+  }
+
   const setChannelMetadata = async function (channelName, key, value) {
     const metaData = [
       {
@@ -85,6 +111,7 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
     ...signalingManager,
     whoNow,
     setUserMetadata,
+    updateUserMetadata,
     getUserMetadata,
     subscribeUserMetadata,
     setChannelMetadata,
