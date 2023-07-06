@@ -1,4 +1,4 @@
-import SignalingManagerMetadata from "./signaling_manager_metadata.js";
+import SignalingManagerStorage from "./signaling_manager_storage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import showMessage from "../utils/showMessage.js";
 
@@ -77,7 +77,7 @@ window.onload = async () => {
     getChannelMetadata, 
     renewToken,
     whoNow,    
-  } = await SignalingManagerMetadata(showMessage, handleSignalingEvents);
+  } = await SignalingManagerStorage(showMessage, handleSignalingEvents);
 
   const ul = document.getElementById("users-list");
 

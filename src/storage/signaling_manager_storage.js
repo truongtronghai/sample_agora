@@ -1,6 +1,6 @@
 import SignalingManagerAuthentication from '../authentication_workflow/signaling_manager_authentication.js';
 
-const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
+const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManagerAuthentication(messageCallback, eventsCallback);
 
@@ -119,4 +119,4 @@ const SignalingManagerMetadata = async (messageCallback, eventsCallback) => {
   };
 };
 
-export default SignalingManagerMetadata;
+export default SignalingManagerStorage;
