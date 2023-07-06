@@ -21,7 +21,7 @@ window.onload = async () => {
           const options = { timeZoneName: 'short' };
           const timeString = currentTime.toLocaleString(undefined, options);
           // Set channel metadata
-          setChannelMetadata(config.channelName, 'lastLogin', timeString);
+          setChannelMetadata(config.channelName, 'lastUser', timeString);
           // Set user metadata
           setUserMetadata(config.uid, 'userBio', 'I want to learn about Agora Signaling');
           setUserMetadata(config.uid, 'email', `user_${config.uid}@example.com`);
