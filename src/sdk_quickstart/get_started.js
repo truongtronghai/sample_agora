@@ -82,6 +82,11 @@ window.onload = async () => {
     }
   };
 
+  const clearChannelUserList = () => {
+    const userList = document.getElementById("users-list");
+    userList.innerHTML = "";
+  };
+  
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
@@ -111,6 +116,7 @@ window.onload = async () => {
       await unsubscribe(config.channelName);
       isSubscribed = false;
       document.getElementById("subscribe").innerHTML = "Subscribe";
+      clearChannelUserList();
     }
   };
 
