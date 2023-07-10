@@ -1,0 +1,24 @@
+{
+    "uid": "1",
+    "appId": "",
+    "channelName": "",
+    "token": "",
+    "proxyUrl": "http://localhost:8080/",
+    "serverUrl": "https://agora-token-service-production-10e3.up.railway.app",
+    "tokenExpiryTime": "600",
+    "encryptionMode": 1,
+    "salt": "",
+    "cipherKey": "",
+    "presenceTimeout": 300,
+    "logUpload": false,
+    "logFilter": {
+        "error": true,
+        "warn": true,
+        "info": true,
+        "track": true,
+        "debug": false
+    },
+    "cloudProxy": true,
+    "useStringUserId": false,
+    "rtcToken": ""
+}

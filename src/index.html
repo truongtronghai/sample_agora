@@ -2,32 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Signaling Examples</title>
-    <script src="index.js" type="text/javascript"></script>
+    <title>Signaling reference app</title>
+    <script src="index.js" type="module"></script>
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <h1 class="left-align">Signaling Examples</h1>
-    <form id="loginForm">
-      <div class="col" style="min-width: 433px; max-width: 443px">
-        <div class="card" style="margin-top: 0px; margin-bottom: 0px">
-          <div
-            class="row card-content"
-            style="margin-bottom: 0px; margin-top: 10px"
-          >
-            <div class="row">
-              <div>
-                <h3>Select a sample code:</h3>
-                <select id="selectedExample">
-                  <option value="">Select</option>
-                  <option value="getStarted">Get Started</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-    <hr />
-    <div id="log"></div>
+    <div id="projectSelector"></div>
+    <div class="center homepage">
+      <h1>Signaling reference app</h1>
+      <p>
+        Choose any project from the navbar up top to try out Agora's Signaling
+        SDK. Have fun :)
+      </p>
+    </div>
   </body>
 </html>

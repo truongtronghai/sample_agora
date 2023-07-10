@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Store channel and user data</title>
+    <script src="../agora-rtm.2.1.3.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="storage.js" type="module"></script>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1>Store channel and user data</h1>
+    <div class="center">
+      <label
+        >Use metadata to enhance user and channel features in Signaling
+        clients.</label
+      >
+    </div>
+    <p />
+    <blockquote class="center">
+      <div>
+        <label>User ID: </label>
+        <input type="text" placeholder="User id" id="uid" />
+        <button class="button" type="button" id="login">Login</button>
+      </div>
+      <p />
+      <div>
+        <label>Channel name: </label>
+        <input type="text" placeholder="Channel Name" id="channelName" />
+        <button class="button" type="button" id="subscribe">Subscribe</button>
+        <button class="button" type="button" id="unsubscribe">
+          Unsubscribe
+        </button>
+      </div>
+      <p />
+      <div>
+        <label>Send a message to the channel</label>:
+        <input type="text" placeholder="Message" id="channelMessage" />
+        <button class="button" type="button" id="send_channel_message">
+          Send
+        </button>
+      </div>
+      <p />
+      <div>
+        <label>Save your bio to user metadata</label>
+        <input type="text" placeholder="Your bio" id="bioText" />
+        <button class="button" type="button" id="updateBio">Update bio</button>
+      </div>
+      <p />
+      <div>
+        <label>Users in the channel:</label><br />
+        <label>(Select a user to view their metadata.)</label>
+        <ul id="users-list"></ul>
+      </div>
+      <div><label>Channel Metadata:</label></div>
+      <div id="channel-metadata"></div>
+    </blockquote>
+    <hr />
+    <div id="log"></div>
+  </body>
+</html>
