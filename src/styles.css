@@ -39,61 +39,24 @@ body {
   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
 }
-/* HOME PAGE */
-.main-content {
-  margin: 0;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+/*************************** /
+/ HOME PAGE STYLING         /
+/**************************/
+.homepage {
+  /* position: absolute; */
+  top: 50%;
+  transform: translateY(150%);
+  font-family: "sans-serif";
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 400;
+  text-decoration-style: solid;
+  color: #212121;
 }
-.main-content__checkmark {
-  font-size: 4.0625rem;
-  line-height: 1;
-  color: #24b663;
-}
-.main-content__body {
-  margin: 20px 0 0;
-  font-size: 2.5rem;
-  line-height: 1.4;
-}
-.site-header {
-  margin: 0 auto;
-  padding: 80px 0 0;
-  max-width: 820px;
-}
-.site-header__title {
-  margin: 0;
-  font-family: serif;
-  font-weight: 200;
-  line-height: 1.1;
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
-}
-@media only screen and (min-width: 40em) {
-  .site-header {
-    padding-top: 150px;
-  }
-  .site-header__title {
-    font-size: 3.25rem;
-  }
-  .main-content__checkmark {
-    font-size: 9.75rem;
-  }
-  .main-content__body {
-    font-size: 2.5rem;
-  }
-  .site-footer {
-    padding: 145px 0 25px;
-  }
-  .site-footer__fineprint {
-    font-size: 1.125rem;
-  }
-}
-/* NAVBAR STYLING STARTS */
+
+/*************************** /
+/ NAVBAR STYLING STARTS     /
+/**************************/
 li {
   list-style: none;
 }
@@ -108,7 +71,6 @@ li {
   display: block;
   font-size: 20px;
   font-weight: 400;
-  /* width: 250px; */
   line-height: 12.8833px;
   text-decoration-style: solid;
   color: #212121;
