@@ -11,7 +11,7 @@ The runnable code examples are:
 - [Secure authentication with tokens](/src/authentication_workflow/) - quickly set up an authentication token server, retrieve
   a token from the server, and use it to connect securely to Signaling as a specific user.
 - [Stream channels](/src/stream_channel/) - communicate to other users in topics.
-- [Store channel and user data](src/read_write_metadata) - easily store data for users and channels without the need to
+- [Store channel and user data](src/storage) - easily store data for users and channels without the need to
   set up your own databases. 
 - [Connect through restricted networks with Cloud Proxy](src/cloud_proxy/) - ensure reliable connectivity for your users when they connect from an
   environment with a restricted network.
