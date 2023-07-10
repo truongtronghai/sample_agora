@@ -1,13 +1,23 @@
-# Agora Signaling SDK for Web sample projects
+# Agora Signaling SDK for Web v2.x reference app
 
-This repository holds the code examples used for the [Agora Signaling SDK for Web](https://docs.agora.io/en/signaling/get-started/get-started-sdk?platform=web) documentation. Clone the repo, run and test the samples, use the code in your own project. Enjoy.
+This repository holds the code examples used for the [Agora Signaling SDK for Web](https://docs-staging-git-milestone-22-signalling-211-agora-gdxe.vercel.app/en/signaling/overview/product-overview?platform=web) documentation. Clone the repo, run and test the samples, use the code in your own project. Enjoy.
 
 ## Samples  
 
 The runnable code examples are:
 
-- [SDK quickstart](/src/sdk_quickstart/) - The minimum code you need to integrate low-latency, high-concurrency signaling features into your app using Signaling SDK.
-- [Authentication Workflow](/src/authentication_workflow/) - This project shows you how to create a Signaling token server and a Signaling client web app
+- [SDK quickstart](/src/sdk_quickstart/) - the minimum code you need to integrate low-latency, high-concurrency
+  signaling features into your app using Signaling SDK.
+- [Secure authentication with tokens](/src/authentication_workflow/) - quickly set up an authentication token server, retrieve
+  a token from the server, and use it to connect securely to Signaling as a specific user.
+- [Stream channels](/src/stream_channel/) - communicate to other users in topics.
+- [Store channel and user data](src/read_write_metadata) - easily store data for users and channels without the need to
+  set up your own databases. 
+- [Connect through restricted networks with Cloud Proxy](src/cloud_proxy/) - ensure reliable connectivity for your users when they connect from an
+  environment with a restricted network.
+- [Data encryption](src/data_encryption) - integrate built-in data encryption into your app using Signaling.
+- [Geofencing](src/geofencing) - only connect to Signaling within the specified region.
+
 
 ## Run this project
 
