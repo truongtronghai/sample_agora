@@ -5,15 +5,21 @@ p {
   text-align: center;
 }
 div {
-  text-align: center;
+  text-align: left;
 }
 label {
-  text-align: center;
+  text-align: left;
 }
 body {
   margin: 0;
 }
 
+.center {
+  margin: auto;
+  width: 25%;
+  padding: 10px;
+  padding-left: 120px;
+}
 .button {
   background-color: #099dfd;
   border: none;
@@ -90,24 +96,34 @@ body {
 /* NAVBAR STYLING STARTS */
 li {
   list-style: none;
-  margin: 0;
 }
 .navbar {
   display: flex;
-  align-items: stretch;
-  justify-content: space-between;
-  background-color: #101C37;
-  color: #fff;
+  background-color: #FFFFFF;
+  color: #212121;
+  border-bottom: 1px solid #ddd;
 }
 
 .nav-links a {
-  color: #fff;
+  display: block;
+  font-size: 20px;
+  font-weight: 400;
+  /* width: 250px; */
+  line-height: 12.8833px;
+  text-decoration-style: solid;
+  color: #212121;
+  font-family: "sans-serif";
   text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: #099dfd;
 }
 
 /* LOGO */
 .logo {
-  padding-top: 14px;
+  padding-top: 10px;
+  padding-left: 10px;
 }
 
 /* NAVBAR MENU */
@@ -115,10 +131,7 @@ li {
   display: flex;
   gap: 1em;
   font-size: 18px;
-}
-
-.menu li:hover {
-  background-color: #099dfd;
+  padding-top: 10px;
 }
 
 .menu li {
