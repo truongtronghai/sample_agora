@@ -1,0 +1,101 @@
+h1 {
+  text-align: center;
+}
+p {
+  text-align: center;
+}
+div {
+  text-align: left;
+}
+label {
+  text-align: left;
+}
+body {
+  margin: 0;
+}
+
+.center {
+  margin: auto;
+  width: 25%;
+  padding: 10px;
+  padding-left: 120px;
+}
+.button {
+  background-color: #099dfd;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+.button:hover {
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+}
+/*************************** /
+/ HOME PAGE STYLING         /
+/**************************/
+.homepage {
+  /* position: absolute; */
+  top: 50%;
+  transform: translateY(150%);
+  font-family: "sans-serif";
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 400;
+  text-decoration-style: solid;
+  color: #212121;
+}
+
+/*************************** /
+/ NAVBAR STYLING STARTS     /
+/**************************/
+li {
+  list-style: none;
+}
+.navbar {
+  display: flex;
+  background-color: #FFFFFF;
+  color: #212121;
+  border-bottom: 1px solid #ddd;
+}
+
+.nav-links a {
+  display: block;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 12.8833px;
+  text-decoration-style: solid;
+  color: #212121;
+  font-family: "sans-serif";
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: #099dfd;
+}
+
+/* LOGO */
+.logo {
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+/* NAVBAR MENU */
+.menu {
+  display: flex;
+  gap: 1em;
+  font-size: 18px;
+  padding-top: 10px;
+}
+
+.menu li {
+  padding: 5px 14px;
+}

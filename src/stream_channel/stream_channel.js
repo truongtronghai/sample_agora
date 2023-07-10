@@ -6,32 +6,25 @@ import setupProjectSelector from "../utils/setupProjectSelector.js";
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   let isStreamChannelJoined = false;
+  let isTopicJoined = false;
 
   // Set the project selector
   setupProjectSelector();
 
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
-
   // Signaling Manager will create the engine and channel for you
   const {
-    _signalingEngine,
-    _getSignalingChannel,
+    config,
     login,
     logout,
-    join,
-    leave,
-    sendChannelMessage,
     streamChannelJoinAndLeave,
     sendTopicMessage,
+    topicJoinAndLeave,
   } = await SignalingManagerStreamChannel(showMessage, handleSignalingEvents);
 
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
   document.getElementById("streamChannelNameLbl").innerHTML =
-    "Stream channel name is: <b>" + config.channelName + "</b>";
+    config.channelName;
 
   // Buttons
   // login
@@ -52,13 +45,27 @@ window.onload = async () => {
     if (isStreamChannelJoined) {
       document.getElementById("streamJoinAndLeave").innerHTML = "Leave";
     } else {
-      document.getElementById("streamJoinAnd  Leave").innerHTML = "Join";
+      document.getElementById("streamJoinAndLeave").innerHTML = "Join";
+    }
+  };
+
+  document.getElementById("joinTopic").onclick = async function () {
+    let topic = document.getElementById("topicName").value.toString();
+    await topicJoinAndLeave(isTopicJoined, topic); // Join and leave logic
+
+    // UI changes for join and leave
+    isTopicJoined = !isTopicJoined;
+    if (isTopicJoined) {
+      document.getElementById("joinTopic").innerHTML = "Leave topic";
+    } else {
+      document.getElementById("joinTopic").innerHTML = "Join topic";
     }
   };
 
   document.getElementById("sendTopicMessage").onclick = async function () {
-    let message = document.getElementById("topicMessage").textContent;
-    let topicName = document.getElementById("topicName").innerHTML;
+    let message = document.getElementById("topicMessage").value.toString();
+    let topicName = document.getElementById("topicName").value.toString();
+    console.log(message, topicName);
     sendTopicMessage(message, topicName);
   };
 };

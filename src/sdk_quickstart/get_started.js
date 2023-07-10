@@ -1,53 +1,125 @@
-import SignalingManager from "../signaling_manager/signaling_manager.js";
+import SignalingManagerGetStarted from "./signaling_manager_get_started.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
-import handleSignalingEvents from "../utils/handleSignalingEvents.js";
+
+var isLoggedIn = false;
+var isSubscribed = false;
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
+
+  const handleSignalingEvents = (event, eventArgs) => {
+    switch (event) {
+      case "message":
+        break;
+      case "presence":
+        switch (eventArgs.eventType) {
+          case "SNAPSHOT":
+          case "REMOTE_JOIN":
+          case "REMOTE_LEAVE":
+            updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
+            break;
+        }
+        break;
+    }
+  };
 
   // Signaling Manager will create the engine and channel for you
   const {
-    signalingEngine,
-    getSignalingChannel,
+    getSignalingEngine,
+    config,
     login,
     logout,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
-  } = await SignalingManager(showMessage, handleSignalingEvents);
+  } = await SignalingManagerGetStarted(showMessage, handleSignalingEvents);
 
+  const ul = document.getElementById("members-list");
+
+  const updateChannelUserList = async function (channelName, channelType) {
+    // Retrieve a list of users in the channel
+    const result = await getSignalingEngine().presence.whoNow(
+      channelName,
+      channelType
+    );
+    const users = result.occupants;
+
+    // Create a Set to store the existing userIds
+    const existingUsers = new Set();
+
+    // Update the list with online users
+    for (let i = 0; i < users.length; i++) {
+      const userId = users[i].userId;
+      updateUserInList(userId);
+      existingUsers.add(userId);
+    }
+
+    // Remove offline users from the list
+    const userList = document.getElementById("users-list");
+    const allUsers = userList.querySelectorAll("li");
+    if (allUsers == null) return;
+    allUsers.forEach((user) => {
+      const userId = user.getAttribute("id");
+      if (!existingUsers.has(userId)) {
+        user.remove();
+      }
+    });
+  };
+
+  const updateUserInList = async function (userId) {
+    const user = document.getElementById(userId);
+
+    if (user == null) {
+      // User does not exist in the list, add a new list item
+      const li = document.createElement("li");
+      li.setAttribute("id", userId);
+      li.innerHTML = userId;
+      const userList = document.getElementById("users-list");
+      userList.appendChild(li);
+    }
+  };
+
+  const clearChannelUserList = () => {
+    const userList = document.getElementById("users-list");
+    userList.innerHTML = "";
+  };
+  
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
 
   // Buttons
-  // login
+  // login and logout
   document.getElementById("login").onclick = async function () {
-    await login();
+    if (!isLoggedIn) {
+      await login();
+      isLoggedIn = true;
+      document.getElementById("login").innerHTML = "Logout";
+    } else {
+      await logout();
+      isLoggedIn = false;
+      document.getElementById("login").innerHTML = "Login";
+    }
   };
 
-  // logout
-  document.getElementById("logout").onclick = async function () {
-    await logout();
+  // Subscribe to a channel and unsubscribe
+  document.getElementById("subscribe").onclick = async function () {
+    if (!isSubscribed) {
+      await subscribe(config.channelName);
+      isSubscribed = true;
+      document.getElementById("subscribe").innerHTML = "Unsubscribe";
+    } else {
+      await unsubscribe(config.channelName);
+      isSubscribed = false;
+      document.getElementById("subscribe").innerHTML = "Subscribe";
+      clearChannelUserList();
+    }
   };
 
-  // join channel
-  document.getElementById("join").onclick = async function () {
-    await join(config.channelName);
-  };
-
-  // leave channel
-  document.getElementById("leave").onclick = async function () {
-    await leave(config.channelName);
-  };
   // send channel message
   document.getElementById("send_channel_message").onclick = async function () {
     let channelMessage = document

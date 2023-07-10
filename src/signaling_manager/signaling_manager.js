@@ -12,8 +12,9 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     try {
       rtmConfig = rtmConfig || {
         token: config.token,
-        logLevel: "debug",
-        useStringUserId: false,
+        useStringUserId: config.useStringUserId,
+        logUpload: config.logUpload,
+        presenceTimeout: config.presenceTimeout,
       };
       AgoraRTM.setArea({ areaCodes: ["ASIA"] });
       signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);
@@ -23,30 +24,68 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
     // Event listener to handle incoming messages and connection status changes
     signalingEngine.addEventListener({
-      message: (event) => {
-        eventsCallback(event);
+      // Message event handler
+      message: (eventArgs) => {
+        eventsCallback("message", eventArgs);
         messageCallback(
-          "Received peer message from " + event.publisher + ": " + event.message
+          "Received message from " +
+            eventArgs.publisher +
+            ": " +
+            eventArgs.message
         );
       },
-      status: (event) => {
-        console.log("this is the event", event);
-        eventsCallback(event);
+      // State event handler
+      status: (eventArgs) => {
+        eventsCallback("status", eventArgs);
         messageCallback(
           "Connection state changed to: " +
-            event.state +
+            eventArgs.state +
             ", Reason: " +
-            event.reason
+            eventArgs.reason
         );
+      },
+      // Presence event handler.
+      presence: (eventArgs) => {
+        eventsCallback("presence", eventArgs);
+        if (eventArgs.eventType === "SNAPSHOT") {
+          messageCallback(
+            `User ${eventArgs.snapshot[0].userId} joined channel ${eventArgs.channelName}`
+          );
+        } else {
+          messageCallback(
+            "Presence event: " +
+              eventArgs.eventType +
+              ", User: " +
+              eventArgs.publisher
+          );
+        }
+      },
+      // Storage event handler
+      storage: (eventArgs) => {
+        eventsCallback("storage", eventArgs);
+      },
+      // Topic event handler
+      topic: (eventArgs) => {
+        eventsCallback("topic", eventArgs);
+      },
+      // Lock event handler
+      lock: (eventArgs) => {
+        eventsCallback("lock", eventArgs);
+      },
+      // TokenPrivilegeWillExpire event handler
+      TokenPrivilegeWillExpire: (eventArgs) => {
+        eventsCallback("TokenPrivilegeWillExpire ", eventArgs);
       },
     });
   };
 
-  await setupSignalingEngine(rtmConfig);
-
   // Login to the signaling engine
-  const login = async () => {
+  const login = async (uid, token) => {
     try {
+      if (uid !== undefined) config.uid = uid;
+      if (token !== undefined) config.token = token;
+
+      await setupSignalingEngine(rtmConfig);
       const result = await signalingEngine.login();
       console.log(result);
     } catch (error) {
@@ -54,14 +93,13 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     }
   };
 
+  const getSignalingEngine = () => {
+    return signalingEngine;
+  };
+
   // Logout from the signaling engine
   const logout = async () => {
     await signalingEngine.logout();
-  };
-
-  // Get signaling Channel instance
-  const getSignalingChannel = () => {
-    return signalingChannel;
   };
 
   const createChannel = async (channelName) => {
@@ -69,64 +107,34 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     channelName = channelName || config.channelName;
     try {
       signalingChannel = await signalingEngine.createStreamChannel(channelName);
-      console.log(
-        "Create stream channel successful for channel name: ",
-        channelName
-      );
     } catch (error) {
       console.error(error);
     }
-
-    // Display signalingChannel messages
-    signalingChannel.on("ChannelMessage", function (message, memberId) {
-      const eventArgs = { message: message, memberId: memberId };
-      eventsCallback("ChannelMessage", eventArgs);
-      messageCallback(
-        "Received channel message from " + memberId + ": " + message.text
-      );
-    });
-
-    // Display signalingChannel member stats
-    signalingChannel.on("MemberJoined", function (memberId) {
-      const eventArgs = { memberId: memberId };
-      eventsCallback("MemberJoined", eventArgs);
-      messageCallback(memberId + " joined the channel");
-    });
-
-    // Display signalingChannel member stats
-    signalingChannel.on("MemberLeft", function (memberId) {
-      const eventArgs = { memberId: memberId };
-      eventsCallback("MemberLeft", eventArgs);
-      messageCallback(memberId + " left the channel");
-    });
   };
 
-  // Join a channel
-  const join = async (channelName) => {
+  // Subscribe to a channel
+  const subscribe = async (channelName) => {
+    channelName = channelName || config.channelName;
     try {
       if (signalingChannel === null) {
         await createChannel(channelName);
-        console.log("this is the channel object", signalingChannel);
       }
 
       const subscribeOptions = {
         withMessage: true,
         withPresence: true,
-        withMetadata: false,
-        withLock: false,
+        withMetadata: true,
+        withLock: true,
       };
       await signalingEngine.subscribe(channelName, subscribeOptions);
-
-      messageCallback(
-        "You have successfully joined & subscribed channel " + signalingChannel.channelName
-      );
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Leave a channel
-  const leave = async (channelName) => {
+  // Unsubscribe a channel
+  const unsubscribe = async (channelName) => {
+    channelName = channelName || config.channelName;
     try {
       await signalingEngine.unsubscribe(channelName);
       messageCallback("You have successfully left channel " + channelName);
@@ -144,7 +152,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         channelName,
         publishMessage
       );
-      messageCallback(config.uid + ": " + publishMessage);
+      messageCallback(`Message sent to channel ${channelName}: ${Message}`);
     } catch (error) {
       console.log(error);
     }
@@ -152,13 +160,13 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
 
   // Return the signaling engine and the available functions
   return {
-    signalingEngine,
-    getSignalingChannel,
+    getSignalingEngine,
+    config,
     login,
     logout,
     createChannel,
-    join,
-    leave,
+    subscribe,
+    unsubscribe,
     sendChannelMessage,
   };
 };

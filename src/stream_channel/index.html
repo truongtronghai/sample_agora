@@ -4,32 +4,40 @@
     <meta charset="UTF-8" />
     <title>Stream Channel</title>
     <script src="stream_channel.js" type="module"></script>
-    <script src="../AgoraRTM-production.js"></script>
+    <script src="../agora-rtm.2.1.3.min.js"></script>
+    <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
     <div id="projectSelector"></div>
     <h1>Stream Channel</h1>
-    <label>Send and receive real-time messages</label>
+    <div class="center">
+      <label>Send and receive real-time messages</label>
+    </div>
     <p />
-    <blockquote>
+    <blockquote class="center">
       <div>
         <label>Current user ID is </label>
         <b><label id="userId"></label></b>:
-        <button type="button" id="login">Login</button>
-        <button type="button" id="logout">Logout</button>
+        <button class="button" type="button" id="login">Login</button>
+        <button class="button" type="button" id="logout">Logout</button>
       </div>
       <p />
       <div>
         <label>Current channel name is </label>
         <label id="streamChannelNameLbl"></label>
-        <button type="button" id="streamJoinAndLeave">Join</button><br />
+        <button class="button" type="button" id="streamJoinAndLeave">
+          Join</button
+        ><br />
       </div>
       <div>
         <h3>Send Messages:</h3>
-        <label>Specify the topic and the message:</label>
+        <label>Join any topic: </label>
         <input type="text" id="topicName" placeholder="Topic name" />
+        <button class="button" type="button" id="joinTopic">Join topic</button
+        ><br />
+        <label>Send message to the joined topic: </label>
         <input type="text" id="topicMessage" placeholder="Topic message" />
-        <button type="button" id="sendTopicMessage">Send</button>
+        <button class="button" type="button" id="sendTopicMessage">Send</button>
       </div>
     </blockquote>
     <hr />

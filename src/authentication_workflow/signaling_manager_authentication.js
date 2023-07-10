@@ -10,13 +10,11 @@ const SignalingManagerAuthentication = async (
     eventsCallback
   );
 
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
+  // Get the config
+  const config = signalingManager.config;
 
   // Fetches the Signaling token
-  async function FetchToken(uid) {
+  async function fetchToken(uid) {
     if (config.serverUrl !== "") {
       return new Promise(function (resolve) {
         axios
@@ -46,26 +44,22 @@ const SignalingManagerAuthentication = async (
   }
 
   const fetchTokenAndLogin = async (uid) => {
-    const token = await FetchToken(uid);
+    const token = await fetchToken(uid);
     signalingManager.login(uid, token);
   };
 
-  const handleTokenExpiry = async () => {
-    // Event triggers when token is about to expire in 30 seconds
-    signalingManager.signalingEngine.on(
-      "TokenPrivilegeWillExpire",
-      async function () {
-        const token = await FetchToken();
-        signalingManager.signalingEngine.renewToken(token);
-        console.log("token renewed...");
-      }
-    );
+  const renewToken = async (uid) => {
+    const token = await fetchToken(uid);
+    const result = await signalingManager
+      .getSignalingEngine()
+      .renewToken(token);
+    messageCallback("Token was about to expire so it was renewed...")
   };
 
   // Return the extended signaling manager
   return {
     ...signalingManager,
-    handleTokenExpiry,
+    renewToken,
     fetchTokenAndLogin,
   };
 };
