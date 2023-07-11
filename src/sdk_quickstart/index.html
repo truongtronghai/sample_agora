@@ -10,40 +10,41 @@
   <body>
     <div id="projectSelector"></div>
     <h1>Get started with Signaling</h1>
-    <blockquote class="center-with-padding">
-      <label
-        >Login to Signaling, then send a message to a channel or another
-        user.</label
-      >
-    </blockquote>
-    <p />
-    <div class="center-with-padding">
-      <div>
-        <label>Current user ID is </label>
-        <b><label id="userId"></label></b>:
-        <button class="button" type="button" id="login">Login</button>
+    <div class="outer-horizontal">
+      <div class="inner-horizontal">
+        <label
+          >Login to Signaling, then send a message to a channel or another
+          user.</label
+        >
+        <p />
+        <div>
+          <label>Current user ID is </label>
+          <b><label id="userId"></label></b>:
+          <button class="button" type="button" id="login">Login</button>
+        </div>
+        <p />
+        <div>
+          <label>Current channel name is </label>
+          <b><label id="channelName"></label></b>:
+          <button class="button" type="button" id="subscribe">Subscribe</button>
+        </div>
+        <p />
+        <div>
+          <label>Send a message to the channel</label>:
+          <input type="text" placeholder="Message" id="channelMessage" />
+          <button class="button" type="button" id="send_channel_message">
+            Send
+          </button>
+        </div>
+        <p />
+        <div>
+          <label>Live users in the channel (presence):</label>
+          <ul id="users-list"></ul>
+        </div>
+        <p />
       </div>
-      <p />
-      <div>
-        <label>Current channel name is </label>
-        <b><label id="channelName"></label></b>:
-        <button class="button" type="button" id="subscribe">Subscribe</button>
-      </div>
-      <p />
-      <div>
-        <label>Send a message to the channel</label>:
-        <input type="text" placeholder="Message" id="channelMessage" />
-        <button class="button" type="button" id="send_channel_message">
-          Send
-        </button>
-      </div>
-      <p />
-      <div>
-        <label>Live users in the channel (presence):</label>
-        <ul id="users-list"></ul>
-      </div>
-      <p />
     </div>
+    <p />
     <hr />
     <blockquote>
       <div id="log"></div>

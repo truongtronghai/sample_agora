@@ -13,12 +13,6 @@ label {
 body {
   margin: 0;
 }
-.center-with-padding {
-  margin: auto;
-  width: 25%;
-  padding: 10px;
-  padding-left: 120px;
-}
 .button {
   background-color: #099dfd;
   border: none;
@@ -118,4 +112,13 @@ li {
   width: 100%;
   z-index: -1;
   /* Whatever width you want */
+}
+
+.inner-horizontal {
+  display: table;
+  margin: 0 auto;
+}
+
+.outer-horizontal {
+  width:100%
 }
