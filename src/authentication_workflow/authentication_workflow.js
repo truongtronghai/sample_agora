@@ -1,6 +1,7 @@
 import SignalingManagerAuthentication from "./signaling_manager_authentication.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import docURLs from "../utils/docSteURLs.js";
 
 var isLoggedIn = false;
 var uid;
@@ -16,7 +17,7 @@ window.onload = async () => {
         renewToken(uid);
         break;
     }
-  }
+  };
 
   // Signaling Manager will create the engine for you
   const {
@@ -66,5 +67,10 @@ window.onload = async () => {
       .getElementById("channelMessage")
       .value.toString();
     await sendChannelMessage(channelName, channelMessage);
+  };
+
+  // Go to the relevant documentation page on docs.agora.io
+  document.getElementById("fullDoc").onclick = async function () {
+    window.open(docURLs["authentication"], "_blank").focus();
   };
 };

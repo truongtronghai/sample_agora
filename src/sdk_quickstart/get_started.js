@@ -1,6 +1,7 @@
 import SignalingManagerGetStarted from "./signaling_manager_get_started.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import docURLs from "../utils/docSteURLs.js";
 
 var isLoggedIn = false;
 var isSubscribed = false;
@@ -86,7 +87,7 @@ window.onload = async () => {
     const userList = document.getElementById("users-list");
     userList.innerHTML = "";
   };
-  
+
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
@@ -126,5 +127,10 @@ window.onload = async () => {
       .getElementById("channelMessage")
       .value.toString();
     await sendChannelMessage(config.channelName, channelMessage);
+  };
+
+  // Go to the relevant documentation page on docs.agora.io
+  document.getElementById("fullDoc").onclick = async function () {
+    window.open(docURLs["sdk_quickstart"], '_blank').focus();
   };
 };

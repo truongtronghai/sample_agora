@@ -1,7 +1,8 @@
 import SignalingManagerCloudProxy from "./signaling_manager_cloud_proxy.js";
-import showMessage from '../utils/showMessage.js';
+import showMessage from "../utils/showMessage.js";
 import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import docURLs from "../utils/docSteURLs.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -9,14 +10,8 @@ window.onload = async () => {
   setupProjectSelector();
 
   // Signaling Manager will create the engine and channel for you
-  const {
-    config,
-    login,
-    logout,
-    subscribe,
-    unsubscribe,
-    sendChannelMessage,
-  } = await SignalingManagerCloudProxy(showMessage, handleSignalingEvents);
+  const { config, login, logout, subscribe, unsubscribe, sendChannelMessage } =
+    await SignalingManagerCloudProxy(showMessage, handleSignalingEvents);
 
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
@@ -48,6 +43,11 @@ window.onload = async () => {
     let channelMessage = document
       .getElementById("channelMessage")
       .value.toString();
-      await sendChannelMessage(config.channelName, channelMessage);
-    };
+    await sendChannelMessage(config.channelName, channelMessage);
+  };
+
+  // Go to the relevant documentation page on docs.agora.io
+  document.getElementById("fullDoc").onclick = async function () {
+    window.open(docURLs["cloudproxy"], "_blank").focus();
+  };
 };
