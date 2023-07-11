@@ -2,6 +2,7 @@ import SignalingManagerStreamChannel from "./signaling_manager_stream_channel.js
 import showMessage from "../utils/showMessage.js";
 import handleSignalingEvents from "../utils/handleSignalingEvents.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
+import docURLs from "../utils/docSteURLs.js";
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -67,5 +68,10 @@ window.onload = async () => {
     let topicName = document.getElementById("topicName").value.toString();
     console.log(message, topicName);
     sendTopicMessage(message, topicName);
+  };
+
+  // Go to the relevant documentation page on docs.agora.io
+  document.getElementById("fullDoc").onclick = async function () {
+    window.open(docURLs["stream"], "_blank").focus();
   };
 };

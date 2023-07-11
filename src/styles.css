@@ -13,13 +13,6 @@ label {
 body {
   margin: 0;
 }
-
-.center {
-  margin: auto;
-  width: 25%;
-  padding: 10px;
-  padding-left: 120px;
-}
 .button {
   background-color: #099dfd;
   border: none;
@@ -43,9 +36,6 @@ body {
 / HOME PAGE STYLING         /
 /**************************/
 .homepage {
-  /* position: absolute; */
-  top: 50%;
-  transform: translateY(150%);
   font-family: "sans-serif";
   text-decoration: none;
   font-size: 20px;
@@ -62,7 +52,7 @@ li {
 }
 .navbar {
   display: flex;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #212121;
   border-bottom: 1px solid #ddd;
 }
@@ -98,4 +88,37 @@ li {
 
 .menu li {
   padding: 5px 14px;
+}
+
+.outer {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+
+.middle {
+  display: table-cell;
+  vertical-align: middle;
+  z-index: -1;
+}
+
+.inner {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  z-index: -1;
+  /* Whatever width you want */
+}
+
+.inner-horizontal {
+  display: table;
+  margin: 0 auto;
+}
+
+.outer-horizontal {
+  width:100%
 }
