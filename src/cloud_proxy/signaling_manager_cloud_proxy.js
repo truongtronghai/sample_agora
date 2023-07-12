@@ -8,7 +8,6 @@ const SignalingManagerCloudProxy = async (messageCallback, eventsCallback) => {
 
   // Set cloud proxy
   const rtmConfig = {
-    token: config.token,
     cloudProxy: config.cloudProxy,
   };
 

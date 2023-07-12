@@ -42,7 +42,6 @@ const SignalingManagerDataEncryption = async (
   encryptionMode = config.encryptionMode;
   // Start channel encryption
   const rtmConfig = {
-    token: config.token,
     logLevel: config.logFilter,
     useStringUserId: config.useStringUserId,
     encryptionMode: config.encryptionMode,
@@ -51,7 +50,11 @@ const SignalingManagerDataEncryption = async (
   };
 
   // Signaling Manager will create the engine and channel for you
-  const signalingManager = await SignalingManager(messageCallback, eventsCallback, rtmConfig);
+  const signalingManager = await SignalingManager(
+    messageCallback,
+    eventsCallback,
+    rtmConfig
+  );
 
   // Return the extended signaling manager
   return {

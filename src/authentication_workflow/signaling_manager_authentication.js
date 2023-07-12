@@ -53,7 +53,7 @@ const SignalingManagerAuthentication = async (
     const result = await signalingManager
       .getSignalingEngine()
       .renewToken(token);
-    messageCallback("Token was about to expire so it was renewed...")
+    messageCallback("Token was about to expire so it was renewed...");
   };
 
   // Return the extended signaling manager
