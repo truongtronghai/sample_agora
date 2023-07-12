@@ -5,6 +5,7 @@ const SignalingManagerStreamChannel = async (
   eventsCallback
 ) => {
   let streamChannel = null;
+  let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
 
   // Extend the SignalingManager by importing it
   const signalingManager = await SignalingManager(
@@ -14,22 +15,53 @@ const SignalingManagerStreamChannel = async (
 
   const config = signalingManager.config;
 
+  // Fetches the RTC token for stream channels
+  async function fetchRTCToken(uid, channelName) {
+    if (config.serverUrl !== "") {
+      return new Promise(function (resolve) {
+        axios
+          .get(
+            config.proxyUrl +
+              config.serverUrl +
+              "/rtc/" +
+              channelName +
+              "/" +
+              role +
+              "/uid/" +
+              uid +
+              "/?expiry=" +
+              config.tokenExpiryTime,
+            {
+              headers: {
+                "X-Requested-With": "XMLHttpRequest",
+              },
+            }
+          )
+          .then((response) => {
+            resolve(response.data.rtcToken);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
+    } else {
+      return config.rtcToken;
+    }
+  }
+
   const streamChannelJoinAndLeave = async function (
     isStreamChannelJoined,
     streamChannelName
   ) {
-    if (config.rtcToken === null) {
-      console.log(
-        "please create a rtc token from the console and add the token to the RtcToken variable in 'src/signaling_manager/config.json'"
-      );
-      return;
-    }
-    streamChannel = await signalingManager.getSignalingEngine().createStreamChannel(streamChannelName); // creates stream channel
+    const token = await fetchRTCToken(config.uid, streamChannelName);
+    streamChannel = await signalingManager
+      .getSignalingEngine()
+      .createStreamChannel(streamChannelName); // creates stream channel
 
     if (isStreamChannelJoined === false) {
       await streamChannel
         .join({
-          token: config.rtcToken,
+          token: token,
           withPresence: true,
         })
         .then((response) => {
@@ -45,13 +77,6 @@ const SignalingManagerStreamChannel = async (
   };
 
   const topicJoinAndLeave = async function (isTopicJoined, topicName) {
-    if (config.rtcToken === null) {
-      console.log(
-        "please create a rtc token from the console and add the token to the RtcToken variable in 'src/signaling_manager/config.json'"
-      );
-      return;
-    }
-
     if (isTopicJoined === false) {
       await streamChannel.joinTopic(topicName).then((response) => {
         messageCallback("Joined the topic: " + response.topicName);
