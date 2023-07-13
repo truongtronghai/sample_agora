@@ -16,7 +16,7 @@ const SignalingManagerAuthentication = async (
   // Fetches the Signaling token
   async function fetchToken(uid) {
     if (config.serverUrl !== "") {
-      return new Promise(function (resolve) {
+      return new Promise(function (resolve, reject) {
         axios
           .get(
             config.proxyUrl +
@@ -32,10 +32,12 @@ const SignalingManagerAuthentication = async (
             }
           )
           .then((response) => {
+            console.log("token fetched from server: ", response.data.rtmToken);
             resolve(response.data.rtmToken);
           })
           .catch((error) => {
             console.log(error);
+            resolve(config.token);
           });
       });
     } else {

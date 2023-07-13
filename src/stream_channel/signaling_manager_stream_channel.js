@@ -1,4 +1,4 @@
-import SignalingManager from "../signaling_manager/signaling_manager.js";
+import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 
 const SignalingManagerStreamChannel = async (
   messageCallback,
@@ -8,7 +8,7 @@ const SignalingManagerStreamChannel = async (
   let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
 
   // Extend the SignalingManager by importing it
-  const signalingManager = await SignalingManager(
+  const signalingManager = await SignalingManagerAuthentication(
     messageCallback,
     eventsCallback
   );

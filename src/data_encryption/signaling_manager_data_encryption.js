@@ -1,4 +1,4 @@
-import SignalingManager from "../signaling_manager/signaling_manager.js";
+import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 
 const SignalingManagerDataEncryption = async (
   messageCallback,
@@ -50,7 +50,7 @@ const SignalingManagerDataEncryption = async (
   };
 
   // Signaling Manager will create the engine and channel for you
-  const signalingManager = await SignalingManager(
+  const signalingManager = await SignalingManagerAuthentication(
     messageCallback,
     eventsCallback,
     rtmConfig

@@ -15,7 +15,7 @@ window.onload = async () => {
   // Signaling Manager will create the engine and channel for you
   const {
     config,
-    login,
+    fetchTokenAndLogin,
     logout,
     streamChannelJoinAndLeave,
     sendTopicMessage,
@@ -30,7 +30,7 @@ window.onload = async () => {
   // Buttons
   // login
   document.getElementById("login").onclick = async function () {
-    await login();
+    await fetchTokenAndLogin(config.uid);
   };
 
   // logout

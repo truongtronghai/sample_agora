@@ -7,47 +7,15 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     res.json()
   );
 
-  // Fetches the Signaling token
-  async function fetchToken(uid) {
-    if (config.serverUrl !== "") {
-      return new Promise(function (resolve, reject) {
-        axios
-          .get(
-            config.proxyUrl +
-              config.serverUrl +
-              "/rtm/" +
-              uid +
-              "/?expiry=" +
-              config.tokenExpiryTime,
-            {
-              headers: {
-                "X-Requested-With": "XMLHttpRequest",
-              },
-            }
-          )
-          .then((response) => {
-            console.log("token fetched from server: ", response.data.rtmToken);
-            resolve(response.data.rtmToken);
-          })
-          .catch((error) => {
-            console.log(error);
-            resolve(config.token);
-          });
-      });
-    } else {
-      return config.token;
-    }
-  }
-
   // Set up the signaling engine with the provided App ID, UID, and configuration
   const setupSignalingEngine = async (rtmConfig) => {
     try {
-      const token = await fetchToken(config.uid);
-      if (rtmConfig !== undefined && rtmConfig.token == undefined) {
-        rtmConfig.token = token;
-      }
+      // const token = await fetchToken(config.uid);
+      // if (rtmConfig !== undefined && rtmConfig.token == undefined) {
+      //   rtmConfig.token = token;
+      // }
       rtmConfig = rtmConfig || {
-        token: token,
+        token: config.token,
         useStringUserId: config.useStringUserId,
         logUpload: config.logUpload,
         presenceTimeout: config.presenceTimeout,

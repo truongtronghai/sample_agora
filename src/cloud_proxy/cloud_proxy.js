@@ -10,7 +10,7 @@ window.onload = async () => {
   setupProjectSelector();
 
   // Signaling Manager will create the engine and channel for you
-  const { config, login, logout, subscribe, unsubscribe, sendChannelMessage } =
+  const { config, fetchTokenAndLogin, logout, subscribe, unsubscribe, sendChannelMessage } =
     await SignalingManagerCloudProxy(showMessage, handleSignalingEvents);
 
   // Display channel name
@@ -20,7 +20,7 @@ window.onload = async () => {
   // Buttons
   // login
   document.getElementById("login").onclick = async function () {
-    await login();
+    await fetchTokenAndLogin(config.uid);
   };
 
   // logout
