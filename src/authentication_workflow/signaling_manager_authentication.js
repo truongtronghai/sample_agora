@@ -5,7 +5,6 @@ const SignalingManagerAuthentication = async (
   eventsCallback
 ) => {
   let streamChannel = null;
-  let isStreamChannelJoined = false;
   let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
 
   // Extend the SignalingManager by importing it
@@ -77,7 +76,10 @@ const SignalingManagerAuthentication = async (
             }
           )
           .then((response) => {
-            console.log("RTC token fetched from server: ", response.data.rtcToken);
+            console.log(
+              "RTC token fetched from server: ",
+              response.data.rtcToken
+            );
             resolve(response.data.rtcToken);
           })
           .catch((error) => {
@@ -91,12 +93,15 @@ const SignalingManagerAuthentication = async (
 
   const streamChannelJoinAndLeave = async function (
     isStreamChannelJoined,
+    uid,
     streamChannelName
   ) {
-    const token = await fetchRTCToken(config.uid, streamChannelName);
-    streamChannel = await signalingManager
+    const token = await fetchRTCToken(uid, streamChannelName);
+    if(getSignalingStreamChannel() === null){
+      streamChannel = await signalingManager
       .getSignalingEngine()
       .createStreamChannel(streamChannelName); // creates stream channel
+    }
 
     if (isStreamChannelJoined === false) {
       await streamChannel
@@ -116,6 +121,11 @@ const SignalingManagerAuthentication = async (
     }
   };
 
+  const getSignalingStreamChannel = () => {
+    console.log("this is sc", streamChannel);
+    return streamChannel;
+  };
+
   const renewToken = async (uid) => {
     const token = await fetchToken(uid);
     const result = await signalingManager
@@ -130,6 +140,7 @@ const SignalingManagerAuthentication = async (
     renewToken,
     fetchTokenAndLogin,
     streamChannelJoinAndLeave,
+    getSignalingStreamChannel,
   };
 };
 

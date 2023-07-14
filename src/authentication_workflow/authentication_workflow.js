@@ -66,7 +66,7 @@ window.onload = async () => {
 
   document.getElementById("streamJoinAndLeave").onclick = async function () {
     channelName = document.getElementById("streamChannelName").value.toString();
-    await streamChannelJoinAndLeave(isStreamChannelJoined, channelName); // Join and leave logic
+    await streamChannelJoinAndLeave(isStreamChannelJoined, uid, channelName); // Join and leave logic
 
     // UI changes for join and leave
     isStreamChannelJoined = !isStreamChannelJoined;
