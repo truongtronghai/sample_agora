@@ -8,6 +8,8 @@ var uid;
 var channelName;
 
 window.onload = async () => {
+  let isStreamChannelJoined = false;
+
   // Set the project selector
   setupProjectSelector();
 
@@ -27,6 +29,7 @@ window.onload = async () => {
     sendChannelMessage,
     renewToken,
     fetchTokenAndLogin,
+    streamChannelJoinAndLeave,
   } = await SignalingManagerAuthentication(showMessage, handleSignalingEvents);
 
   // Login with custom UID using token received from token generator
@@ -59,6 +62,19 @@ window.onload = async () => {
   document.getElementById("leave").onclick = async function () {
     channelName = document.getElementById("channelName").value.toString();
     await unsubscribe(channelName);
+  };
+
+  document.getElementById("streamJoinAndLeave").onclick = async function () {
+    channelName = document.getElementById("streamChannelName").value.toString();
+    await streamChannelJoinAndLeave(isStreamChannelJoined, channelName); // Join and leave logic
+
+    // UI changes for join and leave
+    isStreamChannelJoined = !isStreamChannelJoined;
+    if (isStreamChannelJoined) {
+      document.getElementById("streamJoinAndLeave").innerHTML = "Leave";
+    } else {
+      document.getElementById("streamJoinAndLeave").innerHTML = "Join";
+    }
   };
 
   // send channel message

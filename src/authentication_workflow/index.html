@@ -30,23 +30,32 @@
           <button class="button" type="button" id="login">LOGIN</button>
         </div>
         <div>
-          <label>Join any channel: </label>
+          <label>Join any pub-sub channel: </label>
           <input type="text" placeholder="Channel Name" id="channelName" />
           <button class="button" type="button" id="join">Join</button>
           <button class="button" type="button" id="leave">Leave</button>
         </div>
-        <p />
         <div>
-          <label>Send a message to the channel</label>:
+          <label>Send a message to pub-sub channel</label>:
           <input type="text" placeholder="Message" id="channelMessage" />
           <button class="button" type="button" id="send_channel_message">
             Send
           </button>
         </div>
+        <div>
+          <label>Join any stream channel (using RTC token): </label>
+          <input
+            type="text"
+            placeholder="Channel Name"
+            id="streamChannelName"
+          />
+          <button class="button" type="button" id="streamJoinAndLeave">
+            Join</button
+          ><br />
+        </div>
         <p />
-        <button class="button" id="fullDoc">
-          Read the doc for this app
-        </button>
+        <p />
+        <button class="button" id="fullDoc">Read the doc for this app</button>
       </div>
     </div>
     <p />
