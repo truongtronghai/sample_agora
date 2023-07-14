@@ -16,7 +16,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
         logUpload: config.logUpload,
         presenceTimeout: config.presenceTimeout,
       };
-      AgoraRTM.setArea({ areaCodes: ["ASIA"] });
       signalingEngine = new AgoraRTM.RTM(config.appId, config.uid, rtmConfig);
     } catch (error) {
       console.log("Error:", error);
@@ -116,10 +115,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   const subscribe = async (channelName) => {
     channelName = channelName || config.channelName;
     try {
-      if (signalingChannel === null) {
-        await createChannel(channelName);
-      }
-
       const subscribeOptions = {
         withMessage: true,
         withPresence: true,

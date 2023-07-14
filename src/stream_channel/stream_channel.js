@@ -7,7 +7,10 @@ import docURLs from "../utils/docSteURLs.js";
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   let isStreamChannelJoined = false;
+  let channelName = "";
   let isTopicJoined = false;
+  var isLoggedIn = false;
+  var uid;
 
   // Set the project selector
   setupProjectSelector();
@@ -15,31 +18,37 @@ window.onload = async () => {
   // Signaling Manager will create the engine and channel for you
   const {
     config,
-    login,
+    fetchTokenAndLogin,
     logout,
     streamChannelJoinAndLeave,
     sendTopicMessage,
     topicJoinAndLeave,
   } = await SignalingManagerStreamChannel(showMessage, handleSignalingEvents);
 
-  // Display User name
-  document.getElementById("userId").innerHTML = config.uid;
-  document.getElementById("streamChannelNameLbl").innerHTML =
-    config.channelName;
-
   // Buttons
-  // login
+  // Login with custom UID using token received from token generator
   document.getElementById("login").onclick = async function () {
-    await login();
-  };
+    if (!isLoggedIn) {
+      uid = document.getElementById("uid").value.toString();
+      if (uid === "") {
+        showMessage("Please enter a User ID.");
+        return;
+      }
 
-  // logout
-  document.getElementById("logout").onclick = async function () {
-    await logout();
+      await fetchTokenAndLogin(uid);
+
+      isLoggedIn = true;
+      document.getElementById("login").innerHTML = "LOGOUT";
+    } else {
+      await logout();
+      isLoggedIn = false;
+      document.getElementById("login").innerHTML = "LOGIN";
+    }
   };
 
   document.getElementById("streamJoinAndLeave").onclick = async function () {
-    await streamChannelJoinAndLeave(isStreamChannelJoined, config.channelName); // Join and leave logic
+    channelName = document.getElementById("streamChannelName").value.toString();
+    await streamChannelJoinAndLeave(isStreamChannelJoined, uid, channelName); // Join and leave logic
 
     // UI changes for join and leave
     isStreamChannelJoined = !isStreamChannelJoined;

@@ -1,8 +1,8 @@
-import SignalingManager from "../signaling_manager/signaling_manager.js";
+import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 
 const SignalingManagerGeofencing = async (messageCallback, eventsCallback) => {
   // Extend the SignalingManager by importing it
-  const signalingManager = await SignalingManager(
+  const signalingManager = await SignalingManagerAuthentication(
     messageCallback,
     eventsCallback
   );
