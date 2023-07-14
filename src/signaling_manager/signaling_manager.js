@@ -10,10 +10,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   // Set up the signaling engine with the provided App ID, UID, and configuration
   const setupSignalingEngine = async (rtmConfig) => {
     try {
-      // const token = await fetchToken(config.uid);
-      // if (rtmConfig !== undefined && rtmConfig.token == undefined) {
-      //   rtmConfig.token = token;
-      // }
       rtmConfig = rtmConfig || {
         token: config.token,
         useStringUserId: config.useStringUserId,
@@ -119,10 +115,6 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   const subscribe = async (channelName) => {
     channelName = channelName || config.channelName;
     try {
-      if (signalingChannel === null) {
-        await createChannel(channelName);
-      }
-
       const subscribeOptions = {
         withMessage: true,
         withPresence: true,
