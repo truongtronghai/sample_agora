@@ -17,17 +17,12 @@ window.onload = async () => {
         break;
       case "presence":
         if (eventArgs.eventType == "SNAPSHOT") {
-          // local user logged in
-          const currentTime = new Date();
-          const options = { timeZoneName: "short" };
-          const timeString = currentTime.toLocaleString(undefined, options);
-          // Set channel metadata
-          setChannelMetadata(config.channelName, "lastUser", timeString);
+          // The local user logged in
           // Set user metadata
           setUserMetadata(
             config.uid,
             "userBio",
-            "I want to learn about Agora Signaling"
+            "I want to learn more about Agora Signaling"
           );
           setUserMetadata(
             config.uid,
@@ -191,7 +186,15 @@ window.onload = async () => {
     clearChannelUserList();
   };
 
-  document.getElementById("updateBio").onclick = async function () {
+  // Update channel metadata
+  document.getElementById("update_channel_metadata").onclick = async function () {
+    const key = document.getElementById("key").value.toString();
+    const value = document.getElementById("value").value.toString();
+    setChannelMetadata(config.channelName, key, value);
+  };
+
+  // Update the user bio
+  document.getElementById("update_bio").onclick = async function () {
     const bio = document.getElementById("bioText").value.toString();
     updateUserMetadata(config.uid, "userBio", bio);
   };

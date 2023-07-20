@@ -104,7 +104,7 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       const result = await signalingManager
         .getSignalingEngine()
         .storage.setChannelMetadata(channelName, "MESSAGE", data, options);
-      messageCallback(`channel metadata ${key} set successfully`);
+      messageCallback(`channel metadata key '${key}' set successfully`);
     } catch (status) {
       console.log(status);
     }
