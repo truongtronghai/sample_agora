@@ -42,20 +42,30 @@
         </div>
         <p />
         <div>
+          <label>Update channel metadata: Key</label>
+          <input type="text" placeholder="Key" id="key" />
+          <label>Value</label>
+          <input type="text" placeholder=" Value" id="value" />
+          <button class="button" type="button" id="update_channel_metadata">
+            Update
+          </button>
+        </div>
+        <p />
+        <div>
           <label>Save your bio to user metadata</label>
           <input type="text" placeholder="Your bio" id="bioText" />
-          <button class="button" type="button" id="updateBio">
+          <button class="button" type="button" id="update_bio">
             Update bio
           </button>
         </div>
         <p />
         <div>
-          <label>Users in the channel:</label><br />
+          <label><b>Users in the channel:</b></label><br />
           <label>(Select a user to view their metadata.)</label>
           <ul id="users-list"></ul>
         </div>
         <p />
-        <div><label>Channel Metadata:</label></div>
+        <div><label><b>Channel Metadata:</b></label></div>
         <div id="channel-metadata"></div>
         <p />
         <button class="button" id="fullDoc">
