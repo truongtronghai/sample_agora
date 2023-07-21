@@ -1,13 +1,10 @@
 import AgoraRTM from "agora-rtm";
+import config from "./config.json";
 
 const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   let signalingEngine = null;
   let signalingChannel = null;
 
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
 
   // Set up the signaling engine with the provided App ID, UID, and configuration
   const setupSignalingEngine = async (rtmConfig) => {

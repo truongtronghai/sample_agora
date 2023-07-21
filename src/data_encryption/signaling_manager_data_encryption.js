@@ -1,14 +1,10 @@
 import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
+import config from '../signaling_manager/config.json'
 
 const SignalingManagerDataEncryption = async (
   messageCallback,
   eventsCallback
 ) => {
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
-
   // In a production environment, you retrieve the key and salt from
   // an authentication server. For this code example you generate locally.
 
