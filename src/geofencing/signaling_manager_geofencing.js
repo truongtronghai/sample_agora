@@ -1,3 +1,4 @@
+import AgoraRTM from "agora-rtm";
 import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
 
 const SignalingManagerGeofencing = async (messageCallback, eventsCallback) => {

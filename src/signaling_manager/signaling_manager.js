@@ -1,3 +1,5 @@
+import AgoraRTM from "agora-rtm";
+
 const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
   let signalingEngine = null;
   let signalingChannel = null;
