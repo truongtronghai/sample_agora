@@ -34,8 +34,8 @@ const SignalingManagerAuthentication = async (
           }
         );
         const data = await res.text();
-        console.log(data);
         const json = await JSON.parse(data);
+        console.log("RTM token fetched from server: ", json.rtmToken);
         return json.rtmToken;
       } catch (err) {
         console.log(err);
@@ -72,8 +72,8 @@ const SignalingManagerAuthentication = async (
           }
         );
         const data = await res.text();
-        console.log(data);
         const json = await JSON.parse(data);
+        console.log("RTC token fetched from server: ", json.rtcToken);
         return json.rtcToken;
       } catch (err) {
         console.log(err);
