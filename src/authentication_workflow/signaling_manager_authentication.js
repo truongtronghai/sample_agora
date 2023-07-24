@@ -68,7 +68,7 @@ const SignalingManagerAuthentication = async (
         const data = await res.text();
         console.log(data);
         const json = await JSON.parse(data);
-        return json.rtmToken;
+        return json.rtcToken;
       } catch (err) {
         console.log(err);
       }
