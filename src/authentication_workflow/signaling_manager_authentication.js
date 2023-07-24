@@ -19,30 +19,27 @@ const SignalingManagerAuthentication = async (
   // Fetches the Signaling token
   async function fetchToken(uid) {
     if (config.serverUrl !== "") {
-      return new Promise(function (resolve, reject) {
-        axios
-          .get(
-            config.proxyUrl +
-              config.serverUrl +
-              "/rtm/" +
-              uid +
-              "/?expiry=" +
-              config.tokenExpiryTime,
-            {
-              headers: {
-                "X-Requested-With": "XMLHttpRequest",
-              },
-            }
-          )
-          .then((response) => {
-            console.log("token fetched from server: ", response.data.rtmToken);
-            resolve(response.data.rtmToken);
-          })
-          .catch((error) => {
-            console.log(error);
-            resolve(config.token);
-          });
-      });
+      try {
+        const res = await fetch(
+          config.proxyUrl +
+            config.serverUrl +
+            "/rtm/" +
+            uid +
+            "/?expiry=" +
+            config.tokenExpiryTime,
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
+        const data = await res.text();
+        const json = await JSON.parse(data);
+        console.log("RTM token fetched from server: ", json.rtmToken);
+        return json.rtmToken;
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       return config.token;
     }
@@ -56,36 +53,31 @@ const SignalingManagerAuthentication = async (
   // Fetches the RTC token for stream channels
   async function fetchRTCToken(uid, channelName) {
     if (config.serverUrl !== "") {
-      return new Promise(function (resolve) {
-        axios
-          .get(
-            config.proxyUrl +
-              config.serverUrl +
-              "/rtc/" +
-              channelName +
-              "/" +
-              role +
-              "/uid/" +
-              uid +
-              "/?expiry=" +
-              config.tokenExpiryTime,
-            {
-              headers: {
-                "X-Requested-With": "XMLHttpRequest",
-              },
-            }
-          )
-          .then((response) => {
-            console.log(
-              "RTC token fetched from server: ",
-              response.data.rtcToken
-            );
-            resolve(response.data.rtcToken);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
+      try {
+        const res = await fetch(
+          config.proxyUrl +
+            config.serverUrl +
+            "/rtc/" +
+            channelName +
+            "/" +
+            role +
+            "/uid/" +
+            uid +
+            "/?expiry=" +
+            config.tokenExpiryTime,
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
+        const data = await res.text();
+        const json = await JSON.parse(data);
+        console.log("RTC token fetched from server: ", json.rtcToken);
+        return json.rtcToken;
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       return config.rtcToken;
     }
@@ -97,10 +89,10 @@ const SignalingManagerAuthentication = async (
     streamChannelName
   ) {
     const token = await fetchRTCToken(uid, streamChannelName);
-    if(getSignalingStreamChannel() === null){
+    if (getSignalingStreamChannel() === null) {
       streamChannel = await signalingManager
-      .getSignalingEngine()
-      .createStreamChannel(streamChannelName); // creates stream channel
+        .getSignalingEngine()
+        .createStreamChannel(streamChannelName); // creates stream channel
     }
 
     if (isStreamChannelJoined === false) {
