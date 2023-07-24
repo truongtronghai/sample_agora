@@ -153,6 +153,15 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     }
   };
 
+  // Get list of active members in the channel
+  const getOnlineMembersInChannel = async (channelName, channelType) => {
+    const result = await getSignalingEngine().presence.whoNow(
+      channelName,
+      channelType
+    );
+    return result.occupants;
+  };
+
   // Return the signaling engine and the available functions
   return {
     getSignalingEngine,
@@ -163,6 +172,7 @@ const SignalingManager = async (messageCallback, eventsCallback, rtmConfig) => {
     subscribe,
     unsubscribe,
     sendChannelMessage,
+    getOnlineMembersInChannel,
   };
 };
 
