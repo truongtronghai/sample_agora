@@ -7,13 +7,6 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     eventsCallback
   );
 
-  const whoNow = async function (channelName, channelType) {
-    const result = await signalingManager
-      .getSignalingEngine()
-      .presence.whoNow(channelName, channelType);
-    return result;
-  };
-
   const setUserMetadata = async function (uid, key, value) {
     // Define a data array to hold key-value pairs
     const data = [
@@ -134,7 +127,6 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
   // Return the extended signaling manager
   return {
     ...signalingManager,
-    whoNow,
     setUserMetadata,
     updateUserMetadata,
     getUserMetadata,

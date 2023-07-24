@@ -29,24 +29,18 @@ window.onload = async () => {
 
   // Signaling Manager will create the engine and channel for you
   const {
-    getSignalingEngine,
     config,
     login,
     logout,
     subscribe,
     unsubscribe,
     sendChannelMessage,
+    getOnlineMembersInChannel
   } = await SignalingManagerGetStarted(showMessage, handleSignalingEvents);
-
-  const ul = document.getElementById("members-list");
 
   const updateChannelUserList = async function (channelName, channelType) {
     // Retrieve a list of users in the channel
-    const result = await getSignalingEngine().presence.whoNow(
-      channelName,
-      channelType
-    );
-    const users = result.occupants;
+    const users = await getOnlineMembersInChannel(channelName, channelType);
 
     // Create a Set to store the existing userIds
     const existingUsers = new Set();

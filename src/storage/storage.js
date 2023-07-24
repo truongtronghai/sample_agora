@@ -84,17 +84,15 @@ window.onload = async () => {
     getUserMetadata,
     subscribeUserMetadata,
     setChannelMetadata,
-    getChannelMetadata,
     renewToken,
-    whoNow,
+    getOnlineMembersInChannel,
   } = await SignalingManagerStorage(showMessage, handleSignalingEvents);
 
   const ul = document.getElementById("users-list");
 
   const updateChannelUserList = async function (channelName, channelType) {
     // Retrieve a list of users in the channel
-    const result = await whoNow(channelName, channelType);
-    const users = result.occupants;
+    const users = await getOnlineMembersInChannel(channelName, channelType);
 
     // Create a Set to store the existing userIds
     const existingUsers = new Set();
@@ -187,11 +185,12 @@ window.onload = async () => {
   };
 
   // Update channel metadata
-  document.getElementById("update_channel_metadata").onclick = async function () {
-    const key = document.getElementById("key").value.toString();
-    const value = document.getElementById("value").value.toString();
-    setChannelMetadata(config.channelName, key, value);
-  };
+  document.getElementById("update_channel_metadata").onclick =
+    async function () {
+      const key = document.getElementById("key").value.toString();
+      const value = document.getElementById("value").value.toString();
+      setChannelMetadata(config.channelName, key, value);
+    };
 
   // Update the user bio
   document.getElementById("update_bio").onclick = async function () {
