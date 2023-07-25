@@ -20,19 +20,22 @@ const SignalingManagerAuthentication = async (
   async function fetchToken(uid) {
     if (config.serverUrl !== "") {
       try {
-        const res = await fetch(config.proxyUrl +
-          config.serverUrl +
-          "/rtm/" +
-          uid +
-          "/?expiry=" +
-          config.tokenExpiryTime, {
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-          },
-        })
+        const res = await fetch(
+          config.proxyUrl +
+            config.serverUrl +
+            "/rtm/" +
+            uid +
+            "/?expiry=" +
+            config.tokenExpiryTime,
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
         const data = await res.text();
-        console.log(data);
         const json = await JSON.parse(data);
+        console.log("RTM token fetched from server: ", json.rtmToken);
         return json.rtmToken;
       } catch (err) {
         console.log(err);
@@ -51,24 +54,27 @@ const SignalingManagerAuthentication = async (
   async function fetchRTCToken(uid, channelName) {
     if (config.serverUrl !== "") {
       try {
-        const res = await fetch(config.proxyUrl +
-          config.serverUrl +
-          "/rtc/" +
-          channelName +
-          "/" +
-          role +
-          "/uid/" +
-          uid +
-          "/?expiry=" +
-          config.tokenExpiryTime, {
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-          },
-        })
+        const res = await fetch(
+          config.proxyUrl +
+            config.serverUrl +
+            "/rtc/" +
+            channelName +
+            "/" +
+            role +
+            "/uid/" +
+            uid +
+            "/?expiry=" +
+            config.tokenExpiryTime,
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
         const data = await res.text();
-        console.log(data);
         const json = await JSON.parse(data);
-        return json.rtmToken;
+        console.log("RTC token fetched from server: ", json.rtcToken);
+        return json.rtcToken;
       } catch (err) {
         console.log(err);
       }
