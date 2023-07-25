@@ -11,9 +11,7 @@
     "agora-rtm": "^2.1.3",
     "cors-anywhere": "^0.4.4",
     "livereload-js": "^4.0.1",
-    "url": "^0.11.1",
-    "webpack": "^5.28.0",
-    "webpack-dev-server": "^4.0.0"
+    "url": "^0.11.1"
   },
   "author": "",
   "license": "ISC",
