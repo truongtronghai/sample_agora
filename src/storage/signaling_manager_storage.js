@@ -87,8 +87,8 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     ];
 
     const options = {
-      majorRevision: -1,
-      lockName: lockName, // After setting a lock, only the user who calls the acquireLock method to acquire the lock can perform the operation.
+      majorRevision: -1, // Use this field to enable version number verification of the entire set of channel attributes.
+      lockName: lockName, // When you specify a lock, only the user who calls the acquireLock method to acquire the lock can perform the operation.
       addTimeStamp: true,
       addUserId: true,
     };
@@ -126,6 +126,7 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
   }
   // Manage locks
   const setLock = async function (channelName, channelType, lockName, ttl) {
+    // Create a new lock
     try{
       const result = await signalingManager
       .getSignalingEngine().lock.setLock(
@@ -135,7 +136,9 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       messageCallback(status.reason);
     }
   }
+
   const acquireLock = async function (channelName, channelType, lockName, retry) {
+    // Acquire exclusive use of the named lock
     try{
       const result = await signalingManager
       .getSignalingEngine().lock.acquireLock(
@@ -145,7 +148,9 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       messageCallback(status.reason);
     }
   }
+
   const releaseLock = async function (channelName, channelType, lockName) {
+    // Release a lock after use to make it available for others
     try{
       const result = await signalingManager
       .getSignalingEngine().lock.releaseLock(
@@ -155,7 +160,9 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       messageCallback(status.reason);
     }
   }
+
   const removeLock = async function (channelName, channelType, lockName) {
+    // Delete a lock
     try{
       const result = await signalingManager
       .getSignalingEngine().lock.removeLock(
@@ -165,7 +172,9 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       messageCallback(status.reason);
     }
   }
+
   const getLock = async function (channelName, channelType) {
+    // Get details of all current locks in the channel
     try{
       const result = await signalingManager
       .getSignalingEngine().lock.getLock(
@@ -176,6 +185,7 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       messageCallback(status.reason);
     }
   }
+  
   // Return the extended signaling manager
   return {
     ...signalingManager,
