@@ -124,15 +124,15 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       console.log(status);
     }
   }
+  // Manage locks
   const setLock = async function (channelName, channelType, lockName, ttl) {
     try{
       const result = await signalingManager
       .getSignalingEngine().lock.setLock(
           channelName, channelType, lockName, { ttl: ttl }
       );
-      console.log(result);
     } catch (status) {
-    console.log(status);
+      messageCallback(status.reason);
     }
   }
   const acquireLock = async function (channelName, channelType, lockName, retry) {
@@ -141,9 +141,39 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       .getSignalingEngine().lock.acquireLock(
           channelName, channelType, lockName,  {retry: retry}
       );
-      console.log(result);
     } catch (status) {
-    console.log(status);
+      messageCallback(status.reason);
+    }
+  }
+  const releaseLock = async function (channelName, channelType, lockName) {
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.releaseLock(
+          channelName, channelType, lockName,
+      );
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+  const removeLock = async function (channelName, channelType, lockName) {
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.removeLock(
+          channelName, channelType, lockName,
+      );
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+  const getLock = async function (channelName, channelType) {
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.getLock(
+          channelName, channelType
+      );
+      messageCallback(`getLock succeeded. Total ${result.totalLocks } locks: ${JSON.stringify(result.lockDetails)}`)
+    } catch (status) {
+      messageCallback(status.reason);
     }
   }
   // Return the extended signaling manager
@@ -157,6 +187,9 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     getChannelMetadata,
     setLock,
     acquireLock,
+    releaseLock,
+    removeLock,
+    getLock,
   };
 };
 

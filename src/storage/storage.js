@@ -60,6 +60,7 @@ window.onload = async () => {
       case "topic":
         break;
       case "lock":
+        showMessage(`Lock event: ${eventArgs.eventType}, Lock name: ${eventArgs.lockName}`);
         break;
       case "status":
         break;
@@ -88,6 +89,9 @@ window.onload = async () => {
     getOnlineMembersInChannel,
     setLock,
     acquireLock,
+    releaseLock,
+    removeLock,
+    getLock,
   } = await SignalingManagerStorage(showMessage, handleSignalingEvents);
 
   const ul = document.getElementById("users-list");
@@ -192,15 +196,31 @@ window.onload = async () => {
       const key = document.getElementById("key").value.toString();
       const value = document.getElementById("value").value.toString();
       const revision = parseInt(document.getElementById("revision").value);
-      const lockName = document.getElementById("lockName").value.toString();
-
-
-      await setLock(config.channelName, "MESSAGE", lockName, 15);
-      await acquireLock(config.channelName, "MESSAGE", lockName, false);
-
+      const lockName = document.getElementById("apply_lock").value.toString();
 
       setChannelMetadata(config.channelName, key, value, revision, lockName);
     };
+
+  // Manage locks
+  document.getElementById("set_lock").onclick =async function() {
+    const lockName = document.getElementById("manage_lock").value.toString();
+    await setLock(config.channelName, "MESSAGE", lockName, 10);
+  }
+  document.getElementById("acquire_lock").onclick =async function() {
+    const lockName = document.getElementById("manage_lock").value.toString();
+    await acquireLock(config.channelName, "MESSAGE", lockName, false);
+  }
+  document.getElementById("release_lock").onclick =async function() {
+    const lockName = document.getElementById("manage_lock").value.toString();
+    await releaseLock(config.channelName, "MESSAGE", lockName);
+  }
+  document.getElementById("remove_lock").onclick =async function() {
+    const lockName = document.getElementById("manage_lock").value.toString();
+    await removeLock(config.channelName, "MESSAGE", lockName);
+  }
+  document.getElementById("get_lock").onclick =async function() {
+    await getLock(config.channelName, "MESSAGE");
+  }
 
   // Update the user bio
   document.getElementById("update_bio").onclick = async function () {
