@@ -1,11 +1,7 @@
 import SignalingManagerAuthentication from "../authentication_workflow/signaling_manager_authentication.js";
+import config from '../signaling_manager/config.json'
 
 const SignalingManagerCloudProxy = async (messageCallback, eventsCallback) => {
-  // Get the config from config.json
-  const config = await fetch("/signaling_manager/config.json").then((res) =>
-    res.json()
-  );
-
   // Set cloud proxy
   const rtmConfig = {
     cloudProxy: config.cloudProxy,
