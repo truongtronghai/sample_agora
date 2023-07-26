@@ -74,13 +74,13 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     }
   };
 
-  const setChannelMetadata = async function (channelName, key, value) {
+  const setChannelMetadata = async function (channelName, key, value, revision, lockName) {
     // Define a data array to hold key-value pairs
     const data = [
       {
         key: key,  // Metadata Item's key
         value: value,  // Metadata Item's value
-        revision: -1, // Versioning switch on write operations:
+        revision: revision, // Versioning switch on write operations:
         // -1: Turn off version checking.
         // > 0, The target revision number must match this value for the operation to succeed.
       },
@@ -88,7 +88,7 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
 
     const options = {
       majorRevision: -1,
-      lockName: "", // After setting a lock, only the user who calls the acquireLock method to acquire the lock can perform the operation.
+      lockName: lockName, // After setting a lock, only the user who calls the acquireLock method to acquire the lock can perform the operation.
       addTimeStamp: true,
       addUserId: true,
     };
@@ -99,7 +99,7 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
         .storage.setChannelMetadata(channelName, "MESSAGE", data, options);
       messageCallback(`channel metadata key '${key}' set successfully`);
     } catch (status) {
-      console.log(status);
+      messageCallback(`Error setting channel metadata: ${status.reason}`)
     }
   };
 
@@ -124,6 +124,28 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       console.log(status);
     }
   }
+  const setLock = async function (channelName, channelType, lockName, ttl) {
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.setLock(
+          channelName, channelType, lockName, { ttl: ttl }
+      );
+      console.log(result);
+    } catch (status) {
+    console.log(status);
+    }
+  }
+  const acquireLock = async function (channelName, channelType, lockName, retry) {
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.acquireLock(
+          channelName, channelType, lockName,  {retry: retry}
+      );
+      console.log(result);
+    } catch (status) {
+    console.log(status);
+    }
+  }
   // Return the extended signaling manager
   return {
     ...signalingManager,
@@ -133,6 +155,8 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     subscribeUserMetadata,
     setChannelMetadata,
     getChannelMetadata,
+    setLock,
+    acquireLock,
   };
 };
 

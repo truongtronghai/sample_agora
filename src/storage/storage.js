@@ -86,6 +86,8 @@ window.onload = async () => {
     setChannelMetadata,
     renewToken,
     getOnlineMembersInChannel,
+    setLock,
+    acquireLock,
   } = await SignalingManagerStorage(showMessage, handleSignalingEvents);
 
   const ul = document.getElementById("users-list");
@@ -189,7 +191,15 @@ window.onload = async () => {
     async function () {
       const key = document.getElementById("key").value.toString();
       const value = document.getElementById("value").value.toString();
-      setChannelMetadata(config.channelName, key, value);
+      const revision = parseInt(document.getElementById("revision").value);
+      const lockName = document.getElementById("lockName").value.toString();
+
+
+      await setLock(config.channelName, "MESSAGE", lockName, 15);
+      await acquireLock(config.channelName, "MESSAGE", lockName, false);
+
+
+      setChannelMetadata(config.channelName, key, value, revision, lockName);
     };
 
   // Update the user bio

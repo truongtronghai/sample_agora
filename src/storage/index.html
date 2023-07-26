@@ -41,10 +41,14 @@
         </div>
         <p />
         <div>
-          <label>Update channel metadata: Key</label>
-          <input type="text" placeholder="Key" id="key" />
+          <label>Channel metadata: Key</label>
+          <input type="text" placeholder="Key" id="key" style="width: 80px;" />
           <label>Value</label>
-          <input type="text" placeholder=" Value" id="value" />
+          <input type="text" placeholder=" Value" id="value" style="width: 100px;" />
+          <label>Revision</label>
+          <input type="text" placeholder=" Value" id="revision" value="-1" style="width: 80px;" />
+          <label>Lock name</label>
+          <input type="text" placeholder=" Value" id="lockName" style="width: 60px;" />
           <button class="button" type="button" id="update_channel_metadata">
             Update
           </button>
