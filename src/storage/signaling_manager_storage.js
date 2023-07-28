@@ -74,21 +74,21 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     }
   };
 
-  const setChannelMetadata = async function (channelName, key, value) {
+  const setChannelMetadata = async function (channelName, key, value, revision, lockName) {
     // Define a data array to hold key-value pairs
     const data = [
       {
         key: key,  // Metadata Item's key
         value: value,  // Metadata Item's value
-        revision: -1, // Versioning switch on write operations:
+        revision: revision, // Versioning switch on write operations:
         // -1: Turn off version checking.
         // > 0, The target revision number must match this value for the operation to succeed.
       },
     ];
 
     const options = {
-      majorRevision: -1,
-      lockName: "", // After setting a lock, only the user who calls the acquireLock method to acquire the lock can perform the operation.
+      majorRevision: -1, // Use this field to enable version number verification of the entire set of channel attributes.
+      lockName: lockName, // When you specify a lock, only the user who calls the acquireLock method to acquire the lock can perform the operation.
       addTimeStamp: true,
       addUserId: true,
     };
@@ -99,7 +99,7 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
         .storage.setChannelMetadata(channelName, "MESSAGE", data, options);
       messageCallback(`channel metadata key '${key}' set successfully`);
     } catch (status) {
-      console.log(status);
+      messageCallback(`Error setting channel metadata: ${status.reason}`)
     }
   };
 
@@ -124,6 +124,68 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
       console.log(status);
     }
   }
+  // Manage locks
+  const setLock = async function (channelName, channelType, lockName, ttl) {
+    // Create a new lock
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.setLock(
+          channelName, channelType, lockName, { ttl: ttl }
+      );
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+
+  const acquireLock = async function (channelName, channelType, lockName, retry) {
+    // Acquire exclusive use of the named lock
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.acquireLock(
+          channelName, channelType, lockName,  {retry: retry}
+      );
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+
+  const releaseLock = async function (channelName, channelType, lockName) {
+    // Release a lock after use to make it available for others
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.releaseLock(
+          channelName, channelType, lockName,
+      );
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+
+  const removeLock = async function (channelName, channelType, lockName) {
+    // Delete a lock
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.removeLock(
+          channelName, channelType, lockName,
+      );
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+
+  const getLock = async function (channelName, channelType) {
+    // Get details of all current locks in the channel
+    try{
+      const result = await signalingManager
+      .getSignalingEngine().lock.getLock(
+          channelName, channelType
+      );
+      messageCallback(`getLock succeeded. Total ${result.totalLocks } locks: ${JSON.stringify(result.lockDetails)}`)
+    } catch (status) {
+      messageCallback(status.reason);
+    }
+  }
+  
   // Return the extended signaling manager
   return {
     ...signalingManager,
@@ -133,6 +195,11 @@ const SignalingManagerStorage = async (messageCallback, eventsCallback) => {
     subscribeUserMetadata,
     setChannelMetadata,
     getChannelMetadata,
+    setLock,
+    acquireLock,
+    releaseLock,
+    removeLock,
+    getLock,
   };
 };
 

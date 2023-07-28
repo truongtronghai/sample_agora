@@ -40,17 +40,34 @@
         </div>
         <p />
         <div>
-          <label>Update channel metadata: Key</label>
-          <input type="text" placeholder="Key" id="key" />
-          <label>Value</label>
-          <input type="text" placeholder=" Value" id="value" />
+          <label><b>Manage locks:</b></label><br />
+          <label>Lock Name</label>
+          <input type="text" placeholder=" Value" id="manage_lock" style="width: 80px;" />
+          <button class="button" type="button" id="set_lock" style="width: 80px;">Set</button>
+          <button class="button" type="button" id="acquire_lock" style="width: 80px;">Acquire</button>
+          <button class="button" type="button" id="release_lock" style="width: 80px;">Release</button>
+          <button class="button" type="button" id="remove_lock" style="width: 80px;">Remove</button>
+          <button class="button" type="button" id="get_lock" style="width: 80px;">Get</button>
+        </div>
+        <p />
+        <div>
+          <label><b>Set channel metadata:</b></label><br />
+          <label>Key</label>
+          <input type="text" placeholder="Key" id="key" style="width: 80px;" />
+          <label> Value</label>
+          <input type="text" placeholder="Value" id="value" style="width: 100px;" />
+          <label> Revision</label>
+          <input type="text" placeholder="Number" id="revision" value="-1" style="width: 80px;" />
+          <label> Lock to apply</label>
+          <input type="text" placeholder="Lock name" id="apply_lock" style="width: 100px;" />
           <button class="button" type="button" id="update_channel_metadata">
             Update
           </button>
         </div>
         <p />
         <div>
-          <label>Save your bio to user metadata</label>
+          <label><b>User metadata:</b></label><br />
+          <label>Save bio to user metadata</label>
           <input type="text" placeholder="Your bio" id="bioText" />
           <button class="button" type="button" id="update_bio">
             Update bio
