@@ -6,7 +6,6 @@ const SignalingManagerGetStarted = async (messageCallback, eventsCallback) => {
     messageCallback,
     eventsCallback
   );
-
   // Return the extended signaling manager
   return {
     ...signalingManager,
