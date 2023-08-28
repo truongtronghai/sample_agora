@@ -3,7 +3,7 @@
 set -eo pipefail
 
 # Get the path of the JSON file
-JSON_FILE_PATH="./src/signaling_manager/config.json"
+JSON_FILE_PATH="./src/agora_manager/config.json"
 
 # Read the JSON file contents
 JSON_CONTENTS=$(cat "${JSON_FILE_PATH}")

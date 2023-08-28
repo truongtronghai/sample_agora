@@ -1,8 +1,8 @@
 {
-    "uid": "1",
-    "appId": "",
-    "channelName": "",
-    "token": "",
+    "uid": 1,
+    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
+    "channelName": "demoChannel",
+    "token": "007eJxTYDhjNmORdmnk7FzLX9WhyguX3r3hPsOqy3tVaOv1f+knmxcrMBiaJyeZpyabpJqmWJiYmlhapKQapJmbpqYmJpsYmRsnNhu9TmkIZGQ4vS2SgREKQXxuhpTU3HznjMS8vNQcBgYAyKskWQ==",
     "proxyUrl": "http://localhost:8080/",
     "serverUrl": "https://agora-token-service-production-10e3.up.railway.app",
     "tokenExpiryTime": "600",
@@ -19,6 +19,5 @@
         "debug": false
     },
     "cloudProxy": true,
-    "useStringUserId": false,
-    "rtcToken": ""
+    "useStringUserId": false
 }

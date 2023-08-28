@@ -2,43 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Signaling Quickstart</title>
+    <title>Video Calling Quickstart</title>
     <script src="get_started.js" type="module"></script>
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
     <div id="projectSelector"></div>
-    <h1>Get started with Signaling</h1>
+    <h1>Get started with Video Calling</h1>
     <div class="outer-horizontal">
       <div class="inner-horizontal">
         <label
-          >Login to Signaling, then send a message to a channel or another
-          user.</label
+          >Join and leave a Video call.</label
         >
         <br /><br />
         <div>
           <label>Current user ID is </label>
           <b><label id="userId"></label></b>:
-          <button class="button" type="button" id="login">Login</button>
         </div>
         <br />
         <div>
           <label>Current channel name is </label>
           <b><label id="channelName"></label></b>:
-          <button class="button" type="button" id="subscribe">Subscribe</button>
-        </div>
-        <br />
-        <div>
-          <label>Send a message to the channel</label>:
-          <input type="text" placeholder="Message" id="channelMessage" />
-          <button class="button" type="button" id="send_channel_message">
-            Send
-          </button>
-        </div>
-        <br />
-        <div>
-          <label>Live users in the channel (presence):</label>
-          <ul id="users-list"></ul>
+          <button class="button" type="button" id="join">Join</button>
+          <button class="button" type="button" id="leave">Leave</button>
         </div>
         <br />
         <button class="button" id="fullDoc">

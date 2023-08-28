@@ -1,130 +1,107 @@
-import SignalingManagerGetStarted from "./signaling_manager_get_started.js";
+import AgoraRTCGetStarted from "../sdk_quickstart/agora_manager_get_started.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import docURLs from "../utils/docSteURLs.js";
 
-var isLoggedIn = false;
-var isSubscribed = false;
+let channelParameters = {
+  // A variable to hold a local audio track.
+  localAudioTrack: null,
+  // A variable to hold a local video track.
+  localVideoTrack: null,
+  // A variable to hold a remote audio track.
+  remoteAudioTrack: null,
+  // A variable to hold a remote video track.
+  remoteVideoTrack: null,
+  // A variable to hold the remote user id.s
+  remoteUid: null,
+};
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
   // Set the project selector
   setupProjectSelector();
 
-  const handleSignalingEvents = (event, eventArgs) => {
-    switch (event) {
-      case "message":
-        break;
-      case "presence":
-        switch (eventArgs.eventType) {
-          case "SNAPSHOT":
-          case "REMOTE_JOIN":
-          case "REMOTE_LEAVE":
-            updateChannelUserList(eventArgs.channelName, eventArgs.channelType);
-            break;
+  const handleVSDKEvents = (eventName, ...args) => {
+    switch (eventName) {
+      case "user-published":
+        if (args[1] == "video") {
+          // Retrieve the remote video track.
+          channelParameters.remoteVideoTrack = args[0].videoTrack;
+          // Retrieve the remote audio track.
+          channelParameters.remoteAudioTrack = args[0].audioTrack;
+          // Save the remote user id for reuse.
+          channelParameters.remoteUid = args[0].uid.toString();
+          // Specify the ID of the DIV container. You can use the uid of the remote user.
+          remotePlayerContainer.id = args[0].uid.toString();
+          channelParameters.remoteUid = args[0].uid.toString();
+          remotePlayerContainer.textContent =
+            "Remote user " + args[0].uid.toString();
+          // Append the remote container to the page body.
+          document.body.append(remotePlayerContainer);
+          // Play the remote video track.
+          channelParameters.remoteVideoTrack.play(remotePlayerContainer);
         }
-        break;
+        // Subscribe and play the remote audio track If the remote user publishes the audio track only.
+        if (args[1] == "audio") {
+          // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
+          channelParameters.remoteAudioTrack = args[0].audioTrack;
+          // Play the remote audio track. No need to pass any DOM element.
+          channelParameters.remoteAudioTrack.play();
+        }
     }
   };
 
-  // Signaling Manager will create the engine and channel for you
-  const {
-    config,
-    login,
-    logout,
-    subscribe,
-    unsubscribe,
-    sendChannelMessage,
-    getOnlineMembersInChannel
-  } = await SignalingManagerGetStarted(showMessage, handleSignalingEvents);
-
-  const updateChannelUserList = async function (channelName, channelType) {
-    // Retrieve a list of users in the channel
-    const users = await getOnlineMembersInChannel(channelName, channelType);
-
-    // Create a Set to store the existing userIds
-    const existingUsers = new Set();
-
-    // Update the list with online users
-    for (let i = 0; i < users.length; i++) {
-      const userId = users[i].userId;
-      updateUserInList(userId);
-      existingUsers.add(userId);
-    }
-
-    // Remove offline users from the list
-    const userList = document.getElementById("users-list");
-    const allUsers = userList.querySelectorAll("li");
-    if (allUsers == null) return;
-    allUsers.forEach((user) => {
-      const userId = user.getAttribute("id");
-      if (!existingUsers.has(userId)) {
-        user.remove();
-      }
-    });
-  };
-
-  const updateUserInList = async function (userId) {
-    const user = document.getElementById(userId);
-
-    if (user == null) {
-      // User does not exist in the list, add a new list item
-      const li = document.createElement("li");
-      li.setAttribute("id", userId);
-      li.innerHTML = userId;
-      const userList = document.getElementById("users-list");
-      userList.appendChild(li);
-    }
-  };
-
-  const clearChannelUserList = () => {
-    const userList = document.getElementById("users-list");
-    userList.innerHTML = "";
-  };
+  const { join, leave, config, getAgoraEngine } = await AgoraRTCGetStarted(
+    handleVSDKEvents
+  );
 
   // Display channel name
   document.getElementById("channelName").innerHTML = config.channelName;
   // Display User name
   document.getElementById("userId").innerHTML = config.uid;
 
-  // Buttons
-  // login and logout
-  document.getElementById("login").onclick = async function () {
-    if (!isLoggedIn) {
-      await login();
-      isLoggedIn = true;
-      document.getElementById("login").innerHTML = "Logout";
-    } else {
-      await logout();
-      isLoggedIn = false;
-      document.getElementById("login").innerHTML = "Login";
-    }
-  };
+  // Get an instance of the Agora Engine from the manager
+  const agoraEngine = await getAgoraEngine();
 
-  // Subscribe to a channel and unsubscribe
-  document.getElementById("subscribe").onclick = async function () {
-    if (!isSubscribed) {
-      await subscribe(config.channelName);
-      isSubscribed = true;
-      document.getElementById("subscribe").innerHTML = "Unsubscribe";
-    } else {
-      await unsubscribe(config.channelName);
-      isSubscribed = false;
-      document.getElementById("subscribe").innerHTML = "Subscribe";
-      clearChannelUserList();
-    }
-  };
+  // Dynamically create a container in the form of a DIV element to play the remote video track.
+  const remotePlayerContainer = document.createElement("div");
+  // Dynamically create a container in the form of a DIV element to play the local video track.
+  const localPlayerContainer = document.createElement("div");
+  // Specify the ID of the DIV container. You can use the uid of the local user.
+  localPlayerContainer.id = config.uid;
+  // Set the textContent property of the local video container to the local user id.
+  localPlayerContainer.textContent = "Local user " + config.uid;
+  // Set the local video container size.
+  localPlayerContainer.style.width = "640px";
+  localPlayerContainer.style.height = "480px";
+  localPlayerContainer.style.padding = "15px 5px 5px 5px";
+  // Set the remote video container size.
+  remotePlayerContainer.style.width = "640px";
+  remotePlayerContainer.style.height = "480px";
+  remotePlayerContainer.style.padding = "15px 5px 5px 5px";
 
-  // send channel message
-  document.getElementById("send_channel_message").onclick = async function () {
-    let channelMessage = document
-      .getElementById("channelMessage")
-      .value.toString();
-    await sendChannelMessage(config.channelName, channelMessage);
+  // Listen to the Join button click event.
+  document.getElementById("join").onclick = async function () {
+    // Join a channel.
+    await join(localPlayerContainer, channelParameters);
+    console.log("publish success!");
   };
-
-  // Go to the relevant documentation page on docs.agora.io
-  document.getElementById("fullDoc").onclick = async function () {
-    window.open(docURLs["sdk_quickstart"], '_blank').focus();
+  // Listen to the Leave button click event.
+  document.getElementById("leave").onclick = async function () {
+    removeVideoDiv(remotePlayerContainer.id);
+    removeVideoDiv(localPlayerContainer.id);
+    // Leave the channel
+    await leave(channelParameters);
+    console.log("You left the channel");
+    // Refresh the page for reuse
+    window.location.reload();
   };
 };
+
+function removeVideoDiv(elementId) {
+  console.log("Removing " + elementId + "Div");
+  let Div = document.getElementById(elementId);
+  if (Div) {
+    Div.remove();
+  }
+}
