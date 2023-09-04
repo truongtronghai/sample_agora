@@ -1,10 +1,10 @@
 {
     "uid": 1,
-    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
+    "appId": "",
     "channelName": "demoChannel",
-    "token": "007eJxTYDhjNmORdmnk7FzLX9WhyguX3r3hPsOqy3tVaOv1f+knmxcrMBiaJyeZpyabpJqmWJiYmlhapKQapJmbpqYmJpsYmRsnNhu9TmkIZGQ4vS2SgREKQXxuhpTU3HznjMS8vNQcBgYAyKskWQ==",
+    "token": "",
     "proxyUrl": "http://localhost:8080/",
-    "serverUrl": "https://agora-token-service-production-10e3.up.railway.app",
+    "serverUrl": "",
     "tokenExpiryTime": "600",
     "encryptionMode": 1,
     "salt": "",

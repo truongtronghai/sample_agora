@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Call quality</title>
+    <script src="call_quality.js" type="module"></script>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1>Ensure call quality</h1>
+    <div class="outer-horizontal">
+      <div class="inner-horizontal">
+        <label>The best practices to ensure call quality.</label>
+        <br />
+        <div>
+          <label>Current user ID is </label>
+          <b><label id="userId"></label></b>
+        </div>
+        <div>
+          <label>Current channel name is </label>
+          <b><label id="channelName"></label></b>:
+          <button class="button" type="button" id="join">Join</button>
+          <button class="button" type="button" id="leave">Leave</button>
+        </div>
+                <button class="button" type="button" id="statistics">
+          Show Statistics
+        </button>
+        <br />
+        <label>Audio Devices: </label>
+        <select id="audioDevices"></select
+        ><br />
+        <label>Video Devices: </label>
+        <select id="videoDevices"></select>
+        <button class="button" type="button" id="testDevices">
+          Start Audio/Video device test</button
+        ><br />
+        <label id="upLinkLabel">UplinkQuality :</label>
+        <label id="upLinkIndicator">Good</label><br />
+        <label id="downLinkLabel">DownlinkQuality :</label>
+        <label id="downLinkIndicator">Good</label>
+        <br />
+        <button class="button" id="fullDoc">Read the doc for this app</button>
+        <br />
+      </div>
+    </div>
+    <br />
+    <hr />
+    <blockquote>
+      <div id="log"></div>
+    </blockquote>
+  </body>
+</html>
