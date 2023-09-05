@@ -91,7 +91,7 @@ window.onload = async () => {
     removeVideoDiv(remotePlayerContainer.id);
     removeVideoDiv(localPlayerContainer.id);
     // Leave the channel
-    await leave(channelParameters);
+    await agoraManager.leave(channelParameters);
     console.log("You left the channel");
     // Refresh the page for reuse
     window.location.reload();
