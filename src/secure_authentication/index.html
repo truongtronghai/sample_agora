@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Secure Authentication</title>
+    <script src="secure_authentication.js" type="module"></script>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1>Secure Authentication</h1>
+    <div class="outer-horizontal">
+      <div class="inner-horizontal">
+        <a
+          href="https://docs.agora.io/en/video-calling/get-started/authentication-workflow?platform=web#create-and-run-a-token-server"
+          target="”_blank”"
+          >Deploy a token server.</a
+        ><br />
+        Update <code>serverUrl</code> in this sample code. <br />
+        Start the proxy server from <code>/src</code> using
+        <code>node proxy</code>.<br />
+        Run the app. Join using any UID and the app will fetch the token for
+        you.
+        <p />
+        <div>
+          <label>User ID: </label>
+          <input type="text" placeholder="User id" id="userId" />
+        </div>
+        <div>
+          <label>Current channel name is: </label>
+          <b><label id="channelName"></label></b>
+        </div>
+        <div>
+          <button class="button" type="button" id="join">Join</button>
+          <button class="button" type="button" id="leave">Leave</button>
+        </div>
+        <p />
+        <p />
+        <button class="button" id="fullDoc">Read the doc for this app</button>
+      </div>
+    </div>
+    <p />
+    <hr />
+    <div id="log"></div>
+  </body>
+</html>
