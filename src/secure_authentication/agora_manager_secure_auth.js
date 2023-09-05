@@ -67,6 +67,14 @@ const AgoraManagerAuthentication = async (eventsCallback) => {
     channelParameters.localVideoTrack.play(localPlayerContainer);
   };
 
+  // Renew tokens
+  agoraManager
+    .getAgoraEngine()
+    .on("token-privilege-will-expire", async function () {
+      options.token = await fetchRTCToken(config.uid, config.channelName);
+      await agoraManager.getAgoraEngine().renewToken(options.token);
+    });
+
   // Return the extended agora manager
   return {
     ...agoraManager,
