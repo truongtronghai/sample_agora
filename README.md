@@ -37,7 +37,7 @@ To run the sample projects in this folder, take the following steps:
     To clone the repository to your local machine, open Terminal and navigate to the directory where you want to clone the repository. Then, use the following command:
 
     ```bash
-    git clone https://github.com/AgoraIO/signaling-sdk-samples-web.git
+    git clone https://github.com/AgoraIO/video-sdk-samples-js.git
     ```
 
 1. **Install the dependencies** 
@@ -70,7 +70,7 @@ To run the sample projects in this folder, take the following steps:
     pnpm run dev
     ```
 
-    You open the project at `http://localhost:9000/`.
+    You open the project at the URL shown in your terminal.
 
 1. **Run the samples in the reference app**
 
