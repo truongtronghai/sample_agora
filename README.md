@@ -16,9 +16,9 @@ The runnable code examples are:
 
 - [SDK quickstart](./src/sdk_quickstart/) - the minimum code you need to integrate low-latency, high-concurrency
   video calling features into your app using Video SDK.
-- [Secure authentication with tokens](./src/authentication_workflow/) - quickly set up an authentication token 
+- [Secure authentication with tokens](./src/secure_authentication/) - quickly set up an authentication token 
   server, retrieve a token from the server, and use it to connect securely to Video SDK channel.
-- [Call quality best practice](./src/call-quality/) - ensure optimal audio and video quality in your game.
+- [Call quality best practice](./src/call_quality/) - ensure optimal audio and video quality in your game.
 
 ## Prerequisites
 
