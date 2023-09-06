@@ -1,16 +1,20 @@
 # SDK quickstart
 
-You integrate Video SDK in order to add low-latency, high-concurrency video calling capabilities for real-time systems into your app. You also use Video SDK to enhance the user experience for Video Calling, Voice Calling, Interactive Live Streaming, and Broadcast Streaming.
+Video Calling enables one-to-one or small-group video chat connections with smooth, jitter-free streaming video. Agora’s Video SDK makes it easy to embed real-time video chat into web, mobile and native apps.
 
-This page shows you how to easily integrate video calling into your app using Video SDK.
+Thanks to Agora’s intelligent and global Software Defined Real-time Network (Agora SD-RTN™), you can rely on the highest available video and audio quality.
+
+This app shows the minimum code you need to integrate high-quality, low-latency Video Calling features into your app
+using Video SDK.
+
 
 ## Understand the code
 
-For context on this sample, and a full explanation of the essential code snippets used in this project, read the 
-[SDK quickstart](https://docs.agora.io/en/video-calling/get-started/get-started-sdk?platform=web).
+For context on this sample, and a full explanation of the essential code snippets used in this project, read [SDK quickstart](https://docs-beta.agora.io/en/video-calling/get-started/get-started-sdk)
 
 
 ## How to run this project
 
-To see how to run this project, read the instructions in the main [README](../../README.md) or [SDK quickstart](https://docs.agora.io/en/video-calling/get-started/get-started-sdk?platform=web).
+To see how to run this project, read the instructions in the main [README](../../README.md) or [SDK quickstart](https://docs-beta.agora.io/en/video-calling/get-started/get-started-sdk).
+
 
