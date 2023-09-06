@@ -16,9 +16,8 @@ The runnable code examples are:
 
 - [SDK quickstart](./src/sdk_quickstart/) - the minimum code you need to integrate low-latency, high-concurrency
   video calling features into your app using Video SDK.
-- [Secure authentication with tokens](./src/secure_authentication/) - quickly set up an authentication token 
-  server, retrieve a token from the server, and use it to connect securely to Video SDK channel.
-- [Call quality best practice](./src/call_quality/) - ensure optimal audio and video quality in your game.
+- [Secure authentication with tokens](src/authentication_workflow/) - quickly set up an authentication token server, retrieve a token from the server, and use it to connect securely to Video SDK channel.
+- [Call quality best practice](./src/call_quality/) - ensure optimal audio and video quality in your app.
 
 ## Prerequisites
 
@@ -26,7 +25,7 @@ Before getting started with this reference app, ensure you have the following se
 
 - A [supported browser](../reference/supported-platforms#browsers).
 - Physical media input devices, such as a camera and a microphone.
-- A JavaScript package manager such as [npm](https://www.npmjs.com/package/npm).
+- The [pnpm](https://pnpm.io/installation#using-npm) package manager.
 
 
 ## Run this project
@@ -46,37 +45,36 @@ To run the sample projects in this folder, take the following steps:
     Open Terminal in the root directory of this project and run the following command:
 
     ```bash
-    npm install
+    pnpm install
     ```
  
 1. **Modify the project configuration**
 
    The app loads connection parameters from [`./src/agora_manager/config.json`](./src/agora_manager/config.json)
-   . Ensure that the file is populated with the required parameter values before running the application.
+   . If a valid `serverUrl` is provided, all samples use a token server to obtain a token except the **SDK quickstart** project that uses the `rtcToken`. If a `serverUrl` is not specified, all samples except **Secure authentication with tokens** use the `rtcToken` from `config.json`.
+ 
+   Ensure that the file is populated with the required parameter values before running the application.
 
     - `uid`: The user ID associated with the application.
     - `appId`: (Required) The unique ID for the application obtained from [Agora Console](https://console.agora.io). 
     - `channelName`: The default name of the channel to join.
     - `rtcToken`:An token generated for `channelName`. You generate a temporary token using the [Agora token builder](https://agora-token-generator-demo.vercel.app/).
-    - `serverUrl`: The URL for the token generator. See [Secure authentication with tokens](authentication-workflow) for information on how to set up a token server.
+   - `serverUrl`: The URL for the token generator. See [Secure authentication with tokens](https://docs.agora.io/en/video-calling/get-started/authentication-workflow) for information on how to set up a token server.
     - `tokenExpiryTime`: The time in seconds after which a token expires.
-
-    If a valid `serverUrl` is provided, all samples use the token server to obtain a token except the **SDK quickstart** project that uses the `rtcToken`. If a `serverUrl` is not specified, all samples except **Secure authentication with tokens** use the `rtcToken` from `config.json`.
 
 1. **Build and run the project**
 
    In the project folder, open Terminal and run the following command:
 
     ``` bash
-    npm run build
-    npm run start:dev
+    pnpm run dev
     ```
 
     You open the project at `http://localhost:9000/`.
 
 1. **Run the samples in the reference app**
 
-   Choose a sample code from the dropdown that you wish to execute.
+   Choose a sample from the dropdown and test the code.
 
 ## Contact
 
