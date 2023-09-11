@@ -67,7 +67,7 @@ To run the sample projects in this folder, take the following steps:
    In the project folder, open Terminal and run the following command:
 
     ``` bash
-    pnpm run dev
+    pnpm dev
     ```
 
     You open the project at the URL shown in your terminal.
