@@ -1,4 +1,4 @@
-import AgoraRTC from "agora-rtc-sdk-ng";
+import "../../AgoraRTC_N-production/AgoraRTC_N-production (1).js";
 import config from "./config.json";
 
 const AgoraRTCManager = async (eventsCallback) => {
@@ -8,7 +8,7 @@ const AgoraRTCManager = async (eventsCallback) => {
   const setupAgoraEngine = async () => {
     agoraEngine = new AgoraRTC.createClient({ mode: "rtc", codec: "vp9" });
   };
-
+  console.log(AgoraRTC.VERSION);
   await setupAgoraEngine();
 
   // Event Listeners
