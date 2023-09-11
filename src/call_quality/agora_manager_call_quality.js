@@ -1,5 +1,5 @@
 import AgoraRTCManager from "../agora_manager/agora_manager.js";
-import AgoraRTC from "agora-rtc-sdk-ng";
+import "../../AgoraRTC_N-production/AgoraRTC_N-production (1).js";
 
 const AgoraRTCCallQuality = async (eventsCallback) => {
   // Extend the AgoraManager by importing it
