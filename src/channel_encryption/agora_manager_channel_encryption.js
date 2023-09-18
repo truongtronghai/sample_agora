@@ -4,6 +4,40 @@ const AgoraRTCChannelEncryption = async (eventsCallback) => {
   // Extend the AgoraManager by importing it
   const agoraManager = await AgoraRTCManager(eventsCallback);
   const config = agoraManager.config;
+  let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
+
+  // Fetches the RTC token for stream channels
+  async function fetchRTCToken(uid, channelName) {
+    if (config.serverUrl !== "") {
+      try {
+        const res = await fetch(
+          config.proxyUrl +
+            config.serverUrl +
+            "/rtc/" +
+            channelName +
+            "/" +
+            role +
+            "/uid/" +
+            uid +
+            "/?expiry=" +
+            config.tokenExpiryTime,
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
+        const data = await res.text();
+        const json = await JSON.parse(data);
+        console.log("RTC token fetched from server: ", json.rtcToken);
+        return json.rtcToken;
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      return config.token;
+    }
+  }
 
   // In a production environment, you retrieve the key and salt from
   // an authentication server. For this code example you generate locally.
@@ -43,12 +77,14 @@ const AgoraRTCChannelEncryption = async (eventsCallback) => {
   const joinWithE2EEncryption = async (
     localPlayerContainer,
     channelParameters,
-    password
+    password,
+    uid
   ) => {
     AgoraRTC.setParameter("ENABLE_ENCODED_TRANSFORM", true);
+    const token = await fetchRTCToken(uid, config.channelName);
     await agoraManager
       .getAgoraEngine()
-      .join(config.appId, config.channelName, config.token, config.uid);
+      .join(config.appId, config.channelName, token, uid);
     // Create a local audio track from the audio sampled by a microphone.
     channelParameters.localAudioTrack =
       await AgoraRTC.createMicrophoneAudioTrack();

@@ -16,7 +16,8 @@ let channelParameters = {
   remoteUid: null,
 };
 
-let password;
+var password;
+var uid;
 
 // The following code is solely related to UI implementation and not Agora-specific code
 window.onload = async () => {
@@ -26,6 +27,24 @@ window.onload = async () => {
   const handleVSDKEvents = (eventName, ...args) => {
     switch (eventName) {
       case "user-published":
+        var browserName = (function (agent) {
+          switch (true) {
+            case agent.indexOf("chrome") > -1 && !!window.chrome:
+              return "Chrome";
+            default:
+              return "other";
+          }
+        })(window.navigator.userAgent.toLowerCase());
+
+        if (browserName === "Chrome") {
+          const transceiver =
+            channelParameters.remoteVideoTrack.getRTCRtpTransceiver();
+          if (!transceiver || !transceiver.receiver) {
+            return;
+          }
+          password = document.getElementById("password").value.toString();
+          setDecryptionStream(transceiver.receiver, password);
+        }
         if (args[1] == "video") {
           // Retrieve the remote video track.
           channelParameters.remoteVideoTrack = args[0].videoTrack;
@@ -50,25 +69,6 @@ window.onload = async () => {
           // Play the remote audio track. No need to pass any DOM element.
           channelParameters.remoteAudioTrack.play();
         }
-
-        var browserName = (function (agent) {
-          switch (true) {
-            case agent.indexOf("chrome") > -1 && !!window.chrome:
-              return "Chrome";
-            default:
-              return "other";
-          }
-        })(window.navigator.userAgent.toLowerCase());
-
-        if (browserName === "Chrome") {
-          const transceiver =
-            channelParameters.remoteVideoTrack.getRTCRtpTransceiver();
-          if (!transceiver || !transceiver.receiver) {
-            return;
-          }
-          password = document.getElementById("password").value.toString();
-          setDecryptionStream(transceiver.receiver, password);
-        }
     }
   };
 
@@ -77,17 +77,15 @@ window.onload = async () => {
   // Display channel name
   document.getElementById("channelName").innerHTML =
     agoraManager.config.channelName;
-  // Display User name
-  document.getElementById("userId").innerHTML = agoraManager.config.uid;
-
+  uid = document.getElementById("userId").value.toString();
   // Dynamically create a container in the form of a DIV element to play the remote video track.
   const remotePlayerContainer = document.createElement("div");
   // Dynamically create a container in the form of a DIV element to play the local video track.
   const localPlayerContainer = document.createElement("div");
   // Specify the ID of the DIV container. You can use the uid of the local user.
-  localPlayerContainer.id = agoraManager.config.uid;
+  localPlayerContainer.id = uid;
   // Set the textContent property of the local video container to the local user id.
-  localPlayerContainer.textContent = "Local user " + agoraManager.config.uid;
+  localPlayerContainer.textContent = "Local user " + uid;
   // Set the local video container size.
   localPlayerContainer.style.width = "640px";
   localPlayerContainer.style.height = "480px";
@@ -101,10 +99,12 @@ window.onload = async () => {
   document.getElementById("join").onclick = async function () {
     // Join a channel with password
     password = document.getElementById("password").value.toString();
+    uid = document.getElementById("userId").value.toString();
     await agoraManager.joinWithE2EEncryption(
       localPlayerContainer,
       channelParameters,
-      password
+      password,
+      uid
     );
     // await agoraManager.enableEndToEndEncryption(channelParameters.localVideoTrack)
     console.log("publish success!");
