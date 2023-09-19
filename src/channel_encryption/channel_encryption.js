@@ -1,4 +1,4 @@
-import AgoraRTCChannelEncryption from "./agora_manager_channel_encryption.js";
+import AgoraChannelEncryption from "./agora_manager_channel_encryption.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import docURLs from "../utils/docSteURLs.js";
@@ -72,7 +72,7 @@ window.onload = async () => {
     }
   };
 
-  const agoraManager = await AgoraRTCChannelEncryption(handleVSDKEvents);
+  const agoraManager = await AgoraChannelEncryption(handleVSDKEvents);
 
   // Display channel name
   document.getElementById("channelName").innerHTML =

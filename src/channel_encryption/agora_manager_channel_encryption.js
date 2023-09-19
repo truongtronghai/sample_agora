@@ -1,13 +1,13 @@
-import AgoraRTCManager from "../agora_manager/agora_manager.js";
+import AgoraManager from "../agora_manager/agora_manager.js";
 
-const AgoraRTCChannelEncryption = async (eventsCallback) => {
+const AgoraChannelEncryption = async (eventsCallback) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraRTCManager(eventsCallback);
+  const agoraManager = await AgoraManager(eventsCallback);
   const config = agoraManager.config;
   let role = "publisher"; // set the role to "publisher" or "subscriber" as appropriate
 
-  // Fetches the RTC token for stream channels
-  async function fetchRTCToken(uid, channelName) {
+  // Fetches the token for stream channels
+  async function fetchToken(uid, channelName) {
     if (config.serverUrl !== "") {
       try {
         const res = await fetch(
@@ -81,7 +81,7 @@ const AgoraRTCChannelEncryption = async (eventsCallback) => {
     uid
   ) => {
     AgoraRTC.setParameter("ENABLE_ENCODED_TRANSFORM", true);
-    const token = await fetchRTCToken(uid, config.channelName);
+    const token = await fetchToken(uid, config.channelName);
     await agoraManager
       .getAgoraEngine()
       .join(config.appId, config.channelName, token, uid);
@@ -253,4 +253,4 @@ const AgoraRTCChannelEncryption = async (eventsCallback) => {
   };
 };
 
-export default AgoraRTCChannelEncryption;
+export default AgoraChannelEncryption;

@@ -1,14 +1,13 @@
 import "../../AgoraRTC_N-production/AgoraRTC_N-production (1).js";
 import config from "./config.json";
 
-const AgoraRTCManager = async (eventsCallback) => {
+const AgoraManager = async (eventsCallback) => {
   let agoraEngine = null;
 
   // Set up the signaling engine with the provided App ID, UID, and configuration
   const setupAgoraEngine = async () => {
     agoraEngine = new AgoraRTC.createClient({ mode: "rtc", codec: "vp9" });
   };
-  console.log(AgoraRTC.VERSION);
   await setupAgoraEngine();
 
   // Event Listeners
@@ -68,4 +67,4 @@ const AgoraRTCManager = async (eventsCallback) => {
   };
 };
 
-export default AgoraRTCManager;
+export default AgoraManager;

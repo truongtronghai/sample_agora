@@ -1,4 +1,4 @@
-import AgoraRTCGetStarted from "../sdk_quickstart/agora_manager_get_started.js";
+import AgoraGetStarted from "../sdk_quickstart/agora_manager_get_started.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import docURLs from "../utils/docSteURLs.js";
@@ -51,7 +51,7 @@ window.onload = async () => {
     }
   };
 
-  const { join, leave, config, getAgoraEngine } = await AgoraRTCGetStarted(
+  const { join, leave, config, getAgoraEngine } = await AgoraGetStarted(
     handleVSDKEvents
   );
 

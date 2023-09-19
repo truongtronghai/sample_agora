@@ -1,9 +1,9 @@
-import AgoraRTCManager from "../agora_manager/agora_manager.js";
+import AgoraManager from "../agora_manager/agora_manager.js";
 import "../../AgoraRTC_N-production/AgoraRTC_N-production (1).js";
 
-const AgoraRTCCallQuality = async (eventsCallback) => {
+const AgoraCallQuality = async (eventsCallback) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraRTCManager(eventsCallback);
+  const agoraManager = await AgoraManager(eventsCallback);
   const agoraEngine = agoraManager.getAgoraEngine();
 
   agoraManager
@@ -140,4 +140,4 @@ const AgoraRTCCallQuality = async (eventsCallback) => {
   };
 };
 
-export default AgoraRTCCallQuality;
+export default AgoraCallQuality;
