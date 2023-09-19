@@ -1,5 +1,5 @@
 import AgoraManager from "../agora_manager/agora_manager.js";
-import "../../AgoraRTC_N-production/AgoraRTC_N-production (1).js";
+import AgoraRTC from "agora-rtc-sdk-ng";
 
 const AgoraManagerAuthentication = async (eventsCallback) => {
   let streamChannel = null;
@@ -34,7 +34,7 @@ const AgoraManagerAuthentication = async (eventsCallback) => {
         );
         const data = await res.text();
         const json = await JSON.parse(data);
-        console.log("RTC token fetched from server: ", json.rtcToken);
+        console.log("Video SDK token fetched from server: ", json.rtcToken);
         return json.rtcToken;
       } catch (err) {
         console.log(err);

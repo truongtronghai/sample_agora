@@ -29,7 +29,7 @@ const AgoraChannelEncryption = async (eventsCallback) => {
         );
         const data = await res.text();
         const json = await JSON.parse(data);
-        console.log("RTC token fetched from server: ", json.rtcToken);
+        console.log("Video SDK token fetched from server: ", json.rtcToken);
         return json.rtcToken;
       } catch (err) {
         console.log(err);

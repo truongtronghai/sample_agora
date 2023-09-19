@@ -1,4 +1,4 @@
-import "../../AgoraRTC_N-production/AgoraRTC_N-production (1).js";
+import AgoraRTC from "agora-rtc-sdk-ng";
 import config from "./config.json";
 
 const AgoraManager = async (eventsCallback) => {

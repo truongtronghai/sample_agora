@@ -27,13 +27,13 @@ The `rmtConfig` struct represents the configuration for the application and prov
 - `uid`: The user ID associated with the application.
 - `appId`: The unique ID for the application obtained from https://console.agora.io.
 - `channelName`: The pre-filled text for the channel to join.
-- `token`: The RTC (Real-Time Communication) token generated for authentication.
+- `token`: The Video SDK token generated for authentication.
 - `proxyUrl`: The URL of the proxy server to be used.
 - `serverUrl`: The URL for the token generator (no trailing slash).
 - `tokenExpiryTime`: The expiry time (in seconds) for token generated from the token generator.
 - `encryptionMode`: The mode for encryption, ranging from 1 to 8.
-- `salt`: The salt used for RTC encryption.
-- `cipherKey`: The encryption key used for RTC encryption.
+- `salt`: The salt used for Video SDK encryption.
+- `cipherKey`: The encryption key used for Video SDK encryption.
 - `cloudProxy`: Whether to enable cloud proxy.
 
 The configuration data is loaded from the config.json file located in the project bundle.
