@@ -89,6 +89,7 @@ window.onload = async () => {
     removeVideoDiv(localPlayerContainer.id);
     // Leave the channel
     await agoraManager.leave(channelParameters);
+    agoraManager.stopProxyServer();
     console.log("You left the channel");
     // Refresh the page for reuse
     window.location.reload();

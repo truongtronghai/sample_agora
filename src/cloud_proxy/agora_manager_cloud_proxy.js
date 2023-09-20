@@ -21,9 +21,14 @@ const AgoraManagerCloudProxy = async (eventsCallback) => {
     });
   }
 
+  const stopProxyServer = () => {
+    agoraEngine.stopProxyServer();
+  }
+
   // Return the extended agora manager
   return {
     ...agoraManager,
+    stopProxyServer
   };
 };
 
