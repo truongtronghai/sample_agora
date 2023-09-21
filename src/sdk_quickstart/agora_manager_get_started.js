@@ -1,8 +1,8 @@
-import AgoraRTCManager from "../agora_manager/agora_manager.js";
+import AgoraManager from "../agora_manager/agora_manager.js";
 
-const AgoraRTCGetStarted = async (eventsCallback) => {
+const AgoraGetStarted = async (eventsCallback) => {
   // Extend the AgoraManager by importing it
-  const agoraManager = await AgoraRTCManager(eventsCallback);
+  const agoraManager = await AgoraManager(eventsCallback);
 
   // Return the extended agora manager
   return {
@@ -10,4 +10,4 @@ const AgoraRTCGetStarted = async (eventsCallback) => {
   };
 };
 
-export default AgoraRTCGetStarted;
+export default AgoraGetStarted;

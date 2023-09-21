@@ -12,7 +12,7 @@ const AgoraManagerAuthentication = async (eventsCallback) => {
   const config = agoraManager.config;
 
   // Fetches the RTC token for stream channels
-  async function fetchRTCToken(uid, channelName) {
+  async function fetchToken(uid, channelName) {
     if (config.serverUrl !== "") {
       try {
         const res = await fetch(
@@ -34,7 +34,7 @@ const AgoraManagerAuthentication = async (eventsCallback) => {
         );
         const data = await res.text();
         const json = await JSON.parse(data);
-        console.log("RTC token fetched from server: ", json.rtcToken);
+        console.log("Video SDK token fetched from server: ", json.rtcToken);
         return json.rtcToken;
       } catch (err) {
         console.log(err);
@@ -45,7 +45,7 @@ const AgoraManagerAuthentication = async (eventsCallback) => {
   }
 
   const joinWithToken = async (localPlayerContainer, channelParameters) => {
-    const token = await fetchRTCToken(config.uid, config.channelName);
+    const token = await fetchToken(config.uid, config.channelName);
     await agoraManager
       .getAgoraEngine()
       .join(config.appId, config.channelName, token, config.uid);
@@ -71,7 +71,7 @@ const AgoraManagerAuthentication = async (eventsCallback) => {
   agoraManager
     .getAgoraEngine()
     .on("token-privilege-will-expire", async function () {
-      options.token = await fetchRTCToken(config.uid, config.channelName);
+      options.token = await fetchToken(config.uid, config.channelName);
       await agoraManager.getAgoraEngine().renewToken(options.token);
     });
 

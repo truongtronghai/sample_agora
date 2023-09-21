@@ -4,10 +4,11 @@ This app demonstrates use of [Agora's Video SDK](https://docs.agora.io/en/video-
 
 Clone the repo, run and test the samples, and use the code in your own project. Enjoy.
 
-- [Samples](#samples)
-- [Prerequisites](#prerequisites)
-- [Run this project](#run-this-project)
-- [Contact](#contact)
+- [Agora Video SDK for Web reference app](#agora-video-sdk-for-web-reference-app)
+  - [Samples](#samples)
+  - [Prerequisites](#prerequisites)
+  - [Run this project](#run-this-project)
+  - [Contact](#contact)
 
 
 ## Samples  
@@ -18,6 +19,8 @@ The runnable code examples are:
   video calling features into your app using Video SDK.
 - [Secure authentication with tokens](src/authentication_workflow/) - quickly set up an authentication token server, retrieve a token from the server, and use it to connect securely to Video SDK channel.
 - [Call quality best practice](./src/call_quality/) - ensure optimal audio and video quality in your app.
+- [Secure channels with encryption](./src/channel_encryption/) - integrate built-in encryption into your app using Video SDK..
+
 
 ## Prerequisites
 
@@ -58,11 +61,11 @@ To run the sample projects in this folder, take the following steps:
     - `uid`: The user ID associated with the application.
     - `appId`: (Required) The unique ID for the application obtained from [Agora Console](https://console.agora.io). 
     - `channelName`: The default name of the channel to join.
-    - `rtcToken`:An token generated for `channelName`. You generate a temporary token using the [Agora token builder](https://agora-token-generator-demo.vercel.app/).
-   - `serverUrl`: The URL for the token generator. See [Secure authentication with tokens](https://docs.agora.io/en/video-calling/get-started/authentication-workflow) for information on how to set up a token server.
+    - `token`:An token generated for `channelName`. You generate a temporary token using the [Agora token builder](https://agora-token-generator-demo.vercel.app/).
+    - `serverUrl`: The URL for the token generator. See [Secure authentication with tokens](authentication-workflow) for information on how to set up a token server.
     - `tokenExpiryTime`: The time in seconds after which a token expires.
 
-1. **Build and run the project**
+2. **Build and run the project**
 
    In the project folder, open Terminal and run the following command:
 
@@ -72,7 +75,7 @@ To run the sample projects in this folder, take the following steps:
 
     You open the project at the URL shown in your terminal.
 
-1. **Run the samples in the reference app**
+3. **Run the samples in the reference app**
 
    Choose a sample from the dropdown and test the code.
 

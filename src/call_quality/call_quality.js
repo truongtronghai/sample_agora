@@ -1,4 +1,4 @@
-import AgoraRTCCallQuality from "../call_quality/agora_manager_call_quality.js";
+import AgoraCallQuality from "../call_quality/agora_manager_call_quality.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import docURLs from "../utils/docSteURLs.js";
@@ -83,7 +83,7 @@ window.onload = async () => {
     }
   };
 
-  const agoraManager = await AgoraRTCCallQuality(handleVSDKEvents);
+  const agoraManager = await AgoraCallQuality(handleVSDKEvents);
 
   // Display channel name
   document.getElementById("channelName").innerHTML =
