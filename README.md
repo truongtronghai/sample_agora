@@ -19,6 +19,8 @@ The runnable code examples are:
   video calling features into your app using Video SDK.
 - [Secure authentication with tokens](src/authentication_workflow/) - quickly set up an authentication token server, retrieve a token from the server, and use it to connect securely to Video SDK channel.
 - [Call quality best practice](./src/call_quality/) - ensure optimal audio and video quality in your app.
+- [Secure channels with encryption](./src/channel_encryption/) - integrate built-in encryption into your app using Video SDK..
+
 
 ## Prerequisites
 
