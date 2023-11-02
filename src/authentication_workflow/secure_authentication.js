@@ -1,4 +1,4 @@
-import AgoraSecureAuth from "../secure_authentication/agora_manager_secure_auth.js";
+import AgoraSecureAuth from "../authentication_workflow/agora_manager_secure_auth.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import docURLs from "../utils/docSteURLs.js";
