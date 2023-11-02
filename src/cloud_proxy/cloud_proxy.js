@@ -1,4 +1,4 @@
-import AgoraSecureAuth from "../authentication_workflow/agora_manager_secure_auth.js";
+import AgoraCloudProxy from "../cloud_proxy/agora_manager_cloud_proxy.js";
 import showMessage from "../utils/showMessage.js";
 import setupProjectSelector from "../utils/setupProjectSelector.js";
 import docURLs from "../utils/docSteURLs.js";
@@ -51,7 +51,7 @@ window.onload = async () => {
     }
   };
 
-  const agoraManager = await AgoraSecureAuth(
+  const agoraManager = await AgoraCloudProxy(
     handleVSDKEvents
   );
 
@@ -59,9 +59,6 @@ window.onload = async () => {
   document.getElementById("channelName").innerHTML = agoraManager.config.channelName;
   // Display User name
   document.getElementById("userId").innerHTML = agoraManager.config.uid;
-
-  // Get an instance of the Agora Engine from the manager
-  const agoraEngine = await agoraManager.getAgoraEngine();
 
   // Dynamically create a container in the form of a DIV element to play the remote video track.
   const remotePlayerContainer = document.createElement("div");
@@ -83,7 +80,7 @@ window.onload = async () => {
   // Listen to the Join button click event.
   document.getElementById("join").onclick = async function () {
     // Join a channel.
-    await agoraManager.joinWithToken(localPlayerContainer, channelParameters);
+    await agoraManager.join(localPlayerContainer, channelParameters);
     console.log("publish success!");
   };
   // Listen to the Leave button click event.
@@ -92,6 +89,7 @@ window.onload = async () => {
     removeVideoDiv(localPlayerContainer.id);
     // Leave the channel
     await agoraManager.leave(channelParameters);
+    agoraManager.stopProxyServer();
     console.log("You left the channel");
     // Refresh the page for reuse
     window.location.reload();

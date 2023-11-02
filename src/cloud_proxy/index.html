@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cloud Proxy</title>
+    <script src="cloud_proxy.js" type="module"></script>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1>Connect through restricted networks with Cloud Proxy</h1>
+    <div class="outer-horizontal">
+      <div class="inner-horizontal">
+        <label
+          >Join and leave a Video call.</label
+        >
+        <br /><br />
+        <div>
+          <label>Current user ID is </label>
+          <b><label id="userId"></label></b>
+        </div>
+        <br />
+        <div>
+          <label>Current channel name is: </label>
+          <b><label id="channelName"></label></b>
+          <button class="button" type="button" id="join">Join</button>
+          <button class="button" type="button" id="leave">Leave</button>
+        </div>
+        <br />
+        <button class="button" id="fullDoc">
+          Read the doc for this app
+        </button>
+        <br />
+      </div>
+    </div>
+    <br />
+    <hr />
+    <blockquote>
+      <div id="log"></div>
+    </blockquote>
+  </body>
+</html>
