@@ -1,8 +1,8 @@
 {
     "uid": 1,
-    "appId": "",
-    "channelName": "",
-    "token": "",
+    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
+    "channelName": "demoChannel",
+    "token": "007eJxTYHBk3Pdv65+kmDPXMo/fbbh15fFS4VczqsMSVm+fYDN77z0eBQZD8+Qk89Rkk1TTFAsTUxNLi5RUgzRz09TUxGQTI3PjxCscLqkNgYwMBi7bGRihEMTnZkhJzc13zkjMy0vNYWAAAG9fJTg=",
     "proxyUrl": "http://localhost:8080/",
     "serverUrl": "",
     "tokenExpiryTime": "600",
