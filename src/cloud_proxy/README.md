@@ -1,4 +1,4 @@
-# Connect throught restricted networks using cloud proxy
+# Connect through restricted networks using cloud proxy
 
 To accommodate your end users’ firewall settings and business needs, Cloud Proxy offers the following operating modes:
 
