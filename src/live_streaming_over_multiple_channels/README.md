@@ -1,10 +1,10 @@
-# Connect to a specific geographical regions using Geofencing
+# Live streaming over multiple channels
 
-Agora geofencing enables you to control and customize data routing in your app by specifying the Agora SD-RTN™ region users connect to.
+Agora Video SDK multi-channel streaming allows you to join multiple channels at the same time and broadcast or receive audio and video over them.
 
 ## Understand the code
 
-For context on this sample, and a full explanation of the essential code snippets used in this project, read [Connect to a specific geographical regions using Geofencing](https://docs.agora.io/en/video-calling/enable-features/geofencing?platform=web)
+For context on this sample, and a full explanation of the essential code snippets used in this project, read [Live streaming over multiple channels](https://docs.agora.io/en/interactive-live-streaming/develop/live-streaming-over-multiple-channels?platform=web).
 
 
 ## How to run this project
