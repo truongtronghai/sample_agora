@@ -51,6 +51,11 @@ const AgoraManagerMultiChannel = async (eventsCallback) => {
         .catch((e) => {
           console.log(`startChannelMediaRelay failed`, e);
         });
+      agoraManager
+        .getAgoraEngine().on("channel-media-relay-state", state =>
+      {
+        console.log("The current state is : "+ state);
+      });
     } else {
       // Remove a destination channel.
       channelMediaConfig.removeDestChannelInfo(destChannelName);
