@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Virtual Background</title>
+    <script src="virtual_background.js" type="module"></script>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1></h1>
+    <div class="outer-horizontal">
+      <div class="inner-horizontal">
+        <label
+          >Modify the Background in your video call or live stream</label
+        >
+        <br /><br />
+        <div>
+          <label>Current user ID is </label>
+          <b><label id="userId"></label></b>
+        </div>
+        <br />
+        <div>
+          <label>Current channel name is: </label>
+          <b><label id="channelName"></label></b>
+          <button class="button" type="button" id="join">Join</button>
+          <button class="button" type="button" id="leave">Leave</button>
+        </div>
+        <div>
+          <label>Modify background: </label>
+          <button class="button" type="button" id="virtualBackground">Set virtual background</button>
+        </div>
+        <br />
+        <button class="button" id="fullDoc">
+          Read the doc for this app
+        </button>
+        <br />
+      </div>
+    </div>
+    <br />
+    <hr />
+    <blockquote>
+      <div id="log"></div>
+    </blockquote>
+  </body>
+</html>
