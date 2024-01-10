@@ -14,6 +14,7 @@ const AgoraManagerAudioVoice = async (eventsCallback) => {
     // Replace audioFileTrack with localAudioTrack
     channelParameters.localAudioTrack =
       await AgoraRTC.createMicrophoneAudioTrack();
+    agoraManager.getAgoraEngine().publish([channelParameters.localAudioTrack]);
   };
 
   const startProcessAudioBuffer = async (audioFileTrack, channelParameters) => {
@@ -21,9 +22,8 @@ const AgoraManagerAudioVoice = async (eventsCallback) => {
     audioFileTrack.startProcessAudioBuffer();
     // Call replaceTrack with stopOldTrack set to false to publish audioFileTrack and localAudioTrack together.
     console.log("channelParams", channelParameters);
-    channelParameters.localAudioTrack = AgoraRTC.createCustomAudioTrack({
-      mediaStreamTrack: audioFileTrack,
-  });
+    channelParameters.localAudioTrack = audioFileTrack;
+    agoraManager.getAgoraEngine().publish([channelParameters.localAudioTrack]);
   };
 
   const createAudioFileTrack = async (file) => {
