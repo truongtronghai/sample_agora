@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Audio and Voice effects</title>
+    <script src="audio_voice_effects.js" type="module"></script>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="projectSelector"></div>
+    <h1>Add sound effects, mix in pre-recorded audio, apply voice effects and set the audio route.</h1>
+    <div class="outer-horizontal">
+      <div class="inner-horizontal">
+        <label
+          >Join and leave a Video call.</label
+        >
+        <br /><br />
+        <div>
+          <label>Current user ID is </label>
+          <b><label id="userId"></label></b>
+        </div>
+        <br />
+        <div>
+          <label>Current channel name is: </label>
+          <b><label id="channelName"></label></b>
+          <button class="button" type="button" id="join">Join</button>
+          <button class="button" type="button" id="leave">Leave</button>
+        </div>
+        <br />
+        <div id="Container"></div>
+          <button class="button" id ="audioRoute">Change Audio Route</button>
+          <br><label> Select an audio file :</label>
+          <input type="file" id="filepicker" accept="audio/*">
+          <br><button class="button" type="button" id="audioMixing">Start audio mixing</button>
+        <br />
+        <button class="button" id="fullDoc">
+          Read the doc for this app
+        </button>
+        <br />
+      </div>
+    </div>
+    <br />
+    <hr />
+    <blockquote>
+      <div id="log"></div>
+    </blockquote>
+  </body>
+</html>
