@@ -1,23 +1,23 @@
 {
-    "uid": 1,
-    "appId": "",
-    "channelName": "",
-    "token": "",
-    "proxyUrl": "http://localhost:8080/",
-    "serverUrl": "",
-    "tokenExpiryTime": "600",
-    "encryptionMode": "aes-256-gcm2",
-    "salt": "",
-    "cipherKey": "",
-    "presenceTimeout": 300,
-    "logUpload": false,
-    "logFilter": {
-        "error": true,
-        "warn": true,
-        "info": true,
-        "track": true,
-        "debug": false
-    },
-    "cloudProxy": true,
-    "useStringUserId": false
+  "uid": 1,
+  "appId": "ab240f13bb10488e8b6b250715cd98da",
+  "channelName": "channeltest12032024",
+  "token": "007eJxTYHh5ql+Pr86M2UTgNJNuyE7jR8E8ewPaF3zUNNJb4TntHpcCQ2KSkYlBmqFxUpKhgYmFRapFklmSkamBuaFpcoqlRUrilovvUxsCGRn26vayMDJAIIgvzJCckZiXl5pTklpcYmhkYGxkYGTCwAAAfvAiPA==",
+  "proxyUrl": "http://localhost:8080/",
+  "serverUrl": "",
+  "tokenExpiryTime": "600",
+  "encryptionMode": "aes-256-gcm2",
+  "salt": "",
+  "cipherKey": "",
+  "presenceTimeout": 300,
+  "logUpload": false,
+  "logFilter": {
+    "error": true,
+    "warn": true,
+    "info": true,
+    "track": true,
+    "debug": false
+  },
+  "cloudProxy": true,
+  "useStringUserId": false
 }
